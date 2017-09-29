@@ -1,0 +1,29 @@
+{
+    "type": "yawik-module",
+    "name": "yawik/simple-import",
+    "description": "This module provides various imports",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Carsten Bleek",
+            "email": "bleek@cross-solution.de"
+        },
+        {
+            "name": "Mathias Gelhausen",
+            "email": "gelhausen@cross-solution.de"
+        },
+        {
+            "name": "Miroslav Fedeles",
+            "email": "miroslav.fedeles@gmail.com"
+        }
+    ],
+    "keywords": [
+        "yawik"
+    ],
+    "require": {
+        "composer/installers": "*"
+    },
+    "autoload": {
+        "psr-4": { "SimpleImport\\": "src/"}
+    }
+}
