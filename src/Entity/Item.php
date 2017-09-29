@@ -24,13 +24,19 @@ class Item
      * @var string
      * @ODM\Field(type="string")
      */
-    private $id;
+    private $importId;
     
     /**
      * @var array
      * @ODM\Hash
      */
-    private $data;
+    private $importData;
+    
+    /**
+     * @var string
+     * @ODM\Field(type="string")
+     */
+    private $documentId;
     
     /**
      * @var DateTime
@@ -39,38 +45,56 @@ class Item
     private $dateDeleted;
     
     /**
-     * @param string $id
-     * @param array $data
+     * @param string $importId
+     * @param array $importData
      */
-    public function __construct($id, array $data)
+    public function __construct($importId, array $importData)
     {
-        $this->id = $id;
-        $this->data = $data;
+        $this->importId = $importId;
+        $this->importData = $importData;
     }
 
     /**
      * @return string
      */
-    public function getId()
+    public function getImportId()
     {
-        return $this->id;
-    }
-    
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->data;
+        return $this->importId;
     }
 
     /**
-     * @param array $data
+     * @return array
+     */
+    public function getImportData()
+    {
+        return $this->importData;
+    }
+
+    /**
+     * @param array $importData
      * @return Item
      */
-    public function setData($data)
+    public function setImportData($importData)
     {
-        $this->data = $data;
+        $this->importData = $importData;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentId()
+    {
+        return $this->documentId;
+    }
+
+    /**
+     * @param string $documentId
+     * @return Item
+     */
+    public function setDocumentId($documentId)
+    {
+        $this->documentId = $documentId;
         return $this;
     }
 

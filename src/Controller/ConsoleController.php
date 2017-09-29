@@ -9,10 +9,13 @@
 namespace SimpleImport\Controller;
 
 use SimpleImport\Repository\Crawler as CrawlerRepository;
-use Zend\Mvc\Controller\AbstractActionController;
+use SimpleImport\CrawlerProcessor\Manager as CrawlerProcessors;
+use SimpleImport\Options\ModuleOptions;
+use Zend\Mvc\Console\Controller\AbstractConsoleController;
+use Zend\Console\ColorInterface;
+use DateTime;
 
-
-class ConsoleController extends AbstractActionController
+class ConsoleController extends AbstractConsoleController
 {
     
     /**
@@ -21,22 +24,76 @@ class ConsoleController extends AbstractActionController
     private $crawlerRepository;
     
     /**
+     * @var CrawlerProcessors
+     */
+    private $crawlerProcessors;
+    
+    /**
+     * @var ModuleOptions
+     */
+    private $moduleOptions;
+    
+    /**
      * @var callable
      */
     private $progressBarFactory;
     
     /**
      * @param CrawlerRepository $crawlerRepository
+     * @param ModuleOptions $moduleOptions
      * @param callable $progressBarFactory
      */
-    public function __construct(CrawlerRepository $crawlerRepository, callable $progressBarFactory)
+    public function __construct(
+        CrawlerRepository $crawlerRepository,
+        CrawlerProcessors $crawlerProcessors,
+        ModuleOptions $moduleOptions,
+        callable $progressBarFactory)
     {
         $this->crawlerRepository = $crawlerRepository;
+        $this->crawlerProcessors = $crawlerProcessors;
+        $this->moduleOptions = $moduleOptions;
         $this->progressBarFactory = $progressBarFactory;
     }
     
     public function importAction()
     {
+        $limit = abs($this->params('limit')) ?: 2;
+        $delay = new DateTime();
+        $delay->modify(sprintf('-%d minute', $this->moduleOptions->getImportRunDelay()));
+        $console = $this->getConsole();
+        $crawlers = $this->crawlerRepository->getCrawlersToImport($delay, $limit);
+        $count = count($crawlers);
+        
+        if (0 === $count) {
+            return $console->writeLine('There is currently no crawler to process.', ColorInterface::YELLOW);
+        }
+        
+        /** @var \Core\Console\ProgressBar $progressBar */
+        $progressBar = call_user_func($this->progressBarFactory, $count);
+        $i = 0;
+        
+        foreach ($crawlers as $crawler) {
+            $processor = $this->crawlerProcessors->get($crawler->getType());
+            $result = $processor->execute($crawler);
+            $crawler->setDateLastRun(new DateTime());
+            
+            $console->writeLine(sprintf(
+                'The crawler with name(ID) "%s(%s)" finished with the following result:',
+                $crawler->getName(),
+                $crawler->getId()
+            ), ColorInterface::GREEN);
+            
+            $console->writeLine(sprintf(
+                'Inserted = %d, Updated = %d, Removed = %d',
+                $result->getNumberOfInserted(),
+                $result->getNumberOfUpdated(),
+                $result->getNumberOfRemoved()
+            ), ColorInterface::LIGHT_YELLOW);
+            
+            $progressBar->update(++$i);
+        }
+        
+        $progressBar->finish();
     }
     
     public function addCrawlerAction()

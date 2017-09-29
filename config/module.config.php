@@ -1,5 +1,4 @@
 <?php
-use SimpleImport\Factory\Controller as ControllerFactory;
 
 /**
  * create a config/autoload/SimpleImport.local.php and put modifications there.
@@ -19,12 +18,19 @@ return [
             ]
         ]
     ],
+    'options' => [
+        'SimpleImport/Options/Module' => [
+            'class' => SimpleImport\Options\ModuleOptions::class
+        ]
+    ],
     'service_manager' => [
-        'factories' => []
+        'factories' => [
+            'SimpleImport/CrawlerProcessorManager' => SimpleImport\Factory\CrawlerProcessor\ManagerFactory::class
+        ]
     ],
     'controllers' => [
         'factories' => [
-            'SimpleImport/ConsoleController' => ControllerFactory\ConsoleControllerFactory::class
+            'SimpleImport/ConsoleController' => SimpleImport\Factory\Controller\ConsoleControllerFactory::class
         ]
     ],
     'console' => [
@@ -32,10 +38,11 @@ return [
             'routes' => [
                 'simpleimport-import' => [
                     'options' => [
-                        'route' => 'simpleimport import',
+                        'route' => 'simpleimport import [--limit=]',
                         'defaults' => [
                             'controller' => 'SimpleImport/ConsoleController',
-                            'action' => 'import'
+                            'action' => 'import',
+                            'limit' => '3'
                         ]
                     ]
                 ],
@@ -54,5 +61,10 @@ return [
                 ]
             ]
         ]
-    ]
+    ],
+    'simple_import_crawler_processor_manager' => [
+        'factories' => [
+            'job' => SimpleImport\Factory\CrawlerProcessor\JobProcessor::class
+        ]
+    ],
 ];

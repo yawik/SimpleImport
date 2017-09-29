@@ -25,10 +25,12 @@ class ConsoleControllerFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $crawlerRepository = $container->get('repositories')->get('SimpleImport/Crawler');
+        $crawlerProcessors = $container->get('SimpleImport/CrawlerProcessorManager');
+        $moduleOptions = $container->get('SimpleImport/Options/Module');
         $progressBarFactory = function ($count, $persistenceNamespace = null) {
             return new ProgressBar($count, $persistenceNamespace);
         };
         
-        return new ConsoleController($crawlerRepository, $progressBarFactory);
+        return new ConsoleController($crawlerRepository, $crawlerProcessors, $moduleOptions, $progressBarFactory);
     }
 }
