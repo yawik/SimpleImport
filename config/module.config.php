@@ -1,4 +1,13 @@
 <?php
+/**
+ * @filesource
+ * @copyright (c) 2013 - 2017 Cross Solution (http://cross-solution.de)
+ * @license MIT
+ * @author Miroslav Fedeleš <miroslav.fedeles@gmail.com>
+ * @since 0.30
+ */
+
+use SimpleImport\Entity\Crawler;
 
 /**
  * create a config/autoload/SimpleImport.local.php and put modifications there.
@@ -53,10 +62,19 @@ return [
                             'controller' => 'SimpleImport/ConsoleController',
                             'action' => 'addCrawler',
                             'type' => 'job'
-                        ],
-                        'constraints' => [
-                            'type' => 'job'
                         ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    'log' => [
+        'SimpleImport/Log' => [
+            'writers' => [
+                [
+                    'name' => 'stream',
+                    'options' => [
+                        'stream' => __DIR__ . '/../../../log/simple-import.log'
                     ]
                 ]
             ]
@@ -64,7 +82,7 @@ return [
     ],
     'simple_import_crawler_processor_manager' => [
         'factories' => [
-            'job' => SimpleImport\Factory\CrawlerProcessor\JobProcessor::class
+            Crawler::TYPE_JOB => SimpleImport\Factory\CrawlerProcessor\JobProcessorFactory::class
         ]
     ],
 ];

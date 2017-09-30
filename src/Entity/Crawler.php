@@ -52,7 +52,7 @@ class Crawler extends AbstractIdentifiableEntity
     
     /**
      * @var Collection
-     * @ODM\EmbedMany(targetDocument="Item")
+     * @ODM\EmbedMany(targetDocument="Item", strategy="set")
      */
     private $items;
     
@@ -127,14 +127,25 @@ class Crawler extends AbstractIdentifiableEntity
     }
 
     /**
-     * @param string $id
+     * @return array|Item[]
+     */
+    public function getItemsToSync()
+    {
+        return $this->items()->filter(function (Item $item)
+        {
+            return !$item->isSynced();
+        })->toArray();
+    }
+
+    /**
+     * @param string $importId
      * @return Item|null
      */
-    public function getItem($id)
+    public function getItem($importId)
     {
         $items = $this->items();
         
-        return isset($items[$id]) ? $items[$id] : null;
+        return isset($items[$importId]) ? $items[$importId] : null;
     }
     
     /**
@@ -143,14 +154,14 @@ class Crawler extends AbstractIdentifiableEntity
      */
     public function addItem(Item $item)
     {
-        $id = $item->getId();
+        $importId = $item->getImportId();
         $items = $this->items();
       
-        if (isset($items[$id])) {
-            throw new InvalidArgumentException(sprintf('Item with ID "%s" already exists', $id));
+        if (isset($items[$importId])) {
+            throw new InvalidArgumentException(sprintf('Item with import ID "%s" already exists', $importId));
         }
         
-        $items[$id] = $item;
+        $items[$importId] = $item;
     }
 
     /**

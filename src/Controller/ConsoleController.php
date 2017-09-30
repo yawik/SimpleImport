@@ -8,11 +8,15 @@
  */
 namespace SimpleImport\Controller;
 
+use SimpleImport\Entity\Crawler;
 use SimpleImport\Repository\Crawler as CrawlerRepository;
 use SimpleImport\CrawlerProcessor\Manager as CrawlerProcessors;
+use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\Options\ModuleOptions;
 use Zend\Mvc\Console\Controller\AbstractConsoleController;
 use Zend\Console\ColorInterface;
+use Zend\Log\LoggerInterface;
+use Zend\InputFilter\InputFilterInterface;
 use DateTime;
 
 class ConsoleController extends AbstractConsoleController
@@ -29,32 +33,43 @@ class ConsoleController extends AbstractConsoleController
     private $crawlerProcessors;
     
     /**
+     * @var InputFilterInterface
+     */
+    private $crawlerInputFilter;
+    
+    /**
      * @var ModuleOptions
      */
     private $moduleOptions;
     
     /**
-     * @var callable
+     * @var LoggerInterface
      */
-    private $progressBarFactory;
+    private $logger;
     
     /**
      * @param CrawlerRepository $crawlerRepository
+     * @param CrawlerProcessors $crawlerProcessors
      * @param ModuleOptions $moduleOptions
-     * @param callable $progressBarFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CrawlerRepository $crawlerRepository,
         CrawlerProcessors $crawlerProcessors,
+        InputFilterInterface $crawlerInputFilter,
         ModuleOptions $moduleOptions,
-        callable $progressBarFactory)
+        LoggerInterface $logger)
     {
         $this->crawlerRepository = $crawlerRepository;
         $this->crawlerProcessors = $crawlerProcessors;
+        $this->crawlerInputFilter = $crawlerInputFilter;
         $this->moduleOptions = $moduleOptions;
-        $this->progressBarFactory = $progressBarFactory;
+        $this->logger = $logger;
     }
     
+    /**
+     * Imports data via available crawlers
+     */
     public function importAction()
     {
         $limit = abs($this->params('limit')) ?: 2;
@@ -62,58 +77,66 @@ class ConsoleController extends AbstractConsoleController
         $delay->modify(sprintf('-%d minute', $this->moduleOptions->getImportRunDelay()));
         $console = $this->getConsole();
         $crawlers = $this->crawlerRepository->getCrawlersToImport($delay, $limit);
-        $count = count($crawlers);
         
-        if (0 === $count) {
-            return $console->writeLine('There is currently no crawler to process.', ColorInterface::YELLOW);
+        if (0 === count($crawlers)) {
+            $console->writeLine('There is currently no crawler to process.', ColorInterface::YELLOW);
+            return;
         }
         
-        /** @var \Core\Console\ProgressBar $progressBar */
-        $progressBar = call_user_func($this->progressBarFactory, $count);
-        $i = 0;
+        $documentManager = $this->crawlerRepository->getDocumentManager();
         
         foreach ($crawlers as $crawler) {
+            /** @var \SimpleImport\CrawlerProcessor\ProcessorInterface $processor */
             $processor = $this->crawlerProcessors->get($crawler->getType());
-            $result = $processor->execute($crawler);
+            $result = new Result();
+            $processor->execute($crawler, $result, $this->logger);
             $crawler->setDateLastRun(new DateTime());
+            $documentManager->flush();
             
             $console->writeLine(sprintf(
-                'The crawler with name(ID) "%s(%s)" finished with the following result:',
+                'The crawler with the name (ID) "%s (%s)" finished with the following result:',
                 $crawler->getName(),
                 $crawler->getId()
             ), ColorInterface::GREEN);
             
             $console->writeLine(sprintf(
-                'Inserted = %d, Updated = %d, Removed = %d',
-                $result->getNumberOfInserted(),
-                $result->getNumberOfUpdated(),
-                $result->getNumberOfRemoved()
+                'Inserted = %d, Updated = %d, Deleted = %d, Invalid = %d',
+                $result->getInserted(),
+                $result->getUpdated(),
+                $result->getDeleted(),
+                $result->getInvalid()
             ), ColorInterface::LIGHT_YELLOW);
-            
-            $progressBar->update(++$i);
         }
-        
-        $progressBar->finish();
-    }
-    
-    public function addCrawlerAction()
-    {
-        /** @var \SimpleImport\Entity\Crawler $crawler */
-        $crawler = $this->crawlerRepository->create([
-            'name' => $this->params('name'),
-            'feedUri' => $this->params('feed-uri'),
-            'type' => $this->params('type'),
-        ]);
-        $this->crawlerRepository->store($crawler);
-        
-        return sprintf('A new crawler with ID "%s" has been successfully created.' . PHP_EOL, $crawler->getId());
     }
     
     /**
-     * @return callable
+     * Adds a new crawler.
      */
-    public function getProgressBarFactory()
+    public function addCrawlerAction()
     {
-        return $this->progressBarFactory;
+        $this->crawlerInputFilter->setData([
+            'name' => $this->params('name'),
+            'feedUri' => $this->params('feed-uri'),
+            'type' => $this->params('type', Crawler::TYPE_JOB)
+        ]);
+        $console = $this->getConsole();
+        
+        if (!$this->crawlerInputFilter->isValid()) {
+            $console->writeLine('Invalid parameters!', ColorInterface::RED);
+            foreach ($this->crawlerInputFilter->getMessages() as $name => $messages) {
+                $console->writeLine(sprintf(' - %s: %s', $name, implode(', ', $messages)), ColorInterface::LIGHT_YELLOW);
+            }
+            return;
+        }
+        
+        /** @var Crawler $crawler */
+        $data = $this->crawlerInputFilter->getValues();
+        $crawler = $this->crawlerRepository->create($data);
+        $this->crawlerRepository->store($crawler);
+        
+        $console->writeLine(sprintf(
+            'A new crawler with the ID "%s" has been successfully added.',
+            $crawler->getId()
+        ), ColorInterface::GREEN);
     }
 }

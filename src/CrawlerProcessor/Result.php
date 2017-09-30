@@ -14,51 +14,140 @@ class Result
     /**
      * @var int
      */
-    private $numberOfInserted;
+    private $inserted;
     
     /**
      * @var int
      */
-    private $numberOfUpdated;
+    private $updated;
     
     /**
      * @var int
      */
-    private $numberOfRemoved;
+    private $deleted;
     
     /**
-     * @param int $numberOfInserted
-     * @param int $numberOfUpdated
-     * @param int $numberOfRemoved
+     * @var int
      */
-    public function __construct($numberOfInserted, $numberOfUpdated, $numberOfRemoved)
+    private $invalid;
+    
+    public function __construct()
     {
-        $this->numberOfInserted = $numberOfInserted;
-        $this->numberOfUpdated = $numberOfUpdated;
-        $this->numberOfRemoved = $numberOfRemoved;
+        $this->inserted = 0;
+        $this->updated = 0;
+        $this->deleted = 0;
+        $this->invalid = 0;
     }
     
     /**
      * @return int
      */
-    public function getNumberOfInserted()
+    public function getInserted()
     {
-        return $this->numberOfInserted;
+        return $this->inserted;
+    }
+
+    /**
+     * @param int $inserted
+     * @return Result
+     */
+    public function setInserted($inserted)
+    {
+        $this->inserted = $inserted;
+        return $this;
+    }
+
+    /**
+     * @param int $increment
+     * @return Result
+     */
+    public function incrementInserted($increment = 1)
+    {
+        $this->inserted += $increment;
+        return $this;
     }
 
     /**
      * @return int
      */
-    public function getNumberOfUpdated()
+    public function getUpdated()
     {
-        return $this->numberOfUpdated;
+        return $this->updated;
+    }
+
+    /**
+     * @param int $updated
+     * @return Result
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+        return $this;
+    }
+    
+    /**
+     * @param int $increment
+     * @return Result
+     */
+    public function incrementUpdated($increment = 1)
+    {
+        $this->updated += $increment;
+        return $this;
     }
 
     /**
      * @return int
      */
-    public function getNumberOfRemoved()
+    public function getDeleted()
     {
-        return $this->numberOfRemoved;
+        return $this->deleted;
+    }
+
+    /**
+     * @param int $deleted
+     * @return Result
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+        return $this;
+    }
+    
+    /**
+     * @param int $increment
+     * @return Result
+     */
+    public function incrementDeleted($increment = 1)
+    {
+        $this->deleted += $increment;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInvalid()
+    {
+        return $this->invalid;
+    }
+
+    /**
+     * @param int $invalid
+     * @return Result
+     */
+    public function setInvalid($invalid)
+    {
+        $this->invalid = $invalid;
+        return $this;
+    }
+    
+    /**
+     * @param int $increment
+     * @return Result
+     */
+    public function incrementInvalid($increment = 1)
+    {
+        $this->invalid += $increment;
+        return $this;
     }
 }

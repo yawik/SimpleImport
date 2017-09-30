@@ -10,15 +10,12 @@ namespace SimpleImport\Entity;
 
 use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
-use Core\Entity\ModificationDateAwareEntityTrait;
 
 /**
  * @ODM\EmbeddedDocument
  */
 class Item
 {
-    
-    use ModificationDateAwareEntityTrait;
     
     /**
      * @var string
@@ -42,7 +39,25 @@ class Item
      * @var DateTime
      * @ODM\Field(type="tz_date")
      */
+    private $dateCreated;
+    
+    /**
+     * @var DateTime
+     * @ODM\Field(type="tz_date")
+     */
+    private $dateModified;
+    
+    /**
+     * @var DateTime
+     * @ODM\Field(type="tz_date")
+     */
     private $dateDeleted;
+    
+    /**
+     * @var DateTime
+     * @ODM\Field(type="tz_date")
+     */
+    private $dateSynced;
     
     /**
      * @param string $importId
@@ -52,6 +67,7 @@ class Item
     {
         $this->importId = $importId;
         $this->importData = $importData;
+        $this->dateCreated = $this->dateModified = new DateTime();
     }
 
     /**
@@ -101,6 +117,32 @@ class Item
     /**
      * @return DateTime
      */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateModified()
+    {
+        return $this->dateModified;
+    }
+
+    /**
+     * @param DateTime $dateModified
+     * @return Item
+     */
+    public function setDateModified(DateTime $dateModified)
+    {
+        $this->dateModified = $dateModified;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
     public function getDateDeleted()
     {
         return $this->dateDeleted;
@@ -110,9 +152,43 @@ class Item
      * @param DateTime $dateDeleted
      * @return Item
      */
-    public function setDateDeleted(DateTime $dateDeleted)
+    public function setDateDeleted(DateTime $dateDeleted = null)
     {
         $this->dateDeleted = $dateDeleted;
         return $this;
+    }
+    
+    /**
+     * @return DateTime
+     */
+    public function getDateSynced()
+    {
+        return $this->dateSynced;
+    }
+
+    /**
+     * @param DateTime $dateSynced
+     * @return Item
+     */
+    public function setDateSynced($dateSynced)
+    {
+        $this->dateSynced = $dateSynced;
+        return $this;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function isSynced()
+    {
+        if (!$this->dateSynced) {
+            return false;
+        }
+        
+        if ($this->dateDeleted) {
+            return $this->dateSynced >= $this->dateDeleted;
+        }
+        
+        return $this->dateSynced >= $this->dateModified;
     }
 }

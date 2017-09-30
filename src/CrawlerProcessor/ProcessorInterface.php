@@ -9,13 +9,15 @@
 namespace SimpleImport\CrawlerProcessor;
 
 use SimpleImport\Entity\Crawler;
+use Zend\Log\LoggerInterface;
 
 interface ProcessorInterface
 {
     
     /**
      * @param Crawler $crawler
-     * @return Result
+     * @param Result $result
+     * @param LoggerInterface $logger
      */
-    public function execute(Crawler $crawler);
+    public function execute(Crawler $crawler, Result $result, LoggerInterface $logger);
 }
