@@ -9,6 +9,7 @@
 namespace SimpleImport\Hydrator;
 
 use Zend\Hydrator\HydrationInterface;
+use Jobs\Entity\AtsMode;
 
 class JobHydrator implements HydrationInterface
 {
@@ -20,8 +21,23 @@ class JobHydrator implements HydrationInterface
     {
         /** @var \Jobs\Entity\Job $job */
         $job->setTitle($data['title'])
-            ->setLink($data['link']);
+            ->setLocation($data['location'])
+            ->setCompany($data['company'])
+            ->setReference($data['reference'])
+            ->setContactEmail($data['contactEmail'])
+            ->setLanguage($data['language'])
+            ->setLink($data['link'])
+            ->setDatePublishStart($data['datePublishStart'])
+            ->setLogoRef($data['logoRef']);
         
-        // TODO: implement hydrating of other fields
+        if ($data['datePublishEnd']) {
+            $job->setDatePublishEnd($data['datePublishEnd']);
+        }
+        
+        if ($data['linkApply']) {
+            $job->setAtsMode(new AtsMode(AtsMode::MODE_URI, $data['linkApply']));
+        }
+            
+        // TODO: implement classifications
     }
 }

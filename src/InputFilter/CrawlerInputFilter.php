@@ -14,19 +14,33 @@ use SimpleImport\Entity\Crawler;
 class CrawlerInputFilter extends InputFilter
 {
 
-    public function __construct()
+    /**
+     * {@inheritDoc}
+     * @see \Zend\InputFilter\BaseInputFilter::init()
+     */
+    public function init()
     {
         $this->add([
             'name' => 'name',
-            'required' => true,
             'filters' => [
                 [
                     'name' => 'StringTrim'
                 ]
             ]
         ])->add([
+            'name' => 'organization',
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ],
+            'validators' => [
+                [
+                    'name' => 'SimpleImportOrganizationExists',
+                ]
+            ]
+        ])->add([
             'name' => 'feedUri',
-            'required' => true,
             'filters' => [
                 [
                     'name' => 'StringTrim'
@@ -42,7 +56,6 @@ class CrawlerInputFilter extends InputFilter
             ]
         ])->add([
             'name' => 'type',
-            'required' => true,
             'filters' => [
                 [
                     'name' => 'StringTrim'

@@ -13,6 +13,7 @@ use DateTime;
 use InvalidArgumentException;
 use Doctrine\Common\Collections\Collection;
 use Core\Entity\Collection\ArrayCollection;
+use Organizations\Entity\Organization;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
@@ -31,6 +32,12 @@ class Crawler extends AbstractIdentifiableEntity
      * @ODM\Field(type="string")
      */
     private $name;
+    
+    /**
+     * @var Organization
+     * @ODM\ReferenceOne(targetDocument="\Organizations\Entity\Organization", simple=true)
+     */
+    private $organization;
     
     /**
      * @var string
@@ -74,6 +81,24 @@ class Crawler extends AbstractIdentifiableEntity
         return $this;
     }
     
+    /**
+     * @return Organization
+     */
+    public function getOrganization()
+    {
+        return $this->organization;
+    }
+
+    /**
+     * @param Organization $organization
+     * @return Crawler
+     */
+    public function setOrganization(Organization $organization)
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
     /**
      * @return string
      */

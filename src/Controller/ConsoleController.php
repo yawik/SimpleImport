@@ -116,6 +116,7 @@ class ConsoleController extends AbstractConsoleController
     {
         $this->crawlerInputFilter->setData([
             'name' => $this->params('name'),
+            'organization' => $this->params('organization'),
             'feedUri' => $this->params('feed-uri'),
             'type' => $this->params('type', Crawler::TYPE_JOB)
         ]);

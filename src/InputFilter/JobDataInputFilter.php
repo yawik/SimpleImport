@@ -17,7 +17,6 @@ class JobDataInputFilter extends InputFilter
     {
         $this->add([
             'name' => 'id',
-            'required' => true,
             'filters' => [
                 [
                     'name' => 'StringTrim'
@@ -25,7 +24,51 @@ class JobDataInputFilter extends InputFilter
             ]
         ])->add([
             'name' => 'title',
-            'required' => true,
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ]
+        ])->add([
+            'name' => 'location',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ]
+        ])->add([
+            'name' => 'company',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ]
+        ])->add([
+            'name' => 'reference',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ]
+        ])->add([
+            'name' => 'contactEmail',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ],
+            'validators' => [
+                [
+                    'name' => 'EmailAddress'
+                ]
+            ]
+        ])->add([
+            'name' => 'language',
+            'required' => false,
             'filters' => [
                 [
                     'name' => 'StringTrim'
@@ -33,7 +76,70 @@ class JobDataInputFilter extends InputFilter
             ]
         ])->add([
             'name' => 'link',
-            'required' => true,
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ],
+            'validators' => [
+                [
+                    'name' => 'Uri',
+                    'options' => [
+                        'allowRelative' => false
+                    ]
+                ]
+            ]
+        ])->add([
+            'name' => 'datePublishStart',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ],
+            'validators' => [
+                [
+                    'name' => 'Date',
+                    'options' => [
+                        'format' => 'd.m.Y'
+                    ]
+                ]
+            ]
+        ])->add([
+            'name' => 'datePublishEnd',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ],
+            'validators' => [
+                [
+                    'name' => 'Date',
+                    'options' => [
+                        'format' => 'd.m.Y'
+                    ]
+                ]
+            ]
+        ])->add([
+            'name' => 'logoRef',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => 'StringTrim'
+                ]
+            ],
+            'validators' => [
+                [
+                    'name' => 'Uri',
+                    'options' => [
+                        'allowRelative' => false
+                    ]
+                ]
+            ]
+        ])->add([
+            'name' => 'linkApply',
+            'required' => false,
             'filters' => [
                 [
                     'name' => 'StringTrim'
@@ -49,6 +155,6 @@ class JobDataInputFilter extends InputFilter
             ]
         ]);
         
-        // TODO: implement filters/validators for other fields
+        // TODO: implement classifications
     }
 }

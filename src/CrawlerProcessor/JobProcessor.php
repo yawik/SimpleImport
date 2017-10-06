@@ -144,6 +144,7 @@ class JobProcessor implements ProcessorInterface
                         $result->incrementDeleted();
                     } else {
                         // update the job
+                        $job->setStatus(JobStatusInterface::WAITING_FOR_APPROVAL);
                         $this->jobHydrator->hydrate($item->getImportData(), $job);
                         $result->incrementUpdated();
                     }
@@ -154,6 +155,8 @@ class JobProcessor implements ProcessorInterface
             } else {
                 // create a new job
                 $job = $this->jobRepository->create(null, true);
+                $job->setOrganization($crawler->getOrganization());
+                $job->setStatus(JobStatusInterface::CREATED);
                 $this->jobHydrator->hydrate($item->getImportData(), $job);
                 $this->jobRepository->store($job);
                 $item->setDocumentId($job->getId());

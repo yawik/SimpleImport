@@ -9,6 +9,7 @@
 namespace SimpleImport\Repository;
 
 use Core\Repository\AbstractRepository;
+use Organizations\Entity\Organization;
 use DateTime;
 
 class Crawler extends AbstractRepository
@@ -20,6 +21,10 @@ class Crawler extends AbstractRepository
      */
     public function create(array $data = null, $persist = false)
     {
+        if (isset($data['organization']) && !$data['organization'] instanceof Organization) {
+            $data['organization'] = $this->dm->getReference(Organization::class, $data['organization']);
+        }
+        
         if (!isset($data['dateLastRun'])) {
             $data['dateLastRun'] = new DateTime();
         }

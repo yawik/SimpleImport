@@ -8,6 +8,7 @@
  */
 
 use SimpleImport\Entity\Crawler;
+use Zend\ServiceManager\Factory\InvokableFactory;
 
 /**
  * create a config/autoload/SimpleImport.local.php and put modifications there.
@@ -57,7 +58,7 @@ return [
                 ],
                 'simpleimport-add-crawler' => [
                     'options' => [
-                        'route' => 'simpleimport add-crawler --name= --feed-uri= [--type=]',
+                        'route' => 'simpleimport add-crawler --name= --organization= --feed-uri= [--type=]',
                         'defaults' => [
                             'controller' => 'SimpleImport/ConsoleController',
                             'action' => 'addCrawler',
@@ -78,6 +79,16 @@ return [
                     ]
                 ]
             ]
+        ]
+    ],
+    'input_filters' => [
+        'factories' => [
+            SimpleImport\InputFilter\CrawlerInputFilter::class => InvokableFactory::class
+        ]
+    ],
+    'validators' => [
+        'factories' => [
+            'SimpleImportOrganizationExists' => SimpleImport\Factory\Validator\OrganizationExistsFactory::class
         ]
     ],
     'simple_import_crawler_processor_manager' => [

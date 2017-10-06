@@ -53,6 +53,10 @@ class JsonRemoteFetch
             throw new RuntimeException(sprintf('Invalid data, reason: "%s"', json_last_error_msg()));
         }
         
-        return $data;
+        if (!isset($data['jobs']) || !is_array($data['jobs'])) {
+            throw new RuntimeException('Invalid data, a jobs key is missing or invalid');
+        }
+        
+        return $data['jobs'];
     }
 }

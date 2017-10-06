@@ -26,7 +26,7 @@ class ConsoleControllerFactory implements FactoryInterface
     {
         $crawlerRepository = $container->get('repositories')->get('SimpleImport/Crawler');
         $crawlerProcessors = $container->get('SimpleImport/CrawlerProcessorManager');
-        $crawlerInputFilter = new CrawlerInputFilter();
+        $crawlerInputFilter = $container->get('InputFilterManager')->get(CrawlerInputFilter::class);
         $moduleOptions = $container->get('SimpleImport/Options/Module');
         $logger = $container->get('SimpleImport/Log');
         
