@@ -72,11 +72,9 @@ class ConsoleController extends AbstractConsoleController
      */
     public function importAction()
     {
-        $limit = abs($this->params('limit')) ?: 2;
-        $delay = new DateTime();
-        $delay->modify(sprintf('-%d minute', $this->moduleOptions->getImportRunDelay()));
+        $limit = abs($this->params('limit')) ?: 3;
         $console = $this->getConsole();
-        $crawlers = $this->crawlerRepository->getCrawlersToImport($delay, $limit);
+        $crawlers = $this->crawlerRepository->getCrawlersToImport($limit);
         
         if (0 === count($crawlers)) {
             $console->writeLine('There is currently no crawler to process.', ColorInterface::YELLOW);
@@ -118,6 +116,7 @@ class ConsoleController extends AbstractConsoleController
             'name' => $this->params('name'),
             'organization' => $this->params('organization'),
             'feedUri' => $this->params('feed-uri'),
+            'runDelay' => $this->params('runDelay', $this->moduleOptions->getImportRunDelay()),
             'type' => $this->params('type', Crawler::TYPE_JOB),
             'options' => [
                 'initialState' => $this->params('jobInitialState')
@@ -135,8 +134,8 @@ class ConsoleController extends AbstractConsoleController
         
         /** @var Crawler $crawler */
         $data = $this->crawlerInputFilter->getValues();
-        $crawler = $this->crawlerRepository->create($data);
-        $crawler->setOptionsFromArray($data['options']);
+        $crawler = $this->crawlerRepository->create($data)
+            ->setOptionsFromArray($data['options']);
         $this->crawlerRepository->store($crawler);
         
         $console->writeLine(sprintf(

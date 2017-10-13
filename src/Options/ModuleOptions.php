@@ -14,7 +14,7 @@ class ModuleOptions extends AbstractOptions
 {
 
     /**
-     * Delay when to proceed another import run in minutes
+     * Default delay when to proceed another import run in minutes
      *
      * @var int
      */

@@ -33,14 +33,15 @@ class Crawler extends AbstractRepository
     }
 
     /**
-     * @param DateTime $runDelay
      * @param int $limit
      * @return \Doctrine\ODM\MongoDB\Cursor|\SimpleImport\Entity\Crawler[]
      */
-    public function getCrawlersToImport(DateTime $runDelay, $limit = null)
+    public function getCrawlersToImport($limit = null)
     {
         $qb = $this->createQueryBuilder()
-            ->field('dateLastRun.date')->lt($runDelay)
+            ->where('function() {
+                return this.dateLastRun.date < new Date(ISODate().getTime() - 1000 * 60 * this.runDelay); }
+            ')
             ->sort(['dateLastRun.date' => 1]);
         
         if (isset($limit)) {

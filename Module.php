@@ -49,11 +49,12 @@ class Module implements DependencyIndicatorInterface, ConsoleUsageProviderInterf
         return [
             'Simple import operations',
             'simpleimport import [--limit]'  => 'Executes a data import for all registered crawlers',
-            'simpleimport add-crawler --name --organization= --feed-uri [--type] [--jobInitialState]'  => 'Adds a new import crawler',
+            'simpleimport add-crawler --name --organization= --feed-uri [--runDelay] [--type] [--jobInitialState]'  => 'Adds a new import crawler',
             ['--limit=INT', 'Number of crawlers to check per run. Default 3. 0 means no limit'],
             ['--name=STRING', 'The name of a crawler'],
             ['--organization==STRING', 'The ID of an organization'],
             ['--feed-uri=STRING', 'The URI pointing to a data to import'],
+            ['--runDelay=INT', 'The number of minutes the next import run will be proceeded again'],
             ['--type=STRING', 'The type of an import (e.g. job)'],
             ['--type=jobInitialState', 'The initial state of an imported job'],
         ];

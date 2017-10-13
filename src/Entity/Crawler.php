@@ -53,6 +53,14 @@ class Crawler extends AbstractIdentifiableEntity
     private $feedUri;
     
     /**
+     * Number of minutes the next import run will be proceeded again
+     * 
+     * @var int
+     * @ODM\Field(type="int")
+     */
+    private $runDelay;
+    
+    /**
      * @var DateTime
      * @ODM\Field(type="tz_date")
      */
@@ -151,6 +159,24 @@ class Crawler extends AbstractIdentifiableEntity
     public function setFeedUri($feedUri)
     {
         $this->feedUri = $feedUri;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRunDelay()
+    {
+        return $this->runDelay;
+    }
+
+    /**
+     * @param int $runDelay
+     * @return Crawler
+     */
+    public function setRunDelay($runDelay)
+    {
+        $this->runDelay = $runDelay;
         return $this;
     }
 

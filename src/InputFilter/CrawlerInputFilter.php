@@ -56,6 +56,21 @@ class CrawlerInputFilter extends InputFilter
                 ]
             ]
         ])->add([
+            'name' => 'runDelay',
+            'required' => false,
+            'validators' => [
+                [
+                    'name' => 'Digits',
+                ],
+                [
+                    'name' => 'GreaterThan',
+                    'options' => [
+                        'min' => 0,
+                        'inclusive' => true
+                    ]
+                ]
+            ]
+        ])->add([
             'name' => 'type',
             'filters' => [
                 [

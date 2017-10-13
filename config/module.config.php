@@ -58,7 +58,7 @@ return [
                 ],
                 'simpleimport-add-crawler' => [
                     'options' => [
-                        'route' => 'simpleimport add-crawler --name= --organization= --feed-uri= [--type=] [--jobInitialState=]',
+                        'route' => 'simpleimport add-crawler --name= --organization= --feed-uri= [--runDelay=] [--type=] [--jobInitialState=]',
                         'defaults' => [
                             'controller' => 'SimpleImport/ConsoleController',
                             'action' => 'addCrawler',
