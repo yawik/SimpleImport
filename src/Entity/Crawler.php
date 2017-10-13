@@ -11,6 +11,7 @@ namespace SimpleImport\Entity;
 use Core\Entity\AbstractIdentifiableEntity;
 use DateTime;
 use InvalidArgumentException;
+use LogicException;
 use Doctrine\Common\Collections\Collection;
 use Core\Entity\Collection\ArrayCollection;
 use Organizations\Entity\Organization;
@@ -56,6 +57,12 @@ class Crawler extends AbstractIdentifiableEntity
      * @ODM\Field(type="tz_date")
      */
     private $dateLastRun;
+    
+    /**
+     * @var JobOptions|mixed
+     * @ODM\EmbedOne
+     */
+    private $options;
     
     /**
      * @var Collection
@@ -113,8 +120,20 @@ class Crawler extends AbstractIdentifiableEntity
      */
     public function setType($type)
     {
+        if (!in_array($type, self::validTypes())) {
+            throw new InvalidArgumentException(sprintf('Invalid type: "%s"', $type));
+        }
+        
         $this->type = $type;
         return $this;
+    }
+    
+    /**
+     * @return array
+     */
+    public static function validTypes()
+    {
+        return [self::TYPE_JOB];
     }
 
     /**
@@ -199,6 +218,53 @@ class Crawler extends AbstractIdentifiableEntity
         return $this;
     }
     
+    /**
+     * @return JobOptions
+     */
+    public function getOptions()
+    {
+        if (!isset($this->options)) {
+            if (!$this->type) {
+                throw new LogicException('The options class cannot be resolved because the type is not set');
+            }
+            
+            $map = [
+                self::TYPE_JOB => JobOptions::class
+            ];
+            
+            if (!isset($map[$this->type])) {
+                throw new LogicException(sprintf('The options class resolving failed for the type: "%s"', $this->type));
+            }
+            
+            $class = $map[$this->type];
+            $this->options = new $class();
+        }
+        
+        return $this->options;
+    }
+    
+    /**
+     * @param array $array
+     * @throws InvalidArgumentException
+     * @return Crawler
+     */
+    public function setOptionsFromArray(array $array)
+    {
+        $options = $this->getOptions();
+        
+        foreach ($array as $key => $value) {
+            $setter = "set{$key}";
+            
+            if (!is_callable([$options, $setter])) {
+                throw new InvalidArgumentException(sprintf('Invalid option key: "%s"', $key));
+            }
+            
+            $options->$setter($value);
+        }
+        
+        return $this;
+    }
+
     /**
      * @return Collection
      */

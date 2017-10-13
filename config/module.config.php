@@ -58,7 +58,7 @@ return [
                 ],
                 'simpleimport-add-crawler' => [
                     'options' => [
-                        'route' => 'simpleimport add-crawler --name= --organization= --feed-uri= [--type=]',
+                        'route' => 'simpleimport add-crawler --name= --organization= --feed-uri= [--type=] [--jobInitialState=]',
                         'defaults' => [
                             'controller' => 'SimpleImport/ConsoleController',
                             'action' => 'addCrawler',
@@ -88,7 +88,8 @@ return [
     ],
     'validators' => [
         'factories' => [
-            'SimpleImportOrganizationExists' => SimpleImport\Factory\Validator\OrganizationExistsFactory::class
+            'SimpleImportOrganizationExists' => SimpleImport\Factory\Validator\OrganizationExistsFactory::class,
+            SimpleImport\Validator\CrawlerOptions::class => InvokableFactory::class
         ]
     ],
     'simple_import_crawler_processor_manager' => [

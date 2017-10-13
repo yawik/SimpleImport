@@ -10,6 +10,7 @@ namespace SimpleImport\InputFilter;
 
 use Zend\InputFilter\InputFilter;
 use SimpleImport\Entity\Crawler;
+use SimpleImport\Validator\CrawlerOptions;
 
 class CrawlerInputFilter extends InputFilter
 {
@@ -65,10 +66,30 @@ class CrawlerInputFilter extends InputFilter
                 [
                     'name' => 'InArray',
                     'options' => [
-                        'haystack' => [
-                            Crawler::TYPE_JOB
-                        ]
+                        'haystack' => Crawler::validTypes()
                     ]
+                ]
+            ]
+        ])->add([
+            'name' => 'options',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => 'Callback',
+                    'options' => [
+                        'callback' => function ($array)
+                        {
+                            return array_filter((array)$array, function ($value)
+                            {
+                                return !is_null($value);
+                            });
+                        }
+                    ]
+                ]
+            ],
+            'validators' => [
+                [
+                    'name' => CrawlerOptions::class,
                 ]
             ]
         ]);

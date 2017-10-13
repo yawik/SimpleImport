@@ -156,7 +156,7 @@ class JobProcessor implements ProcessorInterface
                 // create a new job
                 $job = $this->jobRepository->create(null, true);
                 $job->setOrganization($crawler->getOrganization());
-                $job->setStatus(JobStatusInterface::CREATED);
+                $job->setStatus($crawler->getOptions()->getInitialState());
                 $this->jobHydrator->hydrate($item->getImportData(), $job);
                 $this->jobRepository->store($job);
                 $item->setDocumentId($job->getId());

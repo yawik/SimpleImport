@@ -118,7 +118,10 @@ class ConsoleController extends AbstractConsoleController
             'name' => $this->params('name'),
             'organization' => $this->params('organization'),
             'feedUri' => $this->params('feed-uri'),
-            'type' => $this->params('type', Crawler::TYPE_JOB)
+            'type' => $this->params('type', Crawler::TYPE_JOB),
+            'options' => [
+                'initialState' => $this->params('jobInitialState')
+            ]
         ]);
         $console = $this->getConsole();
         
@@ -133,6 +136,7 @@ class ConsoleController extends AbstractConsoleController
         /** @var Crawler $crawler */
         $data = $this->crawlerInputFilter->getValues();
         $crawler = $this->crawlerRepository->create($data);
+        $crawler->setOptionsFromArray($data['options']);
         $this->crawlerRepository->store($crawler);
         
         $console->writeLine(sprintf(
