@@ -26,7 +26,7 @@ class Crawler extends AbstractRepository
         }
         
         if (!isset($data['dateLastRun'])) {
-            $data['dateLastRun'] = new DateTime();
+            $data['dateLastRun'] = new DateTime('@0');
         }
         
         return parent::create($data, $persist);
