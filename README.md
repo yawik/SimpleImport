@@ -40,7 +40,7 @@ TBD
 Documentation
 -------------
 
-TBD
+http://yawik.readthedocs.io/en/latest/modules/simple-import/index.html
 
 
 Licence
