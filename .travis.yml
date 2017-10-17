@@ -30,7 +30,9 @@ before_script:
   - ./composer.phar self-update
   - ./composer.phar create-project --stability dev cross-solution/yawik=dev-develop ../yawik
   - mv ../`basename $TRAVIS_BUILD_DIR` `dirname $TRAVIS_BUILD_DIR`/yawik/module
-  - cp `dirname $TRAVIS_BUILD_DIR`/yawik/module/.travis/composer.json .
+  - cp `dirname $TRAVIS_BUILD_DIR`/yawik/module/SimpleImport/.travis/composer.json `dirname $TRAVIS_BUILD_DIR`/yawik/
+  - cp composer.phar `dirname $TRAVIS_BUILD_DIR`/yawik/
+  - cd `dirname $TRAVIS_BUILD_DIR`/yawik/
   - ./composer.phar dump
 
 script:
