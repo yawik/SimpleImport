@@ -20,7 +20,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 /**
  * @ODM\Document(collection="simpleimport.crawler", repositoryClass="\SimpleImport\Repository\Crawler")
  */
-class Crawler extends AbstractIdentifiableEntity
+class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface
 {
     
     /**

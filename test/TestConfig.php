@@ -22,6 +22,7 @@ return array(
 	    'DoctrineMongoODMModule',
         'Core',
         'Auth',
+        'Organizations',
         'Jobs',
         'SimpleImport'
     ),
