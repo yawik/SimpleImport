@@ -19,8 +19,8 @@ use Organization\Entity\Organization;
 /**
  * Tests for Item
  *
- * @covers \SimpleImport\Entity\Item
- * @coversDefaultClass \SimpleImport\Entity\Item
+ * @covers \SimpleImport\Entity\Crawler
+ * @coversDefaultClass \SimpleImport\Entity\Crawler
  *
  * @author Carsten Bleek <bleek@cross-solution.de>
  * @group  Orders
