@@ -56,7 +56,7 @@ class Module implements DependencyIndicatorInterface, ConsoleUsageProviderInterf
             ['--feed-uri=STRING', 'The URI pointing to a data to import'],
             ['--runDelay=INT', 'The number of minutes the next import run will be proceeded again'],
             ['--type=STRING', 'The type of an import (e.g. job)'],
-            ['--type=jobInitialState', 'The initial state of an imported job'],
+            ['--jobInitialState=STRING', 'The initial state of an imported job'],
         ];
     }
 }
