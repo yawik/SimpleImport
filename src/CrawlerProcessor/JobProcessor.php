@@ -9,7 +9,8 @@
 namespace SimpleImport\CrawlerProcessor;
 
 use SimpleImport\Entity\Crawler;
-use SimpleImport\RemoteFetch\JsonRemoteFetch;
+use SimpleImport\DataFetch\JsonFetch;
+use SimpleImport\DataFetch\PlainTextFetch;
 use Zend\Log\LoggerInterface;
 use SimpleImport\Entity\Item;
 use Jobs\Repository\Job as JobRepository;
@@ -23,9 +24,14 @@ class JobProcessor implements ProcessorInterface
 {
     
     /**
-     * @var JsonRemoteFetch
+     * @var JsonFetch
      */
     private $jsonFetch;
+    
+    /**
+     * @var PlainTextFetch
+     */
+    private $plainTextFetch;
     
     /**
      * @var JobRepository
@@ -43,18 +49,21 @@ class JobProcessor implements ProcessorInterface
     private $dataInputFilter;
     
     /**
-     * @param JsonRemoteFetch $jsonFetch
+     * @param JsonFetch $jsonFetch
+     * @param PlainTextFetch $plainTextFetch
      * @param JobRepository $jobRepository
      * @param HydrationInterface $jobHydrator
      * @param InputFilterInterface $dataInputFilter
      */
     public function __construct(
-        JsonRemoteFetch $jsonFetch,
+        JsonFetch $jsonFetch,
+        PlainTextFetch $plainTextFetch,
         JobRepository $jobRepository,
         HydrationInterface $jobHydrator,
         InputFilterInterface $dataInputFilter)
     {
         $this->jsonFetch = $jsonFetch;
+        $this->plainTextFetch = $plainTextFetch;
         $this->jobRepository = $jobRepository;
         $this->jobHydrator = $jobHydrator;
         $this->dataInputFilter = $dataInputFilter;
@@ -73,7 +82,13 @@ class JobProcessor implements ProcessorInterface
             return;
         }
         
-        $this->trackChanges($crawler, $result, $logger, $data);
+        if (!is_array($data) || !isset($data['jobs']) || !is_array($data['jobs'])) {
+            $logger->err('Invalid data, a jobs key is missing or invalid');
+            return;
+        }
+        
+        $result->setToProcess(count($data['jobs']));
+        $this->trackChanges($crawler, $result, $logger, $data['jobs']);
         $this->syncChanges($crawler, $result, $logger);
         
     }
@@ -110,6 +125,8 @@ class JobProcessor implements ProcessorInterface
                     $item->setImportData($importData)
                         ->setDateModified(new DateTime())
                         ->setDateDeleted(null);
+                } else {
+                    $result->incrementUnchanged();
                 }
             } else {
                 // create a new item
@@ -153,11 +170,28 @@ class JobProcessor implements ProcessorInterface
                     $logger->err(sprintf('Job with ID "%s" does not exists', $item->getDocumentId()));
                 }
             } else {
+                $importData = $item->getImportData();
+                
+                try {
+                    $plainText = $this->plainTextFetch->fetch($importData['link']);
+                } catch (RuntimeException $e) {
+                    $logger->err(sprintf(
+                        'Cannot fetch HTML digest for a job, import ID: "%s", link: "%s", reason: "%s"',
+                        $item->getImportId(),
+                        $importData['link'],
+                        $e->getMessage())
+                    );
+                    
+                    $result->incrementInvalid();
+                    continue;
+                }
+                
                 // create a new job
                 $job = $this->jobRepository->create(null);
                 $job->setOrganization($crawler->getOrganization());
                 $job->setStatus($crawler->getOptions()->getInitialState());
-                $this->jobHydrator->hydrate($item->getImportData(), $job);
+                $job->setMetaData('plainText', $plainText);
+                $this->jobHydrator->hydrate($importData, $job);
                 $this->jobRepository->store($job);
                 $item->setDocumentId($job->getId());
                 $result->incrementInserted();

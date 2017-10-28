@@ -11,7 +11,7 @@ namespace SimpleImport\Factory\CrawlerProcessor;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use SimpleImport\RemoteFetch\JsonRemoteFetch;
+use SimpleImport\DataFetch;
 use SimpleImport\InputFilter\JobDataInputFilter;
 use SimpleImport\Hydrator\JobHydrator;
 use Zend\Http\Client;
@@ -24,11 +24,15 @@ class JobProcessorFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $jsonFetch = new JsonRemoteFetch(new Client());
+        $client = (new Client())->setOptions(['timeout' => 5]);
+        $httpFetch = new DataFetch\HttpFetch($client);
+        $jsonFetch = new DataFetch\JsonFetch($httpFetch);
+        $plainTextFetch = new DataFetch\PlainTextFetch($httpFetch);
         $jobRepository = $container->get('repositories')->get('Jobs/Job');
         $jobHydrator = new JobHydrator();
         $dataInputFilter = new JobDataInputFilter();
         
-        return new \SimpleImport\CrawlerProcessor\JobProcessor($jsonFetch, $jobRepository, $jobHydrator, $dataInputFilter);
+        return new \SimpleImport\CrawlerProcessor\JobProcessor(
+            $jsonFetch, $plainTextFetch, $jobRepository, $jobHydrator, $dataInputFilter);
     }
 }

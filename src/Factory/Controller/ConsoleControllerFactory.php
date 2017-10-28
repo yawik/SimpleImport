@@ -11,6 +11,8 @@ namespace SimpleImport\Factory\Controller;
 
 use SimpleImport\Controller\ConsoleController;
 use SimpleImport\InputFilter\CrawlerInputFilter;
+use SimpleImport\CrawlerProcessor\Result;
+use SimpleImport\Factory\ProgressBarFactory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
@@ -29,7 +31,9 @@ class ConsoleControllerFactory implements FactoryInterface
         $crawlerInputFilter = $container->get('InputFilterManager')->get(CrawlerInputFilter::class);
         $moduleOptions = $container->get('SimpleImport/Options/Module');
         $logger = $container->get('SimpleImport/Log');
+        $resultPrototype = new Result(new ProgressBarFactory());
         
-        return new ConsoleController($crawlerRepository, $crawlerProcessors, $crawlerInputFilter, $moduleOptions, $logger);
+        return new ConsoleController(
+            $crawlerRepository, $crawlerProcessors, $crawlerInputFilter, $moduleOptions, $logger, $resultPrototype);
     }
 }

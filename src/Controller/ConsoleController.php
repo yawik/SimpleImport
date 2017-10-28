@@ -48,23 +48,32 @@ class ConsoleController extends AbstractConsoleController
     private $logger;
     
     /**
+     * @var Result
+     */
+    private $resultPrototype;
+    
+    /**
      * @param CrawlerRepository $crawlerRepository
      * @param CrawlerProcessors $crawlerProcessors
+     * @param InputFilterInterface $crawlerInputFilter
      * @param ModuleOptions $moduleOptions
      * @param LoggerInterface $logger
+     * @param Result $resultPrototype
      */
     public function __construct(
         CrawlerRepository $crawlerRepository,
         CrawlerProcessors $crawlerProcessors,
         InputFilterInterface $crawlerInputFilter,
         ModuleOptions $moduleOptions,
-        LoggerInterface $logger)
+        LoggerInterface $logger,
+        Result $resultPrototype)
     {
         $this->crawlerRepository = $crawlerRepository;
         $this->crawlerProcessors = $crawlerProcessors;
         $this->crawlerInputFilter = $crawlerInputFilter;
         $this->moduleOptions = $moduleOptions;
         $this->logger = $logger;
+        $this->resultPrototype = $resultPrototype;
     }
     
     /**
@@ -86,25 +95,36 @@ class ConsoleController extends AbstractConsoleController
         foreach ($crawlers as $crawler) {
             /** @var \SimpleImport\CrawlerProcessor\ProcessorInterface $processor */
             $processor = $this->crawlerProcessors->get($crawler->getType());
-            $result = new Result();
+            
+            $console->writeLine(sprintf(
+                'The crawler with the name (ID) "%s (%s)" has started its job:',
+                $crawler->getName(),
+                $crawler->getId())
+            );
+            
+            $result = clone $this->resultPrototype;
             $processor->execute($crawler, $result, $this->logger);
             $crawler->setDateLastRun(new DateTime());
             $documentManager->flush();
             
             $console->writeLine(sprintf(
-                'The crawler with the name (ID) "%s (%s)" finished with the following result:',
+                'The crawler with the name (ID) "%s (%s)" has finished with the following result:',
                 $crawler->getName(),
                 $crawler->getId()
             ), ColorInterface::GREEN);
             
             $console->writeLine(sprintf(
-                'Inserted = %d, Updated = %d, Deleted = %d, Invalid = %d',
+                'To process = %d, Inserted = %d, Updated = %d, Deleted = %d, Invalid = %d, Unchanged = %d',
+                $result->getToProcess(),
                 $result->getInserted(),
                 $result->getUpdated(),
                 $result->getDeleted(),
-                $result->getInvalid()
+                $result->getInvalid(),
+                $result->getUnchanged()
             ), ColorInterface::LIGHT_YELLOW);
         }
+        
+        $console->writeLine('The import task has finished (see simple-import.log for possible problems).', ColorInterface::GRAY);
     }
     
     /**

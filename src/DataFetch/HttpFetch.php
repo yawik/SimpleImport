@@ -6,13 +6,13 @@
  * @author Miroslav Fedeleš <miroslav.fedeles@gmail.com>
  * @since 0.30
  */
-namespace SimpleImport\RemoteFetch;
+namespace SimpleImport\DataFetch;
 
 use Zend\Http\Client;
 use Exception;
 use RuntimeException;
 
-class JsonRemoteFetch
+class HttpFetch
 {
     
     /**
@@ -30,14 +30,13 @@ class JsonRemoteFetch
     
     /**
      * @param string $uri
-     * @return array
+     * @return string
      * @throws RuntimeException
      */
     public function fetch($uri)
     {
-        $this->client->setUri($uri);
-        
         try {
+            $this->client->setUri($uri);
             $response = $this->client->send();
         } catch (Exception $e) {
             throw new RuntimeException(sprintf('Unable to fetch remote data, reason: "%s"', $e->getMessage()));
@@ -47,16 +46,6 @@ class JsonRemoteFetch
             throw new RuntimeException(sprintf('Invalid HTTP status: "%d"', $response->getStatusCode()));
         }
         
-        $data = json_decode($response->getBody(), true);
-        
-        if (!is_array($data)) {
-            throw new RuntimeException(sprintf('Invalid data, reason: "%s"', json_last_error_msg()));
-        }
-        
-        if (!isset($data['jobs']) || !is_array($data['jobs'])) {
-            throw new RuntimeException('Invalid data, a jobs key is missing or invalid');
-        }
-        
-        return $data['jobs'];
+        return $response->getBody();
     }
 }

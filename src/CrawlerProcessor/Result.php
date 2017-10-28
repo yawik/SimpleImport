@@ -8,8 +8,16 @@
  */
 namespace SimpleImport\CrawlerProcessor;
 
+use SimpleImport\Factory\ProgressBarFactory;
+use Core\Console\ProgressBar;
+
 class Result
 {
+    
+    /**
+     * @var int
+     */
+    private $toProcess;
     
     /**
      * @var int
@@ -31,14 +39,54 @@ class Result
      */
     private $invalid;
     
-    public function __construct()
+    /**
+     * @var int
+     */
+    private $unchanged;
+    
+    /**
+     * @var ProgressBarFactory
+     */
+    private $progressBarFactory;
+    
+    /**
+     * @var ProgressBar
+     */
+    private $progressBar;
+    
+    /**
+     * @param ProgressBarFactory $progressBarFactory
+     */
+    public function __construct(ProgressBarFactory $progressBarFactory)
     {
+        $this->progressBarFactory = $progressBarFactory;
+        $this->toProcess = 0;
         $this->inserted = 0;
         $this->updated = 0;
         $this->deleted = 0;
         $this->invalid = 0;
+        $this->unchanged = 0;
     }
     
+    /**
+     * @return int
+     */
+    public function getToProcess()
+    {
+        return $this->toProcess;
+    }
+
+    /**
+     * @param number $toProcess
+     * @return Result
+     */
+    public function setToProcess($toProcess)
+    {
+        $this->toProcess = $toProcess;
+        $this->progressBar = $this->progressBarFactory->factory($toProcess);
+        return $this;
+    }
+
     /**
      * @return int
      */
@@ -48,23 +96,13 @@ class Result
     }
 
     /**
-     * @param int $inserted
-     * @return Result
-     */
-    public function setInserted($inserted)
-    {
-        $this->inserted = $inserted;
-        return $this;
-    }
-
-    /**
      * @param int $increment
      * @return Result
      */
     public function incrementInserted($increment = 1)
     {
         $this->inserted += $increment;
-        return $this;
+        return $this->updateProgressBar($increment);
     }
 
     /**
@@ -76,23 +114,13 @@ class Result
     }
 
     /**
-     * @param int $updated
-     * @return Result
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-        return $this;
-    }
-    
-    /**
      * @param int $increment
      * @return Result
      */
     public function incrementUpdated($increment = 1)
     {
         $this->updated += $increment;
-        return $this;
+        return $this->updateProgressBar($increment);
     }
 
     /**
@@ -104,23 +132,13 @@ class Result
     }
 
     /**
-     * @param int $deleted
-     * @return Result
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-        return $this;
-    }
-    
-    /**
      * @param int $increment
      * @return Result
      */
     public function incrementDeleted($increment = 1)
     {
         $this->deleted += $increment;
-        return $this;
+        return $this->updateProgressBar($increment);
     }
 
     /**
@@ -132,22 +150,43 @@ class Result
     }
 
     /**
-     * @param int $invalid
-     * @return Result
-     */
-    public function setInvalid($invalid)
-    {
-        $this->invalid = $invalid;
-        return $this;
-    }
-    
-    /**
      * @param int $increment
      * @return Result
      */
     public function incrementInvalid($increment = 1)
     {
         $this->invalid += $increment;
+        return $this->updateProgressBar($increment);
+    }
+    
+    /**
+     * @return int
+     */
+    public function getUnchanged()
+    {
+        return $this->unchanged;
+    }
+
+    /**
+     * @param int $increment
+     * @return Result
+     */
+    public function incrementUnchanged($increment = 1)
+    {
+        $this->unchanged += $increment;
+        return $this->updateProgressBar($increment);
+    }
+    
+    /**
+     * @param int $increment
+     * @return Result
+     */
+    private function updateProgressBar($increment)
+    {
+        if (isset($this->progressBar)) {
+            $this->progressBar->next($increment);
+        }
+        
         return $this;
     }
 }
