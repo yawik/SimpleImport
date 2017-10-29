@@ -33,7 +33,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     /**
      * The "Class under Test"
      *
-     * @var Item
+     * @var Crawler
      */
     private $target = Crawler::class;
 

@@ -44,7 +44,22 @@ class PlainTextFetch
         }
         
         // remove non-content tags including their content
-        $body = preg_replace('~<(script|style).+?>.+</\1>~si', '', $matches[1]);
+
+        $oldErrorReporting = error_reporting(0);
+        $dom = new \DOMDocument();
+        $dom->loadHTML($matches[1]);
+        // delete js
+        while($elem = $dom->getElementsByTagName("script")->item(0)) {
+            $elem->parentNode->removeChild($elem);
+        }
+        // delete style
+        while($elem = $dom->getElementsByTagName("style")->item(0)) {
+            $elem->parentNode->removeChild($elem);
+        }
+
+        $body = $dom->saveHTML();
+        error_reporting($oldErrorReporting);
+
         
         // remove all tags keeping their content
         $body = strip_tags($body);
