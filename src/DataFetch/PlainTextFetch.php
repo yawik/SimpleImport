@@ -37,14 +37,14 @@ class PlainTextFetch
         $matches = [];
     
         // extract content of the body tag
-        preg_match('~<body.+?>(.+)</body>~si', $html, $matches);
+        preg_match('~<body.*?>(.+)?</body>~si', $html, $matches);
         
         if (!isset($matches[1])) {
             throw new RuntimeException('Cannot find a <body> tag');
         }
         
         // remove non-content tags including their content
-        $body = preg_replace('~<(script|style).+?>.+</\1>~si', '', $matches[1]);
+        $body = preg_replace('~<(script|style).*?>.*?</\1>~si', '', $matches[1]);
         
         // remove all tags keeping their content
         $body = strip_tags($body);
