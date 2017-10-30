@@ -34,20 +34,12 @@ class PlainTextFetch
     public function fetch($uri)
     {
         $html = $this->httpFetch->fetch($uri);
-        $matches = [];
-    
-        // extract content of the body tag
-        preg_match('~<body.+?>(.+)</body>~si', $html, $matches);
-        
-        if (!isset($matches[1])) {
-            throw new RuntimeException('Cannot find a <body> tag');
-        }
-        
-        // remove non-content tags including their content
+
+        // remove non-content tags including their content. 
 
         $oldErrorReporting = error_reporting(0);
         $dom = new \DOMDocument();
-        $dom->loadHTML($matches[1]);
+        $dom->loadHTML($html);
         // delete js
         while($elem = $dom->getElementsByTagName("script")->item(0)) {
             $elem->parentNode->removeChild($elem);
@@ -56,11 +48,23 @@ class PlainTextFetch
         while($elem = $dom->getElementsByTagName("style")->item(0)) {
             $elem->parentNode->removeChild($elem);
         }
+        // delete forms
+        while($elem = $dom->getElementsByTagName("form")->item(0)) {
+            $elem->parentNode->removeChild($elem);
+        }
+        // delete links
+        while($elem = $dom->getElementsByTagName("a")->item(0)) {
+            $elem->parentNode->removeChild($elem);
+        }
 
         $body = $dom->saveHTML();
         error_reporting($oldErrorReporting);
 
-        
+        $body=html_entity_decode($body);
+
+        // make sure, that ther is allways a space in front of a tag
+        $body = trim(strip_tags(str_replace('<', ' <', $body)));
+
         // remove all tags keeping their content
         $body = strip_tags($body);
         
