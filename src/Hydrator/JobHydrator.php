@@ -33,9 +33,11 @@ class JobHydrator implements HydrationInterface
         if ($data['datePublishEnd']) {
             $job->setDatePublishEnd($data['datePublishEnd']);
         }
-        
+
         if ($data['linkApply']) {
             $job->setAtsMode(new AtsMode(AtsMode::MODE_URI, $data['linkApply']));
+        } else {
+            $job->setAtsMode(new AtsMode(AtsMode::MODE_NONE));
         }
             
         // TODO: implement classifications
