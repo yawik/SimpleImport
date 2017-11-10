@@ -21,10 +21,7 @@
         "yawik"
     ],
     "require": {
-        "composer/installers": "*",
-        "egeloen/http-adapter": ">=0.8",
-        "igorw/get-in": "~1.0",
-        "geocoder-php/geocoder": "^3.3.0"
+        "willdurand/geocoder": "v3.3.2"
     },
     "autoload": {
         "psr-4": { "SimpleImport\\": "src/"}
