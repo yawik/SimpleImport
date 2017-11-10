@@ -35,7 +35,8 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'SimpleImport/CrawlerProcessorManager' => SimpleImport\Factory\CrawlerProcessor\ManagerFactory::class
+            'SimpleImport/CrawlerProcessorManager' => SimpleImport\Factory\CrawlerProcessor\ManagerFactory::class,
+            'SimpleImport/JobGeocodeLocation' => SimpleImport\Factory\Job\GeocodeLocationFactory::class
         ]
     ],
     'controllers' => [

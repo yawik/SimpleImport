@@ -29,7 +29,7 @@ class JobProcessorFactory implements FactoryInterface
         $jsonFetch = new DataFetch\JsonFetch($httpFetch);
         $plainTextFetch = new DataFetch\PlainTextFetch($httpFetch);
         $jobRepository = $container->get('repositories')->get('Jobs/Job');
-        $jobHydrator = new JobHydrator();
+        $jobHydrator = new JobHydrator($container->get('SimpleImport/JobGeocodeLocation'));
         $dataInputFilter = new JobDataInputFilter();
         
         return new \SimpleImport\CrawlerProcessor\JobProcessor(

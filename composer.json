@@ -20,24 +20,6 @@
     "keywords": [
         "yawik"
     ],
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "geocoder-php/geocoder",
-                "version": "3.3.0",
-                "dist": {
-                    "url": "https://github.com/geocoder-php/Geocoder/archive/v3.3.0.tar.gz",
-                    "type": "tar"
-                },
-                "autoload": {
-                    "classmap": [
-                        "src/"
-                    ]
-                }
-            }
-        }
-    ],
     "require": {
         "composer/installers": "*",
         "egeloen/http-adapter": ">=0.8",

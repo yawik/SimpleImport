@@ -19,6 +19,34 @@ class ModuleOptions extends AbstractOptions
      * @var int
      */
     private $importRunDelay = 1440;
+    
+    /**
+     * Geocode locale
+     * 
+     * @var string
+     */
+    private $geocodeLocale = 'de';
+    
+    /**
+     * Geocode region biasing
+     * 
+     * @var string
+     */
+    private $geocodeRegion = 'DE';
+    
+    /**
+     * Whether to use an SSL connection for Geocoding
+     * 
+     * @var bool
+     */
+    private $geocodeUseSsl = true;
+    
+    /**
+     * An optional Geocode Google map API key
+     * 
+     * @var string
+     */
+    private $geocodeGoogleApiKey = null;
 
     /**
      * @return int
@@ -37,4 +65,77 @@ class ModuleOptions extends AbstractOptions
         $this->importRunDelay = $importRunDelay;
         return $this;
     }
+    
+    /**
+     * @return string
+     */
+    public function getGeocodeLocale()
+    {
+        return $this->geocodeLocale;
+    }
+
+    /**
+     * @param string $geocodeLocale
+     * @return ModuleOptions
+     */
+    public function setGeocodeLocale($geocodeLocale)
+    {
+        $this->geocodeLocale = $geocodeLocale;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGeocodeRegion()
+    {
+        return $this->geocodeRegion;
+    }
+
+    /**
+     * @param string $geocodeRegion
+     * @return ModuleOptions
+     */
+    public function setGeocodeRegion($geocodeRegion)
+    {
+        $this->geocodeRegion = $geocodeRegion;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getGeocodeUseSsl()
+    {
+        return $this->geocodeUseSsl;
+    }
+
+    /**
+     * @param boolean $geocodeUseSsl
+     * @return ModuleOptions
+     */
+    public function setGeocodeUseSsl($geocodeUseSsl)
+    {
+        $this->geocodeUseSsl = $geocodeUseSsl;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGeocodeGoogleApiKey()
+    {
+        return $this->geocodeGoogleApiKey;
+    }
+
+    /**
+     * @param string $geocodeGoogleApiKey
+     * @return ModuleOptions
+     */
+    public function setGeocodeGoogleApiKey($geocodeGoogleApiKey)
+    {
+        $this->geocodeGoogleApiKey = $geocodeGoogleApiKey;
+        return $this;
+    }
+
 }

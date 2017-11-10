@@ -10,9 +10,24 @@ namespace SimpleImport\Hydrator;
 
 use Zend\Hydrator\HydrationInterface;
 use Jobs\Entity\AtsMode;
+use SimpleImport\Job\GeocodeLocation;
 
 class JobHydrator implements HydrationInterface
 {
+    
+    /**
+     * @var GeocodeLocation
+     */
+    private $geocodeLocation;
+    
+    /**
+     * @param GeocodeLocation $geocodeLocation
+     */
+    public function __construct(GeocodeLocation $geocodeLocation)
+    {
+        $this->geocodeLocation = $geocodeLocation;
+    }
+    
     /**
      * {@inheritDoc}
      * @see \Zend\Hydrator\HydrationInterface::hydrate()
@@ -38,6 +53,12 @@ class JobHydrator implements HydrationInterface
             $job->setAtsMode(new AtsMode(AtsMode::MODE_URI, $data['linkApply']));
         } else {
             $job->setAtsMode(new AtsMode(AtsMode::MODE_NONE));
+        }
+        
+        $locations = $this->geocodeLocation->getLocations($data['location']);
+        
+        if ($locations) {
+            $job->getLocations()->fromArray($locations);
         }
             
         // TODO: implement classifications
