@@ -21,6 +21,7 @@
         "yawik"
     ],
     "require": {
+    	"composer/installers": "*",
         "willdurand/geocoder": "v3.3.2"
     },
     "autoload": {
