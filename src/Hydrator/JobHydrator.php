@@ -11,6 +11,7 @@ namespace SimpleImport\Hydrator;
 use Zend\Hydrator\HydrationInterface;
 use Jobs\Entity\AtsMode;
 use SimpleImport\Job\GeocodeLocation;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class JobHydrator implements HydrationInterface
 {
@@ -58,7 +59,12 @@ class JobHydrator implements HydrationInterface
         $locations = $this->geocodeLocation->getLocations($data['location']);
         
         if ($locations) {
-            $job->getLocations()->fromArray($locations);
+            $locationCollection = $job->getLocations();
+            $locationCollection->clear();
+            
+            foreach ($locations as $location) {
+               $locationCollection->add($location);
+            }
         }
             
         // TODO: implement classifications
