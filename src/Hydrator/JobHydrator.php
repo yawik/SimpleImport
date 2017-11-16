@@ -57,15 +57,7 @@ class JobHydrator implements HydrationInterface
         }
         
         $locations = $this->geocodeLocation->getLocations($data['location']);
-        
-        if ($locations) {
-            $locationCollection = $job->getLocations();
-            $locationCollection->clear();
-            
-            foreach ($locations as $location) {
-               $locationCollection->add($location);
-            }
-        }
+        $job->setLocations(new ArrayCollection($locations));
             
         // TODO: implement classifications
     }
