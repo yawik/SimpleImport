@@ -12,6 +12,7 @@ use Zend\Hydrator\HydrationInterface;
 use Jobs\Entity\AtsMode;
 use SimpleImport\Job\GeocodeLocation;
 use Doctrine\Common\Collections\ArrayCollection;
+use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 
 class JobHydrator implements HydrationInterface
 {
@@ -22,11 +23,18 @@ class JobHydrator implements HydrationInterface
     private $geocodeLocation;
     
     /**
-     * @param GeocodeLocation $geocodeLocation
+     * @var ClassificationsHydrator
      */
-    public function __construct(GeocodeLocation $geocodeLocation)
+    private $classificationsHydrator;
+    
+    /**
+     * @param GeocodeLocation $geocodeLocation
+     * @param ClassificationsHydrator $classificationsHydrator
+     */
+    public function __construct(GeocodeLocation $geocodeLocation, ClassificationsHydrator $classificationsHydrator)
     {
         $this->geocodeLocation = $geocodeLocation;
+        $this->classificationsHydrator = $classificationsHydrator;
     }
     
     /**
@@ -58,7 +66,7 @@ class JobHydrator implements HydrationInterface
         
         $locations = $this->geocodeLocation->getLocations($data['location']);
         $job->setLocations(new ArrayCollection($locations));
-            
-        // TODO: implement classifications
+        
+        $this->classificationsHydrator->hydrate($data['classifications'], $job->getClassifications());
     }
 }

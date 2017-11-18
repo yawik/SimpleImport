@@ -47,6 +47,17 @@ class ModuleOptions extends AbstractOptions
      * @var string
      */
     private $geocodeGoogleApiKey = null;
+    
+    /**
+     * List of available classifications to import
+     * 
+     * @var array
+     */
+    private $classifications = [
+        'professions',
+        'industries',
+        'employmentTypes',
+    ];
 
     /**
      * @return int
@@ -137,5 +148,22 @@ class ModuleOptions extends AbstractOptions
         $this->geocodeGoogleApiKey = $geocodeGoogleApiKey;
         return $this;
     }
+    
+    /**
+     * @return array
+     */
+    public function getClassifications()
+    {
+        return $this->classifications;
+    }
 
+    /**
+     * @param array $classifications
+     * @return ModuleOptions
+     */
+    public function setClassifications($classifications)
+    {
+        $this->classifications = $classifications;
+        return $this;
+    }
 }

@@ -13,7 +13,10 @@ use Zend\InputFilter\InputFilter;
 class JobDataInputFilter extends InputFilter
 {
 
-    public function __construct()
+    /**
+     * @param array $availableClassifications
+     */
+    public function __construct(array $availableClassifications)
     {
         $this->add([
             'name' => 'id',
@@ -153,8 +156,28 @@ class JobDataInputFilter extends InputFilter
                     ]
                 ]
             ]
+        ])->add([
+            'name' => 'classifications',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => 'Callback',
+                    'options' => [
+                        'callback' => function ($classifications) use ($availableClassifications)
+                        {
+                            $return = [];
+                            
+                            foreach ($availableClassifications as $availableClassification) {
+                                $return[$availableClassification] = isset($classifications[$availableClassification])
+                                    ? (array)$classifications[$availableClassification]
+                                    : [];
+                            }
+                            
+                            return $return;
+                        }
+                    ]
+                ]
+            ]
         ]);
-        
-        // TODO: implement classifications
     }
 }

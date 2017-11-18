@@ -14,6 +14,8 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use SimpleImport\DataFetch;
 use SimpleImport\InputFilter\JobDataInputFilter;
 use SimpleImport\Hydrator\JobHydrator;
+use SimpleImport\Hydrator\Job\ClassificationsHydrator;
+use Core\Form\Hydrator\Strategy\TreeSelectStrategy;
 use Zend\Http\Client;
 
 class JobProcessorFactory implements FactoryInterface
@@ -28,9 +30,12 @@ class JobProcessorFactory implements FactoryInterface
         $httpFetch = new DataFetch\HttpFetch($client);
         $jsonFetch = new DataFetch\JsonFetch($httpFetch);
         $plainTextFetch = new DataFetch\PlainTextFetch($httpFetch);
-        $jobRepository = $container->get('repositories')->get('Jobs/Job');
-        $jobHydrator = new JobHydrator($container->get('SimpleImport/JobGeocodeLocation'));
-        $dataInputFilter = new JobDataInputFilter();
+        $repositories = $container->get('repositories');
+        $jobRepository = $repositories->get('Jobs/Job');
+        $moduleOptions = $container->get('SimpleImport/Options/Module');
+        $classificationsHydrator = new ClassificationsHydrator(new TreeSelectStrategy(), $repositories->get('Jobs/Category'), $moduleOptions->getClassifications());
+        $jobHydrator = new JobHydrator($container->get('SimpleImport/JobGeocodeLocation'), $classificationsHydrator);
+        $dataInputFilter = new JobDataInputFilter($moduleOptions->getClassifications());
         
         return new \SimpleImport\CrawlerProcessor\JobProcessor(
             $jsonFetch, $plainTextFetch, $jobRepository, $jobHydrator, $dataInputFilter);
