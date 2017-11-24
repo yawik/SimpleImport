@@ -13,6 +13,8 @@ use Jobs\Entity\AtsMode;
 use SimpleImport\Job\GeocodeLocation;
 use Doctrine\Common\Collections\ArrayCollection;
 use SimpleImport\Hydrator\Job\ClassificationsHydrator;
+use Jobs\Entity\Job;
+use InvalidArgumentException;
 
 class JobHydrator implements HydrationInterface
 {
@@ -43,6 +45,10 @@ class JobHydrator implements HydrationInterface
      */
     public function hydrate(array $data, $job)
     {
+        if (!$job instanceof Job) {
+            throw new InvalidArgumentException(sprintf('Object must be instance of "%s"', Job::class));
+        }
+        
         /** @var \Jobs\Entity\Job $job */
         $job->setTitle($data['title'])
             ->setLocation($data['location'])

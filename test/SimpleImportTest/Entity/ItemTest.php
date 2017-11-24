@@ -5,9 +5,10 @@
  * @filesource
  * @license    MIT
  * @copyright  2013 - 2017 Cross Solution <http://cross-solution.de>
+ * @author Miroslav Fedeleš <miroslav.fedeles@gmail.com>
+ * @since 0.30
  */
 
-/** */
 namespace SimpleImportTest\Entity;
 
 use CoreTestUtils\TestCase\TestSetterGetterTrait;
@@ -17,8 +18,6 @@ use DateTime;
 
 /**
  * @coversDefaultClass \SimpleImport\Entity\Item
- *
- * @author Miroslav Fedeleš <miroslav.fedeles@gmail.com>
  */
 class ItemTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,7 +25,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     use SetupTargetTrait;
 
     /**
-     * @var array
+     * @var Item
      */
     private $target = [Item::class, ['id1', []]];
 
@@ -55,5 +54,33 @@ class ItemTest extends \PHPUnit_Framework_TestCase
             [ 'dateDeleted', '@DateTime' ],
             [ 'dateSynced', '@DateTime' ],
         ];
+    }
+
+    /**
+     * @covers ::isSynced()
+     */
+    public function testIsSynced()
+    {
+        $this->assertFalse($this->target->isSynced(), 'False should be returned if dateSynced is not set');
+
+        $this->target->setDateSynced(new DateTime('-1 hour'));
+        $this->target->setDateModified(new DateTime());
+        $this->target->setDateDeleted(new DateTime());
+        $this->assertFalse($this->target->isSynced(), 'False should be returned if dateSynced is less than dateDeleted');
+
+        $this->target->setDateSynced(new DateTime('+1 hour'));
+        $this->target->setDateModified(new DateTime());
+        $this->target->setDateDeleted(new DateTime());
+        $this->assertTrue($this->target->isSynced(), 'True should be returned if dateSynced is greater than or equals dateDeleted');
+
+        $this->target->setDateSynced(new DateTime('-1 hour'));
+        $this->target->setDateModified(new DateTime());
+        $this->target->setDateDeleted(null);
+        $this->assertFalse($this->target->isSynced(), 'False should be returned if dateSynced is less than dateModified');
+
+        $this->target->setDateSynced(new DateTime('+1 hour'));
+        $this->target->setDateModified(new DateTime());
+        $this->target->setDateDeleted(null);
+        $this->assertTrue($this->target->isSynced(), 'True should be returned if dateSynced is greater than or equals dateModified');
     }
 }
