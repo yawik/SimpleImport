@@ -33,7 +33,7 @@ before_script:
   - cp `dirname $TRAVIS_BUILD_DIR`/yawik/module/SimpleImport/.travis/composer.json `dirname $TRAVIS_BUILD_DIR`/yawik/
   - cp composer.phar `dirname $TRAVIS_BUILD_DIR`/yawik/
   - cd `dirname $TRAVIS_BUILD_DIR`/yawik/
-  - ./composer.phar dump
+  - ./composer.phar require --dev willdurand/geocoder:v3.3.2
 
 script:
   - cd `dirname $TRAVIS_BUILD_DIR`/yawik/module/SimpleImport/test
