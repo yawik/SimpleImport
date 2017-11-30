@@ -24,6 +24,7 @@ return array(
         'Auth',
         'Organizations',
         'Jobs',
+        'Geo',
         'SimpleImport'
     ),
     'module_listener_options' => array(

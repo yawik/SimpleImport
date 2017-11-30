@@ -79,7 +79,8 @@
         "friends-of-behat/context-service-extension": "^0.3.0",
         "friends-of-behat/cross-container-extension": "^0.3.0",
         "friends-of-behat/service-container-extension": "^0.3.0",
-        "novaway/common-contexts": "dev-master"
+        "novaway/common-contexts": "dev-master",
+        "willdurand/geocoder": "v3.3.2"
     },
     "scripts": {
         "post-install-cmd": [
@@ -89,7 +90,7 @@
     "autoload": {
         "psr-4": {
             "Yawik\\Behat\\": "module/Behat/src",
-	    "SimpleImport\\": "module/SimpleImport/src"
+            "SimpleImport\\": "module/SimpleImport/src"
         }
     }
 }
