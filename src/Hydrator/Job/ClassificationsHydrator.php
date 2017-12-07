@@ -62,7 +62,8 @@ class ClassificationsHydrator implements HydrationInterface
         }
         
         $this->treeStrategy->setAllowSelectMultipleItems(true)
-            ->setShouldCreateLeafs(true);
+            ->setShouldCreateLeafs(true)
+            ->setShouldUseNames(true);
         
         foreach ($this->availableClassifications as $availableClassification) {
             $this->treeStrategy->setAttachedLeafs($classifications->{"get$availableClassification"}())
