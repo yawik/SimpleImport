@@ -11,6 +11,8 @@ namespace SimpleImport\Hydrator\Job;
 use Zend\Hydrator\HydrationInterface;
 use Core\Form\Hydrator\Strategy\TreeSelectStrategy;
 use Jobs\Repository\Categories;
+use Jobs\Entity\Classifications;
+use InvalidArgumentException;
 
 class ClassificationsHydrator implements HydrationInterface
 {
@@ -55,7 +57,9 @@ class ClassificationsHydrator implements HydrationInterface
      */
     public function hydrate(array $data, $classifications)
     {
-        /** @var \Jobs\Entity\Classifications $classifications */
+        if (!$classifications instanceof Classifications) {
+            throw new InvalidArgumentException(sprintf('Object must be instance of "%s"', Classifications::class));
+        }
         
         if (!$this->availableClassifications) {
             return;

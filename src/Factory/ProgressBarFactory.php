@@ -14,10 +14,11 @@ class ProgressBarFactory
 {
     /**
      * @param int $count
+     * @param string $persistenceNamespace
      * @return \Zend\ProgressBar\ProgressBar
      */
-    public function factory($count)
+    public function factory($count, $persistenceNamespace = null)
     {
-        return new ProgressBar($count);
+        return new ProgressBar($count, $persistenceNamespace);
     }
 }

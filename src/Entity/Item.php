@@ -170,7 +170,7 @@ class Item
      * @param DateTime $dateSynced
      * @return Item
      */
-    public function setDateSynced($dateSynced)
+    public function setDateSynced(DateTime $dateSynced = null)
     {
         $this->dateSynced = $dateSynced;
         return $this;

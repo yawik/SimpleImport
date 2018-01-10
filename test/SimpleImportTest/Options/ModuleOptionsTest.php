@@ -7,7 +7,7 @@
  * @license   MIT
  */
 
-namespace SimpleImport\Options;
+namespace SimpleImportTest\Options;
 
 use CoreTestUtils\TestCase\TestSetterGetterTrait;
 use CoreTestUtils\TestCase\SetupTargetTrait;
@@ -17,6 +17,7 @@ use SimpleImport\Options\ModuleOptions;
  * Class ModuleOptionsTest
  *
  * @author  Carsten Bleek <bleek@cross-solution.de>
+ * @author Miroslav Fedeleš <miroslav.fedeles@gmail.com>
  * @since   0.30
  * @covers  SimpleImport\Options\ModuleOptions
  * @package SimpleImport\Options
@@ -25,9 +26,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
 {
     use TestSetterGetterTrait, SetupTargetTrait;
 
-    protected $target = [
-        'class' => ModuleOptions::class
-    ];
+    private $target = ModuleOptions::class;
 
     public function propertiesProvider()
     {
@@ -35,6 +34,30 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             ['importRunDelay', [
                 'value' => '60',
                 'default' => '1440'
+            ]],
+            ['geocodeLocale', [
+                'value' => 'it',
+                'default' => 'de'
+            ]],
+            ['geocodeRegion', [
+                'value' => 'IT',
+                'default' => 'DE'
+            ]],
+            ['geocodeUseSsl', [
+                'value' => false,
+                'default' => true
+            ]],
+            ['geocodeGoogleApiKey', [
+                'value' => 'apiKey',
+                'default' => null
+            ]],
+            ['classifications', [
+                'value' => 'apiKey',
+                    'default' => [
+                        'professions',
+                        'industries',
+                        'employmentTypes'
+                    ]
             ]],
         ];
     }

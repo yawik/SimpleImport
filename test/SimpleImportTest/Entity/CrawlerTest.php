@@ -11,24 +11,23 @@
 namespace SimpleImportTest\Entity;
 
 use CoreTestUtils\TestCase\TestInheritanceTrait;
-use CoreTestUtils\TestCase\TestUsesTraitsTrait;
 use CoreTestUtils\TestCase\TestSetterGetterTrait;
 use SimpleImport\Entity\Crawler;
-use Organization\Entity\Organization;
+use SimpleImport\Entity\Item;
+use SimpleImport\Entity\JobOptions;
+use InvalidArgumentException;
+use DateTime;
+use ReflectionClass;
 
 /**
- * Tests for Item
- *
- * @covers \SimpleImport\Entity\Crawler
  * @coversDefaultClass \SimpleImport\Entity\Crawler
  *
  * @author Carsten Bleek <bleek@cross-solution.de>
- * @group  Orders
- * @group  Orders.Entity
+ * @author Miroslav Fedeleš <miroslav.fedeles@gmail.com>
  */
 class CrawlerTest extends \PHPUnit_Framework_TestCase
 {
-    use TestInheritanceTrait, TestSetterGetterTrait;//, TestUsesTraitsTrait;
+    use TestInheritanceTrait, TestSetterGetterTrait;
 
     /**
      * The "Class under Test"
@@ -45,13 +44,6 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     private $inheritance = [ 'SimpleImport\Entity\CrawlerInterface' ];
 
     /**
-     * @see TestUsesTraitsTrait
-     *
-     * @var array
-     */
-    //private $traits = [ 'Core\Entity\EntityTrait' ];
-
-    /**
      * @see TestSetterGetterTrait
      *
      * @var array
@@ -64,4 +56,129 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         [ 'runDelay', 10 ],
         [ 'DateLastRun', '@DateTime' ],
     ];
+
+    /**
+     * @covers ::setType()
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid type
+     */
+    public function testSetTypeInvalid()
+    {
+        $this->target->setType('inV4lid');
+    }
+
+    /**
+     * @covers ::getItems()
+     * @covers ::addItem()
+     * @covers ::items()
+     */
+    public function testGetItems()
+    {
+        $this->assertSame([], $this->target->getItems());
+
+        $importId = 'importId1';
+        $item = new Item($importId, []);
+        $this->target->addItem($item);
+        $this->assertSame([$importId => $item], $this->target->getItems());
+    }
+
+    /**
+     * @covers ::getItemsToSync()
+     * @covers ::addItem()
+     * @covers ::items()
+     */
+    public function testGetItemsToSync()
+    {
+        $this->assertSame([], $this->target->getItemsToSync());
+
+        $nonSyncedImportId = 'importId1';
+        $nonSyncedItem = new Item($nonSyncedImportId, []);
+        $this->target->addItem($nonSyncedItem);
+        $this->assertSame([$nonSyncedImportId => $nonSyncedItem], $this->target->getItemsToSync());
+
+        $syncedImportId = 'importId2';
+        $syncedItem = new Item($syncedImportId, []);
+        $syncedItem->setDateSynced(new DateTime());
+        $this->target->addItem($syncedItem);
+        $this->assertSame([$nonSyncedImportId => $nonSyncedItem], $this->target->getItemsToSync(),
+            'Synchronized items may not be returned');
+    }
+
+    /**
+     * @covers ::addItem()
+     * @covers ::getItem()
+     * @covers ::items()
+     */
+    public function testAddItem()
+    {
+        $importId = 'importId1';
+        $item = new Item($importId, []);
+        $this->target->addItem($item);
+        $this->assertSame($item, $this->target->getItem($importId));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('already exists');
+        $this->target->addItem($item);
+    }
+
+    /**
+     * @covers ::getOptions()
+     * @expectedException LogicException
+     * @expectedExceptionMessage The options class cannot be resolved
+     */
+    public function testGetOptionsWithoutTypeSet()
+    {
+        $this->target->getOptions();
+    }
+
+    /**
+     * @covers ::getOptions()
+     * @expectedException LogicException
+     * @expectedExceptionMessage The options class resolving failed
+     */
+    public function testGetOptionsWithInvalidTypeSet()
+    {
+        $reflectionClass = new ReflectionClass($this->target);
+        $reflectionProperty = $reflectionClass->getProperty('type');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->target, 'inv4lid');
+
+        $this->target->getOptions();
+    }
+
+    /**
+     * @covers ::getOptions()
+     */
+    public function testGetOptionsWithValidTypeSet()
+    {
+        $this->target->setType(Crawler::TYPE_JOB);
+        $options = $this->target->getOptions();
+
+        $this->assertInstanceOf(JobOptions::class, $options);
+        $this->assertSame($options, $this->target->getOptions(), 'Repetitive calls should return the same instance');
+    }
+
+    /**
+     * @covers ::setOptionsFromArray()
+     */
+    public function testSetOptionsFromArray()
+    {
+        $this->target->setType(Crawler::TYPE_JOB);
+        $optionsArray = ['initialState' => 'stateValue'];
+
+        $this->target->setOptionsFromArray($optionsArray);
+        $options = $this->target->getOptions();
+        $this->assertSame($optionsArray['initialState'], $options->getInitialState());
+    }
+
+    /**
+     * @covers ::setOptionsFromArray()
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid option key
+     */
+    public function testSetOptionsFromArrayWithInvalidKey()
+    {
+        $this->target->setType(Crawler::TYPE_JOB);
+        $this->target->setOptionsFromArray(['inv4lid' => 'someValue']);
+    }
 }

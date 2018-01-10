@@ -89,7 +89,7 @@
     "autoload": {
         "psr-4": {
             "Yawik\\Behat\\": "module/Behat/src",
-	    "SimpleImport\\": "module/SimpleImport/src"
+            "SimpleImport\\": "module/SimpleImport/src"
         }
     }
 }
