@@ -39,7 +39,24 @@ class Module implements DependencyIndicatorInterface, ConsoleUsageProviderInterf
     {
         return ['Jobs'];
     }
-    
+
+    /**
+     * Loads module specific autoloader configuration.
+     *
+     * @return array
+     */
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__ . '/src/',
+                    __NAMESPACE__ . 'Test' => __DIR__ . '/test/' . __NAMESPACE__ . 'Test',
+                ),
+            ),
+        );
+    }
+
     /**
      * {@inheritDoc}
      * @see ConsoleUsageProviderInterface::getConsoleUsage()

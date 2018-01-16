@@ -35,7 +35,12 @@ class PlainTextFetch
     {
         $html = $this->httpFetch->fetch($uri);
 
-        // remove non-content tags including their content. 
+        if (preg_match("//u", $html)) {
+            // $html is valid UTF-8
+            $html=preg_replace("/iso-8859-1/","utf-8",$html);
+        }
+
+        // remove non-content tags including their content.
 
         $oldErrorReporting = error_reporting(0);
         $dom = new \DOMDocument();
