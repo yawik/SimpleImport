@@ -87,7 +87,7 @@ class GeocodeLocation
         $coordinates = $address->getCoordinates();
         
         if ($coordinates) {
-            $point = new Point([$coordinates->getLatitude(), $coordinates->getLongitude()]);
+            $point = new Point([$coordinates->getLongitude(), $coordinates->getLatitude()]);
             $location->setCoordinates($point);
         }
         
