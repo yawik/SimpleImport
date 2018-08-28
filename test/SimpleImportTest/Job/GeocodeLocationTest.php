@@ -100,7 +100,7 @@ class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($address->getCountry()->getName(), $location->getCountry());
 
         $coordinates = $location->getCoordinates()->getCoordinates();
-        $this->assertSame($address->getCoordinates()->getLatitude(), $coordinates[0]);
-        $this->assertSame($address->getCoordinates()->getLongitude(), $coordinates[1]);
+        $this->assertSame($address->getCoordinates()->getLatitude(), $coordinates[1]);
+        $this->assertSame($address->getCoordinates()->getLongitude(), $coordinates[0]);
     }
 }
