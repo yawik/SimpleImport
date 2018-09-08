@@ -36,7 +36,7 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface
     
     /**
      * @var Organization
-     * @ODM\ReferenceOne(targetDocument="\Organizations\Entity\Organization", simple=true)
+     * @ODM\ReferenceOne(targetDocument="\Organizations\Entity\Organization", storeAs="id")
      */
     private $organization;
     

@@ -25,7 +25,7 @@ class Item
     
     /**
      * @var array
-     * @ODM\Hash
+     * @ODM\Field(type="hash")
      */
     private $importData;
     
