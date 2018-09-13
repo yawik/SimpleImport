@@ -171,26 +171,37 @@ class JobProcessor implements ProcessorInterface
                 }
             } else {
                 $importData = $item->getImportData();
-                
-                try {
-                    $plainText = $this->plainTextFetch->fetch($importData['link']);
-                } catch (RuntimeException $e) {
-                    $logger->err(sprintf(
-                        'Cannot fetch HTML digest for a job, import ID: "%s", link: "%s", reason: "%s"',
-                        $item->getImportId(),
-                        $importData['link'],
-                        $e->getMessage())
-                    );
+
+                if (array_key_exists('templateValues', $importData)
+                    && (array_key_exists('description', $importData['templateValues'])
+                        || array_key_exists('tasks', $importData['templateValues'])
+                        || array_key_exists('requirements', $importData['templateValues'])
+                        || array_key_exists('benefits', $importData['templateValues'])
+                        || array_key_exists('html', $importData['templateValues'])
+                    )
+                ) {
+                    $plainText = false;
+                } else {
+                    try {
+                        $plainText = $this->plainTextFetch->fetch($importData['link']);
+                    } catch (RuntimeException $e) {
+                        $logger->err(sprintf(
+                            'Cannot fetch HTML digest for a job, import ID: "%s", link: "%s", reason: "%s"',
+                            $item->getImportId(),
+                            $importData['link'],
+                            $e->getMessage())
+                        );
                     
-                    $result->incrementInvalid();
-                    continue;
+                        $result->incrementInvalid();
+                        continue;
+                    }
                 }
                 
                 // create a new job
                 $job = $this->jobRepository->create(null);
                 $job->setOrganization($crawler->getOrganization());
                 $job->setStatus($crawler->getOptions()->getInitialState());
-                $job->setMetaData('plainText', $plainText);
+                if (false !== $plainText) { $job->setMetaData('plainText', $plainText); }
                 $this->jobHydrator->hydrate($importData, $job);
                 $this->jobRepository->store($job);
                 $item->setDocumentId($job->getId());
