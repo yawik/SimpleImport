@@ -59,7 +59,17 @@ class JobHydrator implements HydrationInterface
             ->setLink($data['link'])
             ->setDatePublishStart($data['datePublishStart'])
             ->setLogoRef($data['logoRef']);
-        
+
+        if (isset($data['templateValues'])) {
+            $templateValues = $job->getTemplateValues();
+            foreach ($data['templatesValues'] as $key => $value) {
+                $method = 'set' . $key;
+                if (method_exists($method, $templateValues)) {
+                    $templateValues->$method($value);
+                }
+            }
+        }
+
         if ($data['datePublishEnd']) {
             $job->setDatePublishEnd($data['datePublishEnd']);
         }
