@@ -9,6 +9,7 @@
 namespace SimpleImport\InputFilter;
 
 use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\OptionalInputFilter;
 
 class JobDataInputFilter extends InputFilter
 {
@@ -178,6 +179,28 @@ class JobDataInputFilter extends InputFilter
                     ]
                 ]
             ]
-        ]);
+        ])->add([
+            'type' => OptionalInputFilter::class,
+            'html' => [
+                'required' => false,
+                'allowEmpty' => false,
+                'filters' => [ [ 'name' => 'StringTrim' ] ],
+            ],
+            'requirements' => [
+                'required' => false,
+                'allowEmpty' => false,
+                'filters' => [ [ 'name' => 'StringTrim' ] ],
+            ],
+            'benefits' => [
+                'required' => false,
+                'allowEmpty' => false,
+                'filters' => [ [ 'name' => 'StringTrim' ] ],
+            ],
+            'tasks' => [
+                'required' => false,
+                'allowEmpty' => false,
+                'filters' => [ [ 'name' => 'StringTrim' ] ],
+            ],
+        ], 'templateValues');
     }
 }

@@ -11,6 +11,7 @@ namespace SimpleImport\CrawlerProcessor;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\DataFetch\JsonFetch;
 use SimpleImport\DataFetch\PlainTextFetch;
+use Zend\Json\Json;
 use Zend\Log\LoggerInterface;
 use SimpleImport\Entity\Item;
 use Jobs\Repository\Job as JobRepository;
@@ -109,7 +110,7 @@ class JobProcessor implements ProcessorInterface
             if (!$this->dataInputFilter->isValid()) {
                 $result->incrementInvalid();
                 $messages = $this->formatMessages($this->dataInputFilter->getMessages());
-                $logger->err(sprintf('Invalid import data: "%s"', implode(', ', $messages)), $importData);
+                $logger->err(sprintf('Invalid import data: "%s"', Json::encode($messages)), $importData);
                 continue;
             }
             
