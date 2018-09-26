@@ -7,6 +7,8 @@
  * @since 0.30
  */
 
+namespace SimpleImport;
+
 use SimpleImport\Entity\Crawler;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
@@ -30,18 +32,19 @@ return [
     ],
     'options' => [
         'SimpleImport/Options/Module' => [
-            'class' => SimpleImport\Options\ModuleOptions::class
+            'class' => Options\ModuleOptions::class
         ]
     ],
     'service_manager' => [
         'factories' => [
-            'SimpleImport/CrawlerProcessorManager' => SimpleImport\Factory\CrawlerProcessor\ManagerFactory::class,
-            'SimpleImport/JobGeocodeLocation' => SimpleImport\Factory\Job\GeocodeLocationFactory::class
+            'SimpleImport/CrawlerProcessorManager' => Factory\CrawlerProcessor\ManagerFactory::class,
+            'SimpleImport/JobGeocodeLocation' => Factory\Job\GeocodeLocationFactory::class
         ]
     ],
     'controllers' => [
         'factories' => [
-            'SimpleImport/ConsoleController' => SimpleImport\Factory\Controller\ConsoleControllerFactory::class
+            'SimpleImport/ConsoleController' => Factory\Controller\ConsoleControllerFactory::class,
+            Controller\DeleteCrawlerConsoleController::class => Factory\Controller\DeleteCrawlerConsoleControllerFactory::class,
         ]
     ],
     'console' => [
@@ -66,7 +69,16 @@ return [
                             'type' => 'job'
                         ]
                     ]
-                ]
+                ],
+                'simpleimport-delete-crawler' => [
+                    'options' => [
+                        'route' => 'simpleimport delete-crawler [--id] <name>',
+                        'defaults' => [
+                            'controller' => Controller\DeleteCrawlerConsoleController::class,
+                            'action' => 'index',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -84,18 +96,18 @@ return [
     ],
     'input_filters' => [
         'factories' => [
-            SimpleImport\InputFilter\CrawlerInputFilter::class => InvokableFactory::class
+            InputFilter\CrawlerInputFilter::class => InvokableFactory::class
         ]
     ],
     'validators' => [
         'factories' => [
-            'SimpleImportOrganizationExists' => SimpleImport\Factory\Validator\OrganizationExistsFactory::class,
-            SimpleImport\Validator\CrawlerOptions::class => InvokableFactory::class
+            'SimpleImportOrganizationExists' => Factory\Validator\OrganizationExistsFactory::class,
+            Validator\CrawlerOptions::class => InvokableFactory::class
         ]
     ],
     'simple_import_crawler_processor_manager' => [
         'factories' => [
-            Crawler::TYPE_JOB => SimpleImport\Factory\CrawlerProcessor\JobProcessorFactory::class
+            Crawler::TYPE_JOB => Factory\CrawlerProcessor\JobProcessorFactory::class
         ]
     ],
 ];

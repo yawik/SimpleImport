@@ -74,6 +74,9 @@ class Module implements DependencyIndicatorInterface, ConsoleUsageProviderInterf
             ['--runDelay=INT', 'The number of minutes the next import run will be proceeded again'],
             ['--type=STRING', 'The type of an import (e.g. job)'],
             ['--jobInitialState=STRING', 'The initial state of an imported job'],
+            'simpleimport delete-crawler [--id] <name>' => 'Deletes an import crawler',
+            ['<name>', 'The name of the crawler to delete.'],
+            ['--id', 'When given, treats <name> as the MongoID of the crawler'],
         ];
     }
 }
