@@ -18,6 +18,7 @@ use SimpleImport\CrawlerProcessor\Manager as CrawlerProcessors;
 use SimpleImport\CrawlerProcessor\ProcessorInterface;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\Options\ModuleOptions;
+use Zend\Console\ColorInterface;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\Log\LoggerInterface;
 use Zend\Console\Adapter\AdapterInterface as ConsoleAdapter;
@@ -28,6 +29,7 @@ use DateTime;
 
 /**
  * @coversDefaultClass \SimpleImport\Controller\ConsoleController
+ * @covers \SimpleImport\Controller\ConsoleController
  */
 class ConsoleControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -87,6 +89,7 @@ class ConsoleControllerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->crawlerRepository = $this->getMockBuilder(CrawlerRepository::class)
+            ->setMethods(['getCrawlersToImport', 'create', 'getDocumentManager', 'store', 'findOneByName', 'find'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -166,6 +169,73 @@ class ConsoleControllerTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testImportActionNameParameter()
+    {
+        $this->target->method('params')->will($this->returnValueMap([
+            ['limit', null],
+            ['name', 'test']
+        ]));
+
+        $this->crawlerRepository->expects($this->once())
+            ->method('findOneByName')
+            ->with($this->identicalTo('test'))
+            ->willReturn(null);
+
+        $this->console->expects($this->once())->method('writeLine')->with($this->stringContains('no crawler with name "test"'));
+
+        $model = $this->target->importAction();
+
+        $this->assertEquals(1, $model->getErrorLevel());
+    }
+
+    public function testImportActionIdParameter()
+    {
+        $this->target->method('params')->will($this->returnValueMap([
+            ['limit', null],
+            ['name', 'test'],
+            ['id', 'overrideName']
+        ]));
+
+        $this->crawlerRepository->expects($this->once())
+                                ->method('find')
+                                ->with($this->identicalTo('overrideName'))
+                                ->willReturn(null);
+
+        $this->console->expects($this->once())->method('writeLine')->with($this->stringContains('no crawler with id "overrideName"'), ColorInterface::RED);
+
+        $model = $this->target->importAction();
+
+        $this->assertEquals(1, $model->getErrorLevel());
+    }
+
+    public function testImportActionDoesNotProcessDelayedCrawler()
+    {
+        $this->target->method('params')->will($this->returnValueMap([
+            ['limit', null],
+            ['name', 'test']
+        ]));
+
+        $crawler =$this->getMockBuilder(\SimpleImport\Entity\Crawler::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['canRun'])
+            ->getMock();
+
+        $crawler->expects($this->once())->method('canRun')->willReturn(false);
+
+        $this->crawlerRepository->expects($this->once())
+                                ->method('findOneByName')
+                                ->with($this->identicalTo('test'))
+                                ->willReturn($crawler);
+
+        $this->console->expects($this->once())->method('writeLine')->with($this->stringContains('is still delayed'));
+
+        $model = $this->target->importAction();
+
+        $this->assertEquals(2,$model->getErrorLevel());
+
+
+    }
+
     /**
      * @covers ::importAction()
      */
@@ -181,6 +251,59 @@ class ConsoleControllerTest extends \PHPUnit_Framework_TestCase
             ->willReturn([]);
 
         $this->target->importAction();
+    }
+
+    public function testImportActionProcessSpecificCrawler()
+    {
+        $this->target->method('params')->will($this->returnValueMap([
+            ['limit', null],
+            ['name', 'test']
+        ]));
+
+        $crawler =$this->getMockBuilder(\SimpleImport\Entity\Crawler::class)
+                       ->disableOriginalConstructor()
+                       ->setMethods(['canRun'])
+                       ->getMock();
+
+        $crawler->expects($this->once())->method('canRun')->willReturn(true);
+
+        $this->crawlerRepository->expects($this->once())
+                                ->method('findOneByName')
+                                ->with($this->identicalTo('test'))
+                                ->willReturn($crawler);
+        $crawler->setType(Crawler::TYPE_JOB);
+        $now = new DateTime();
+
+        $documentManager = $this->getMockBuilder(ObjectManager::class)
+                                ->getMock();
+        $documentManager->expects($this->once())
+                        ->method('flush');
+
+        $this->crawlerRepository->expects($this->once())
+                                ->method('getDocumentManager')
+                                ->willReturn($documentManager);
+
+        $processor = $this->getMockBuilder(ProcessorInterface::class)
+                          ->getMock();
+        $processor->expects($this->once())
+                  ->method('execute')
+                  ->with($this->identicalTo($crawler),
+                      $this->callback(function ($result) {
+                          return $result instanceof Result;
+                      }),
+                      $this->identicalTo($this->logger)
+                  );
+
+        $this->crawlerProcessors->expects($this->once())
+                                ->method('get')
+                                ->with($this->identicalTo($crawler->getType()))
+                                ->willReturn($processor);
+
+        $this->target->importAction();
+
+        $dateLastRun = $crawler->getDateLastRun();
+        $this->assertInstanceOf(DateTime::class, $dateLastRun);
+        $this->assertGreaterThanOrEqual($now, $dateLastRun);
     }
 
     /**

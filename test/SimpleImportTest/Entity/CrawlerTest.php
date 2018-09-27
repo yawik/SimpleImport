@@ -181,4 +181,17 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $this->target->setType(Crawler::TYPE_JOB);
         $this->target->setOptionsFromArray(['inv4lid' => 'someValue']);
     }
+
+    public function testCanRun()
+    {
+        $this->target->setRunDelay(10000);
+        $this->target->setDateLastRun(new \DateTime());
+
+        $this->assertFalse($this->target->canRun());
+
+        $this->target->setRunDelay(100);
+        $this->target->setDateLastRun(new \DateTime('yesterday'));
+
+        $this->assertTrue($this->target->canRun());
+    }
 }

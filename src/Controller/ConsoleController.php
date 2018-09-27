@@ -18,6 +18,7 @@ use Zend\Console\ColorInterface;
 use Zend\Log\LoggerInterface;
 use Zend\InputFilter\InputFilterInterface;
 use DateTime;
+use Zend\Mvc\Console\View\ViewModel;
 
 class ConsoleController extends AbstractConsoleController
 {
@@ -82,37 +83,62 @@ class ConsoleController extends AbstractConsoleController
     public function importAction()
     {
         $limit = abs($this->params('limit')) ?: 3;
+        $name  = $this->params('name');
+        $id    = $this->params('id');
+
         $console = $this->getConsole();
-        $crawlers = $this->crawlerRepository->getCrawlersToImport($limit);
+
+        if ($name || $id) {
+            /* @var \SimpleImport\Entity\Crawler $crawler */
+            $findMethod = 'find' . ($id ? '' : 'OneByName');
+            $name = $id ?: $name;
+            $crawler = $this->crawlerRepository->$findMethod($name);
+
+            if (!$crawler) {
+                $console->writeLine(sprintf('There is no crawler with %s "%s"', $id ? 'id' : 'name', $name), ColorInterface::RED);
+                return new ViewModel([], ['errorLevel' => 1]);
+            }
+
+            if (!$crawler->canRun()) {
+                $console->writeLine(sprintf('Crawler "%s" (%s) is still delayed.', $crawler->getName(), $crawler->getId()), ColorInterface::YELLOW);
+                return new ViewModel([], ['errorLevel' => 2]);
+            }
+
+            $crawlers = [$crawler];
+        } else {
+
+            $crawlers = $this->crawlerRepository->getCrawlersToImport($limit);
         
-        if (0 === count($crawlers)) {
-            $console->writeLine('There is currently no crawler to process.', ColorInterface::YELLOW);
-            return;
+            if (0 === count($crawlers)) {
+                $console->writeLine('There is currently no crawler to process.', ColorInterface::YELLOW);
+                return;
+            }
         }
-        
+
         $documentManager = $this->crawlerRepository->getDocumentManager();
-        
+        $console = $this->getConsole();
+
         foreach ($crawlers as $crawler) {
             /** @var \SimpleImport\CrawlerProcessor\ProcessorInterface $processor */
             $processor = $this->crawlerProcessors->get($crawler->getType());
-            
+
             $console->writeLine(sprintf(
-                'The crawler with the name (ID) "%s (%s)" has started its job:',
-                $crawler->getName(),
-                $crawler->getId())
+                    'The crawler with the name (ID) "%s (%s)" has started its job:',
+                    $crawler->getName(),
+                    $crawler->getId())
             );
-            
+
             $result = clone $this->resultPrototype;
             $processor->execute($crawler, $result, $this->logger);
             $crawler->setDateLastRun(new DateTime());
             $documentManager->flush();
-            
+
             $console->writeLine(sprintf(
                 'The crawler with the name (ID) "%s (%s)" has finished with the following result:',
                 $crawler->getName(),
                 $crawler->getId()
             ), ColorInterface::GREEN);
-            
+
             $console->writeLine(sprintf(
                 'To process = %d, Inserted = %d, Updated = %d, Deleted = %d, Invalid = %d, Unchanged = %d',
                 $result->getToProcess(),
@@ -123,7 +149,7 @@ class ConsoleController extends AbstractConsoleController
                 $result->getUnchanged()
             ), ColorInterface::LIGHT_YELLOW);
         }
-        
+
         $console->writeLine('The import task has finished (see simple-import.log for possible problems).', ColorInterface::GRAY);
     }
     

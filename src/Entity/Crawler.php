@@ -188,6 +188,16 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface
         return $this->dateLastRun;
     }
 
+    public function canRun()
+    {
+        $lastRunDate = $this->getDateLastRun();
+        $lastRun = $lastRunDate->getTimestamp();
+        $timezone = $lastRunDate->getTimezone();
+        $now = (new \DateTime('now', $timezone))->getTimestamp();
+
+        return $lastRun < $now - 60 * $this->getRunDelay();
+    }
+
     /**
      * @return array|Item[]
      */

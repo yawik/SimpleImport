@@ -52,11 +52,11 @@ return [
             'routes' => [
                 'simpleimport-import' => [
                     'options' => [
-                        'route' => 'simpleimport import [--limit=]',
+                        'route' => 'simpleimport import [--limit=] [--name=] [--id=]',
                         'defaults' => [
                             'controller' => 'SimpleImport/ConsoleController',
                             'action' => 'import',
-                            'limit' => '3'
+                            'limit' => '3',
                         ]
                     ]
                 ],
