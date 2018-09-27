@@ -46,7 +46,8 @@ class DeleteCrawlerConsoleController extends AbstractConsoleController
         }
 
         foreach ($crawler->getItems() as $item) {
-            $this->jobRepository->find($item->getDocumentId())->delete();
+            $job = $this->jobRepository->find($item->getDocumentId());
+            if ($job) { $job->delete(); }
         }
 
         $this->crawlerRepository->remove($crawler);

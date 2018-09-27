@@ -145,14 +145,19 @@ class DeleteCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['getDocumentId'])->getMock();
         $item->expects($this->once())->method('getDocumentId')->willReturn('jobId');
 
-        $items = [ $item ];
+        $item2 = $this->getMockBuilder(\SimpleImport\Entity\Item::class)->disableOriginalConstructor()
+                      ->setMethods(['getDocumentId'])->getMock();
+        $item2->expects($this->once())->method('getDocumentId')->willReturn('jobId2');
+
+        $items = [ $item, $item2 ];
 
         $crawler->expects($this->once())->method('getItems')->willReturn($items);
 
         $job = $this->getMockBuilder(\Jobs\Entity\Job::class)->disableOriginalConstructor()->setMethods(['delete'])->getMock();
         $job->expects($this->once())->method('delete');
 
-        $this->jobRepo->expects($this->once())->method('find')->with('jobId')->willReturn($job);
+        $this->jobRepo->expects($this->exactly(2))->method('find')->withConsecutive(['jobId'], ['jobId2'])
+                                                                  ->will($this->onConsecutiveCalls($job, null));
 
         $this->crawlerRepo->expects($this->once())->method('remove')->with($crawler);
 
