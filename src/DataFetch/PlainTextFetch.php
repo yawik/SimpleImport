@@ -38,6 +38,13 @@ class PlainTextFetch
         if (preg_match("//u", $html)) {
             // $html is valid UTF-8
             $html=preg_replace("/iso-8859-1/","utf-8",$html);
+
+        } else if ($encoding = mb_detect_encoding($html, ['iso-8859-15', 'latin1'])) {
+            $html = mb_convert_encoding($html, 'utf8', $encoding);
+            $html = preg_replace('~' . preg_quote($encoding) . '|iso-8859-.{1,2}~', 'utf-8', $html);
+
+        } else {
+            $html = utf8_encode($html);
         }
 
         // remove non-content tags including their content.
