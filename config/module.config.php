@@ -47,6 +47,15 @@ return [
             Controller\DeleteCrawlerConsoleController::class => Factory\Controller\DeleteCrawlerConsoleControllerFactory::class,
         ]
     ],
+    'controller_plugins' => [
+        'factories' => [
+            Controller\Plugin\LoadCrawler::class => Controller\Plugin\LoadCrawlerFactory::class,
+        ],
+        'aliases' => [
+            'siLoadCrawler' => Controller\Plugin\LoadCrawler::class,
+        ],
+    ],
+
     'console' => [
         'router' => [
             'routes' => [
