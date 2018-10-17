@@ -14,7 +14,9 @@ use SimpleImport\Repository\Crawler;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
- * Plugin to load a crawler entity according to route parameters.
+ * Plugin to load all crawlers or one crawler entity according to route parameters.
+ *
+ * Provide a method to store a modified crawler.
  *
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  */
@@ -61,5 +63,25 @@ class LoadCrawler extends AbstractPlugin
         }
 
         return $crawler;
+    }
+
+    /**
+     * Loads all crawler entities.
+     *
+     * @return array|\SimpleImport\Entity\Crawler[]
+     */
+    public function loadAll()
+    {
+        return $this->repository->findAll();
+    }
+
+    /**
+     * Stores a crawler entity
+     *
+     * @param \SimpleImport\Entity\Crawler $crawler
+     */
+    public function store(\SimpleImport\Entity\Crawler $crawler)
+    {
+        $this->repository->store($crawler);
     }
 }

@@ -55,7 +55,7 @@ class LoadCrawlerTest extends \PHPUnit_Framework_TestCase
     {
         $repository = $this->getMockBuilder(CrawlerRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['find', 'findOneByName'])
+            ->setMethods(['find', 'findOneByName', 'findAll', 'store'])
             ->getMock();
 
         $this->crawlerRepositoryMock = $repository;
@@ -131,5 +131,21 @@ class LoadCrawlerTest extends \PHPUnit_Framework_TestCase
         $crawler = $this->target->__invoke();
 
         $this->assertSame($expected, $crawler);
+    }
+
+    public function testLoadsAllCrawler()
+    {
+        $this->crawlerRepositoryMock->expects($this->once())->method('findAll');
+
+        $this->target->loadAll();
+    }
+
+    public function testStoresACrawler()
+    {
+        $crawler = new Crawler();
+
+        $this->crawlerRepositoryMock->expects($this->once())->method('store')->with($crawler);
+
+        $this->target->store($crawler);
     }
 }
