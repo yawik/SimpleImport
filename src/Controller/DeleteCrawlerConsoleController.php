@@ -18,7 +18,7 @@ use Zend\Mvc\Console\View\ViewModel;
  * ${CARET}
  * 
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
- * @todo write test 
+ * @todo write test
  */
 class DeleteCrawlerConsoleController extends AbstractConsoleController
 {
@@ -33,17 +33,7 @@ class DeleteCrawlerConsoleController extends AbstractConsoleController
 
     public function indexAction()
     {
-        /* @var \SimpleImport\Entity\Crawler $crawler */
-        $crawlerName = $this->params('name');
-        $isCrawlerId = $this->params('id');
-        $crawler     = $isCrawlerId ? $this->crawlerRepository->find($crawlerName) : $this->crawlerRepository->findOneByName($crawlerName);
-
-        if (!$crawler) {
-            $model = new ViewModel();
-            $model->setErrorLevel(2);
-            $model->setResult(sprintf('Crawler with %s "%s" does not exist.', $isCrawlerId ? 'id' : 'name', $crawlerName));
-            return $model;
-        }
+        $crawler = $this->siLoadCrawler();
 
         foreach ($crawler->getItems() as $item) {
             $job = $this->jobRepository->find($item->getDocumentId());
