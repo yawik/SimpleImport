@@ -45,6 +45,7 @@ return [
         'factories' => [
             'SimpleImport/ConsoleController' => Factory\Controller\ConsoleControllerFactory::class,
             Controller\DeleteCrawlerConsoleController::class => Factory\Controller\DeleteCrawlerConsoleControllerFactory::class,
+            Controller\UpdateCrawlerConsoleController::class => Factory\Controller\UpdateCrawlerConsoleControllerFactory::class,
         ]
     ],
     'controller_plugins' => [
@@ -88,8 +89,26 @@ return [
                         ],
                     ],
                 ],
-            ]
-        ]
+                'simpleimport-info' => [
+                    'options' => [
+                        'route' => 'simpleimport info [--id] [<name>]',
+                        'defaults' => [
+                            'controller' => Controller\UpdateCrawlerConsoleController::class,
+                            'action' => 'index'
+                        ],
+                    ],
+                ],
+                'simpleimport-update-crawler' => [
+                    'options' => [
+                        'route' => 'simpleimport update-crawler [--id] <name> [--rename=] [--feed-uri=] [--rundelay=] [--type=] [--jobInitialState=] [--organization=]',
+                        'defaults' => [
+                            'controller' => Controller\UpdateCrawlerConsoleController::class,
+                            'action' => 'update'
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     'log' => [
         'SimpleImport/Log' => [
@@ -108,11 +127,17 @@ return [
             InputFilter\CrawlerInputFilter::class => InvokableFactory::class
         ]
     ],
+    'filters' => [
+        'factories' => [
+            Filter\IdToEntity::class => Filter\IdToEntityFactory::class,
+        ],
+    ],
     'validators' => [
         'factories' => [
             'SimpleImportOrganizationExists' => Factory\Validator\OrganizationExistsFactory::class,
-            Validator\CrawlerOptions::class => InvokableFactory::class
-        ]
+            Validator\CrawlerOptions::class => InvokableFactory::class,
+            Validator\EntityExists::class => InvokableFactory::class,
+        ],
     ],
     'simple_import_crawler_processor_manager' => [
         'factories' => [

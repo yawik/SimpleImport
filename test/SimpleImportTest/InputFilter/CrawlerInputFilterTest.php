@@ -12,6 +12,7 @@
 namespace SimpleImportTest\Hydrator;
 
 use CoreTestUtils\TestCase\TestInheritanceTrait;
+use SimpleImport\Entity\Crawler;
 use SimpleImport\InputFilter\CrawlerInputFilter;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\ValidatorPluginManager;
@@ -27,7 +28,11 @@ class CrawlerInputFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * @var CrawlerInputFilter
      */
-    private $target = CrawlerInputFilter::class;
+    private $target = [
+        CrawlerInputFilter::class,
+        'args' => false,
+        'mock' => ['add'],
+    ];
 
     /**
      * @see TestInheritanceTrait
@@ -40,55 +45,111 @@ class CrawlerInputFilterTest extends \PHPUnit_Framework_TestCase
      * {@inheritDoc}
      * @see \PHPUnit_Framework_TestCase::setUp()
      */
-    protected function setUp()
-    {
-        $this->setupTargetInstance();
-
-        $validatorMock = $this->getMockBuilder(AbstractValidator::class)
-            ->getMock();
-
-        $validatorPluginManager = $this->getMockBuilder(ValidatorPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $validatorPluginManager->method('get')
-            ->will($this->returnValue($validatorMock));
-
-        $this->target->getFactory()
-            ->getDefaultValidatorChain()
-            ->setPluginManager($validatorPluginManager);
-    }
 
     /**
      * @covers ::init()
      */
-    public function testHasInputFilters()
+    public function testInitiatesCorrectInputs()
     {
+        $this->target->expects($this->exactly(6))->method('add')
+            ->withConsecutive(
+                [[
+                   'name' => 'name',
+                   'filters' => [
+                       [
+                           'name' => 'StringTrim'
+                       ]
+                   ]
+                ]],
+                [[
+                    'name' => 'organization',
+                    'filters' => [
+                        [
+                            'name' => \SimpleImport\Filter\IdToEntity::class,
+                            'options' => [
+                                'document' => 'Organizations',
+                            ],
+                        ],
+                    ],
+                    'validators' => [
+                        [
+                            'name' => \SimpleImport\Validator\EntityExists::class,
+                            'options' => [
+                                'entityClass' => \Organizations\Entity\Organization::class,
+                            ],
+                        ],
+                    ],
+                ]],
+                [[
+                    'name' => 'feedUri',
+                    'filters' => [
+                        [
+                            'name' => 'StringTrim'
+                        ]
+                    ],
+                    'validators' => [
+                        [
+                            'name' => 'Uri',
+                            'options' => [
+                                'allowRelative' => false
+                            ]
+                        ]
+                    ]
+                ]],
+                [[
+                    'name' => 'runDelay',
+                    'required' => false,
+                    'validators' => [
+                        [
+                            'name' => 'Digits',
+                        ],
+                        [
+                            'name' => 'GreaterThan',
+                            'options' => [
+                                'min' => 0,
+                                'inclusive' => true
+                            ]
+                        ]
+                    ]
+                ]],
+                [[
+                    'name' => 'type',
+                    'filters' => [
+                        [
+                            'name' => 'StringTrim'
+                        ]
+                    ],
+                    'validators' => [
+                        [
+                            'name' => 'InArray',
+                            'options' => [
+                                'haystack' => Crawler::validTypes()
+                            ]
+                        ]
+                    ]
+                ]],
+                [[
+                    'name' => 'options',
+                    'required' => false,
+                    'filters' => [
+                        [
+                            'name' => 'Callback',
+                            'options' => [
+                                'callback' => 'array_filter'
+                            ]
+                        ]
+                    ],
+                    'validators' => [
+                        [
+                            'name' => \SimpleImport\Validator\CrawlerOptions::class,
+                        ]
+                    ]
+                ]]
+            )
+            ->will($this->returnSelf());
+
         $this->target->init();
 
-        $this->assertTrue($this->target->has('name'));
-        $this->assertTrue($this->target->has('organization'));
-        $this->assertTrue($this->target->has('feedUri'));
-        $this->assertTrue($this->target->has('runDelay'));
-        $this->assertTrue($this->target->has('type'));
-        $this->assertTrue($this->target->has('options'));
-    }
 
-    /**
-     * @covers ::init()
-     */
-    public function testOptionsFilter()
-    {
-
-        $this->target->init();
-
-        $options = [
-            'someKey' => 'someValue'
-        ];
-        $this->target->setData([
-            'options' => array_merge($options, [
-                'emptyValue' => null
-            ])
-        ]);
-        $this->assertSame($options, $this->target->getValue('options'));
     }
 }

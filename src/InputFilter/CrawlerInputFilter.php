@@ -32,14 +32,20 @@ class CrawlerInputFilter extends InputFilter
             'name' => 'organization',
             'filters' => [
                 [
-                    'name' => 'StringTrim'
-                ]
+                    'name' => \SimpleImport\Filter\IdToEntity::class,
+                    'options' => [
+                        'document' => 'Organizations',
+                    ],
+                ],
             ],
             'validators' => [
                 [
-                    'name' => 'SimpleImportOrganizationExists',
-                ]
-            ]
+                    'name' => \SimpleImport\Validator\EntityExists::class,
+                    'options' => [
+                        'entityClass' => \Organizations\Entity\Organization::class,
+                    ],
+                ],
+            ],
         ])->add([
             'name' => 'feedUri',
             'filters' => [
@@ -92,13 +98,7 @@ class CrawlerInputFilter extends InputFilter
                 [
                     'name' => 'Callback',
                     'options' => [
-                        'callback' => function ($array)
-                        {
-                            return array_filter((array)$array, function ($value)
-                            {
-                                return !is_null($value);
-                            });
-                        }
+                        'callback' => 'array_filter'
                     ]
                 ]
             ],
