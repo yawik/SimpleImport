@@ -162,7 +162,7 @@ class JobProcessor implements ProcessorInterface
                         $result->incrementDeleted();
                     } else {
                         // update the job
-                        $job->setStatus(JobStatusInterface::WAITING_FOR_APPROVAL);
+                        $job->setStatus($crawler->getOptions()->getRecoverState());
                         $this->jobHydrator->hydrate($item->getImportData(), $job);
                         $result->incrementUpdated();
                     }

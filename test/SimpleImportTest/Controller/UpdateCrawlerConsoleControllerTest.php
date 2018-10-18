@@ -121,9 +121,9 @@ class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
         $params = $this->getMockBuilder(\Zend\Mvc\Controller\Plugin\Params::class)
             ->disableOriginalConstructor()->setMethods(['__invoke'])->getMock();
 
-        $params->expects($this->exactly(6))->method('__invoke')
+        $params->expects($this->exactly(7))->method('__invoke')
             ->with($this->callback(function($arg) {
-                return in_array($arg, ['rename', 'feed-uri', 'organization', 'rundelay', 'type', 'jobInitialState']);
+                return in_array($arg, ['rename', 'feed-uri', 'organization', 'rundelay', 'type', 'jobInitialState', 'jobRecoverState']);
             }))
             ->willReturn(null);
 
@@ -151,7 +151,7 @@ class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
             'organization' => null,
             'runDelay' => null,
             'type' => null,
-            'options' => ['initialState' => null]
+            'options' => ['initialState' => null, 'recoverState' => null]
         ]);
 
         $inputFilter->expects($this->once())->method('isValid')->willReturn($inputFilterValid
@@ -166,7 +166,7 @@ class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
                     'organization' => $org,
                     'runDelay' =>  '4321',
                     'type' => Crawler::TYPE_JOB,
-                    'options' => [ 'initialState' => 'active' ],
+                    'options' => [ 'initialState' => 'active', 'recoverState' => 'active' ],
                 ]
             );
         } else {
@@ -198,7 +198,7 @@ class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
         $this->setupUpdateActionTest(false);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageRegExp('~^Invalid parameter.*field1.*Test error message 1, Message1\.1.*field2.*Error Message 2~s');
+        $this->expectExceptionMessageRegExp('~^Invalid parameter.*field1.*Test error message 1.*Message1\.1.*field2.*Error Message 2~s');
 
         $this->target->updateAction();
 

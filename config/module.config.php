@@ -72,7 +72,7 @@ return [
                 ],
                 'simpleimport-add-crawler' => [
                     'options' => [
-                        'route' => 'simpleimport add-crawler --name= --organization= --feed-uri= [--runDelay=] [--type=] [--jobInitialState=]',
+                        'route' => 'simpleimport add-crawler --name= --organization= --feed-uri= [--runDelay=] [--type=] [--jobInitialState=] [--jobRecoverState=]',
                         'defaults' => [
                             'controller' => 'SimpleImport/ConsoleController',
                             'action' => 'addCrawler',
@@ -100,7 +100,7 @@ return [
                 ],
                 'simpleimport-update-crawler' => [
                     'options' => [
-                        'route' => 'simpleimport update-crawler [--id] <name> [--rename=] [--feed-uri=] [--rundelay=] [--type=] [--jobInitialState=] [--organization=]',
+                        'route' => 'simpleimport update-crawler [--id] <name> [--rename=] [--feed-uri=] [--rundelay=] [--type=] [--jobInitialState=] [--jobRecoverState=] [--organization=]',
                         'defaults' => [
                             'controller' => Controller\UpdateCrawlerConsoleController::class,
                             'action' => 'update'

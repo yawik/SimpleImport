@@ -73,7 +73,7 @@ class Module implements DependencyIndicatorInterface, ConsoleUsageProviderInterf
         return [
             'Simple import operations',
             'simpleimport import [--limit] [--name] [--id]'  => 'Executes a data import for all registered crawlers',
-            'simpleimport add-crawler --name --organization --feed-uri [--runDelay] [--type] [--jobInitialState]'  => 'Adds a new import crawler',
+            'simpleimport add-crawler --name --organization --feed-uri [--runDelay] [--type] [--jobInitialState] [--jobRecoverState]'  => 'Adds a new import crawler',
             ['--limit=INT', 'Number of crawlers to check per run. Default 3. 0 means no limit'],
             ['--name=STRING', 'The name of a crawler'],
             ['--id=STRING', 'The Mongo object id of a crawler'],
@@ -82,6 +82,7 @@ class Module implements DependencyIndicatorInterface, ConsoleUsageProviderInterf
             ['--runDelay=INT', 'The number of minutes the next import run will be proceeded again'],
             ['--type=STRING', 'The type of an import (e.g. job)'],
             ['--jobInitialState=STRING', 'The initial state of an imported job'],
+            ['--jobRecoverState=STRING', 'The state a job gets, if it was deleted, but found again in later runs.'],
             '',
             'simpleimport info' => 'Displays a list of all available crawlers.',
             'simpleimport info [--id] <name>' => 'Shows information for a crawler',

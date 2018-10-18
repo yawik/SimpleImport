@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Validator;
 
+use CoreTestUtils\TestCase\TestDefaultAttributesTrait;
+use Jobs\Entity\StatusInterface;
 use SimpleImport\Validator\CrawlerOptions;
 use CoreTestUtils\TestCase\TestInheritanceTrait;
 use Zend\Validator\AbstractValidator;
@@ -23,7 +25,7 @@ use Jobs\Entity\Status;
 class CrawlerOptionsTest extends \PHPUnit_Framework_TestCase
 {
 
-    use TestInheritanceTrait;
+    use TestInheritanceTrait, TestDefaultAttributesTrait;
 
     /**
      * @var CrawlerOptions
@@ -36,6 +38,18 @@ class CrawlerOptionsTest extends \PHPUnit_Framework_TestCase
      * @var array
      */
     private $inheritance = [AbstractValidator::class];
+
+    /**
+     * @see TestDefaultAttributesTrait
+     * @var array
+     */
+    private $attributes = [
+        'messageTemplates' => [
+            CrawlerOptions::INVALID_INITIAL_STATE => "Invalid initial state. Possible values are: %validStates%.",
+            CrawlerOptions::INVALID_RECOVER_STATE => "Invalid recover state. Possible values are: %validStates%.",
+        ],
+        'messageVariables' => [ 'validStates' => 'validStates' ],
+    ];
 
     /**
      * @covers ::isValid()
@@ -56,21 +70,38 @@ class CrawlerOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($isValid);
     }
 
-    /**
-     * @covers ::isValid()
-     */
-    public function testIsValidWithInvalidJobState()
+    public function provideIsValidTestData()
     {
-        $isValid = $this->target->isValid(['initialState' => 'inv4lid'], ['type' => Crawler::TYPE_JOB]);
-        $this->assertFalse($isValid);
+        return [
+            [['initialState' => 'invalid'], false, [CrawlerOptions::INVALID_INITIAL_STATE]],
+            [['initialState' => StatusInterface::ACTIVE], true],
+            [['recoverState' => 'invalid'], false, [CrawlerOptions::INVALID_RECOVER_STATE]],
+            [['recoverState' => StatusInterface::ACTIVE], true],
+            [['initialState' => StatusInterface::ACTIVE, 'recoverState' => 'invalid'], false, [CrawlerOptions::INVALID_RECOVER_STATE]],
+            [['initialState' => 'invalid', 'recoverState' => StatusInterface::ACTIVE], false, [CrawlerOptions::INVALID_INITIAL_STATE]],
+            [['initialState' => 'invalid', 'recoverState' => 'invalid'], false, [CrawlerOptions::INVALID_INITIAL_STATE, CrawlerOptions::INVALID_RECOVER_STATE]],
+            [['initialState' => StatusInterface::ACTIVE, 'recoverState' => StatusInterface::ACTIVE], true],
+        ];
     }
 
     /**
-     * @covers ::isValid()
+     * @dataProvider provideIsValidTestData
+     *
+     * @param      $value
+     * @param      $expect
+     * @param null $messageKeys
      */
-    public function testIsValidWithValidJobState()
+    public function testIsValid($value, $expect, $messageKeys = null)
     {
-        $isValid = $this->target->isValid(['initialState' => Status::PUBLISH], ['type' => Crawler::TYPE_JOB]);
-        $this->assertTrue($isValid);
+        $actual = $this->target->isValid($value, ['type' => Crawler::TYPE_JOB]);
+
+        $this->assertEquals($actual, $expect, CrawlerOptions::class . '::isValid returns wrong boolean value.');
+
+        if ($messageKeys) {
+            $messages = $this->target->getMessages();
+            foreach ($messageKeys as $key) {
+                $this->assertArrayHasKey($key, $messages);
+            }
+        }
     }
 }

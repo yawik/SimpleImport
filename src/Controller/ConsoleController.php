@@ -165,7 +165,8 @@ class ConsoleController extends AbstractConsoleController
             'runDelay' => $this->params('runDelay', $this->moduleOptions->getImportRunDelay()),
             'type' => $this->params('type', Crawler::TYPE_JOB),
             'options' => [
-                'initialState' => $this->params('jobInitialState')
+                'initialState' => $this->params('jobInitialState'),
+                'recoverState' => $this->params('jobRecoverState'),
             ]
         ]);
         $console = $this->getConsole();

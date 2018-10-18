@@ -20,12 +20,17 @@ class CrawlerOptions extends AbstractValidator
      * @var string
      */
     const INVALID_INITIAL_STATE = 'invalidInitialState';
+    /**
+     * @var string
+     */
+    const INVALID_RECOVER_STATE = 'invalidRecoverState';
 
     /**
      * @var array
      */
     protected $messageTemplates = [
         self::INVALID_INITIAL_STATE => "Invalid initial state. Possible values are: %validStates%.",
+        self::INVALID_RECOVER_STATE => "Invalid recover state. Possible values are: %validStates%.",
     ];
     
     /**
@@ -51,20 +56,26 @@ class CrawlerOptions extends AbstractValidator
         if (!isset($context['type'])) {
             throw new LogicException('There is no type key in the context');
         }
+
+        $isValid = true;
         
         switch ($context['type']) {
             case Crawler::TYPE_JOB:
-                if (isset($value['initialState'])) {
-                    $states = Status::getStates();
-                    if (!in_array($value['initialState'], $states)) {
-                        $this->validStates = implode(', ', $states);
-                        $this->error(self::INVALID_INITIAL_STATE);
-                        return false;
-                    }
+                $states = Status::getStates();
+                $this->validStates = join(', ', $states);
+
+                if (isset($value['initialState']) && !in_array($value['initialState'], $states)) {
+                   $this->error(self::INVALID_INITIAL_STATE);
+                   $isValid = false;
                 }
+                if (isset($value['recoverState']) && !in_array($value['recoverState'], $states)) {
+                    $this->error(self::INVALID_RECOVER_STATE);
+                    $isValid = false;
+                }
+
             break;
         }
         
-        return true;
+        return $isValid;
     }
 }

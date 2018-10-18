@@ -81,6 +81,7 @@ Feed-URI:     %s
 Run delay:    %s
 
 Jobs initial state: %s
+Jobs recover state: %s
 Date last run:      %s
 
 EOF
@@ -90,6 +91,7 @@ EOF
             $crawler->getFeedUri(),
             $crawler->getRunDelay(),
             $crawler->getOptions()->getInitialState(),
+            $crawler->getOptions()->getRecoverState(),
             $crawler->getDateLastRun()->format('d.m.Y H:i:s')
         );
 
@@ -125,7 +127,7 @@ EOF
     }
 
     /**
-     * Validates rhe command line arguments.
+     * Validates the command line arguments.
      *
      * @param \SimpleImport\Entity\Crawler $crawler
      *
@@ -142,16 +144,19 @@ EOF
             'organization' => $params('organization', $crawler->getOrganization()),
             'runDelay' => $params('rundelay', $crawler->getRunDelay()),
             'type' => $params('type', $crawler->getType()),
-            'options' => ['initialState' => $params('jobInitialState', $crawler->getOptions()->getInitialState())]
+            'options' => [
+                'initialState' => $params('jobInitialState', $crawler->getOptions()->getInitialState()),
+                'recoverState' => $params('jobRecoverState', $crawler->getOptions()->getRecoverState())
+            ],
         ]);
 
         if (!$this->inputFilter->isValid()) {
-            $message = 'Invalid parameters!' . PHP_EOL . PHP_EOL;
+            $message = ['Invalid parameters!'];
             foreach ($this->inputFilter->getMessages() as $name => $messages) {
-                $message .= sprintf(' - %s: %s', $name, join(', ', $messages)) . PHP_EOL;
+                $message[] = sprintf(' - %s: %s', $name, join(PHP_EOL . str_repeat(' ', strlen($name) + 5), $messages));
             }
 
-            throw new \RuntimeException($message);
+            throw new \RuntimeException(join(PHP_EOL . PHP_EOL, $message) . PHP_EOL);
         }
 
         $values = array_filter($this->inputFilter->getValues(), function($i) { return !empty($i); });

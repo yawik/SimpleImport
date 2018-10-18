@@ -362,7 +362,8 @@ class ConsoleControllerTest extends \PHPUnit_Framework_TestCase
             'runDelay' => 'crawlerRunDelay',
             'type' => 'crawlerType',
             'options' => [
-                'initialState' => 'crawlerInitialState'
+                'initialState' => 'crawlerInitialState',
+                'recoverState' => 'crawlerRecoverState',
             ]
         ];
 
@@ -374,6 +375,7 @@ class ConsoleControllerTest extends \PHPUnit_Framework_TestCase
                 ['runDelay', $this->moduleOptions->getImportRunDelay(), $data['runDelay']],
                 ['type', Crawler::TYPE_JOB, $data['type']],
                 ['jobInitialState', $data['options']['initialState']],
+                ['jobRecoverState', $data['options']['recoverState']],
             ]));
 
         $this->crawlerInputFilter->expects($this->once())

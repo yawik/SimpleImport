@@ -21,12 +21,13 @@ class JobOptions
      * @var string
      * @ODM\Field(type="string")
      */
-    private $initialState;
-    
-    public function __construct()
-    {
-        $this->initialState = JobStatusInterface::ACTIVE;
-    }
+    private $initialState = JobStatusInterface::ACTIVE;
+
+    /**
+     * @var string
+     * @ODM\Field(type="string")
+     */
+    private $recoverState = JobStatusInterface::ACTIVE;
     
     /**
      * @return string
@@ -45,6 +46,28 @@ class JobOptions
         $this->initialState = $initialState;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getRecoverState()
+    {
+        return $this->recoverState;
+    }
+
+    /**
+     * @param string $recoverState
+     *
+     * @return self
+     */
+    public function setRecoverState($recoverState)
+    {
+        $this->recoverState = $recoverState;
+
+        return $this;
+    }
+
+
 
 
 }
