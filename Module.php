@@ -86,7 +86,7 @@ class Module implements DependencyIndicatorInterface, ConsoleUsageProviderInterf
             '',
             'simpleimport info' => 'Displays a list of all available crawlers.',
             'simpleimport info [--id] <name>' => 'Shows information for a crawler',
-            'simpleimport update-crawler [--id] <name> [--rename] [--limit] [--organization] [--feed-uri] [--runDelay] [--type] [--jobInitalState]'
+            'simpleimport update-crawler [--id] <name> [--rename] [--limit] [--organization] [--feed-uri] [--runDelay] [--type] [--jobInitalState] [--jobRecoverState]'
                 => 'Updates configuration for a crawler. ',
             'simpleimport delete-crawler [--id] <name>' => 'Deletes an import crawler',
             ['<name>', 'The name of the crawler to delete.'],

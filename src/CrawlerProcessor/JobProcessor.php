@@ -121,7 +121,7 @@ class JobProcessor implements ProcessorInterface
             
             if ($item) {
                 // check if the item has changed
-                if ($importData != $item->getImportData()) {
+                if ($importData != $item->getImportData() || $item->getDateDeleted()) {
                     // mark the item modified
                     $item->setImportData($importData)
                         ->setDateModified(new DateTime())
