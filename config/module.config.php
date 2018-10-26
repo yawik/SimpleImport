@@ -144,4 +144,12 @@ return [
             Crawler::TYPE_JOB => Factory\CrawlerProcessor\JobProcessorFactory::class
         ]
     ],
+
+    'event_manager' => [
+        'Core/EntityEraser/Dependencies/Events' => [
+            'listeners' => [
+                Listener\CheckJobDependencyListener::class => ['*', true ]
+            ],
+        ]
+    ]
 ];

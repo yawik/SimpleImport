@@ -9,6 +9,8 @@
 namespace SimpleImport\Entity;
 
 use Core\Entity\AbstractIdentifiableEntity;
+use Core\Entity\MetaDataProviderInterface;
+use Core\Entity\MetaDataProviderTrait;
 use DateTime;
 use InvalidArgumentException;
 use LogicException;
@@ -19,10 +21,12 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(collection="simpleimport.crawler", repositoryClass="\SimpleImport\Repository\Crawler")
+ * @ODM\HasLifecycleCallbacks
  */
-class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface
+class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, MetaDataProviderInterface
 {
-    
+    use MetaDataProviderTrait;
+
     /**
      * @var string
      */
@@ -77,7 +81,22 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface
      * @ODM\EmbedMany(targetDocument="Item", strategy="set")
      */
     private $items;
-    
+
+    /**
+     * @ODM\PrePersist
+     * @ODM\PreUpdate
+     */
+    public function setItemsMetaData()
+    {
+        $documentIds = [];
+
+        foreach ($this->items as $item) {
+            $documentIds[] = $item->getDocumentId();
+        }
+
+        $this->setMetaData('documentIds', $documentIds);
+    }
+
     /**
      * @return string
      */
@@ -204,6 +223,11 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface
     public function getItems()
     {
         return $this->items()->toArray();
+    }
+
+    public function getItemsCollection()
+    {
+        return $this->items();
     }
 
     /**
