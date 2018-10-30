@@ -1,11 +1,5 @@
 <?php
-$manifestFile = __DIR__.'/../../sandbox/public/build/manifest.json';
-if (!is_dir($dir=dirname($manifestFile))) {
-    mkdir($dir, 0755, true);
-}
-if (!is_file($manifestFile)) {
-    file_put_contents($manifestFile, '{}', LOCK_EX);
-}
+
 return [
     'doctrine' =>[
         'connection' =>[
@@ -24,17 +18,12 @@ return [
     'core_options' => [
 
     ],
-    'view_helper_config' => [
-        'asset' => [
-            'resource_map' => json_decode(file_get_contents($manifestFile), true),
-        ]
-    ],
     'SimpleImport/Log' => [
         'writers' => [
             [
                 'name' => 'stream',
                 'options' => [
-                    'stream' => __DIR__ . '/../../log/simple-import.log'
+                    'stream' => realpath(__DIR__.'/../../sandbox').'/var/log/simple-import.log'
                 ]
             ]
         ]
