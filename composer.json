@@ -46,6 +46,14 @@
             "": "test/"
         }
     },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "0.32-dev"
+        },
+        "zf": {
+            "module": "SimpleImport"
+        }
+    },
     "scripts": {
         "auto-scripts": [
             "./vendor/bin/yawik assets-install --relative",
