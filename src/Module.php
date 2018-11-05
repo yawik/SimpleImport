@@ -19,7 +19,7 @@ use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 /**
  * Bootstrap module
  */
-class Module implements DependencyIndicatorInterface, ConsoleUsageProviderInterface, ConsoleBannerProviderInterface
+class Module implements DependencyIndicatorInterface, ConsoleBannerProviderInterface
 {
 
     /**
@@ -39,23 +39,6 @@ class Module implements DependencyIndicatorInterface, ConsoleUsageProviderInterf
     public function getModuleDependencies()
     {
         return ['Jobs'];
-    }
-
-    /**
-     * Loads module specific autoloader configuration.
-     *
-     * @return array
-     */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/',
-                    __NAMESPACE__ . 'Test' => __DIR__ . '/test/' . __NAMESPACE__ . 'Test',
-                ),
-            ),
-        );
     }
 
     public function getConsoleBanner(Console $console)
