@@ -44,7 +44,7 @@ install:
   - pecl install -f ${PECLMONGO}
   - phpenv config-add .travis/phpenv.ini
   # TODO: change to --prefer-dist when CoreTestUtils become separate packages
-  - composer install yawik/core --prefer-source
+  - composer install --prefer-source
 
 before_script:
   # behat preparation
