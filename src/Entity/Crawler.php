@@ -78,7 +78,7 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
     
     /**
      * @var Collection
-     * @ODM\EmbedMany(targetDocument="Item", strategy="set")
+     * @ODM\ReferenceMany(targetDocument="Item", mappedBy="crawler", cascade={"persist","remove"})
      */
     private $items;
 
@@ -264,7 +264,8 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
         if (isset($items[$importId])) {
             throw new InvalidArgumentException(sprintf('Item with import ID "%s" already exists', $importId));
         }
-        
+
+        $item->setCrawler($this);
         $items[$importId] = $item;
     }
 
