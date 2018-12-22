@@ -41,6 +41,7 @@
         "yawik/organizations": "^0.32@dev",
         "yawik/composer-plugin": "^0.32@dev",
         "yawik/core": "^0.32.0@RC",
+        "yawik/geo": "^0.32@dev",
         "willdurand/geocoder": "^3.3.2"
     },
     "require-dev": {
