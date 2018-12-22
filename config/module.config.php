@@ -116,7 +116,7 @@ return [
                 [
                     'name' => 'stream',
                     'options' => [
-                        'stream' => __DIR__ . '/../../../log/simple-import.log'
+                        'stream' => __DIR__ . '/../../../var/log/simple-import.log'
                     ]
                 ]
             ]
