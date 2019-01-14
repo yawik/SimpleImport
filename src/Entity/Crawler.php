@@ -247,9 +247,9 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
      */
     public function getItem($importId)
     {
-        $items = $this->items();
+        $items = $this->items()->filter(function (Item $item) use ($importId) { return $item->getImportId() == $importId; });
         
-        return isset($items[$importId]) ? $items[$importId] : null;
+        return $items->first() ?: null;
     }
     
     /**
@@ -261,12 +261,12 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
         $importId = $item->getImportId();
         $items = $this->items();
       
-        if (isset($items[$importId])) {
+        if ($this->getItem($importId)) {
             throw new InvalidArgumentException(sprintf('Item with import ID "%s" already exists', $importId));
         }
 
         $item->setCrawler($this);
-        $items[$importId] = $item;
+        $items->add($item);
     }
 
     /**
