@@ -4,6 +4,8 @@ require __DIR__.'/../../../vendor/autoload.php';
 
 use Core\Application;
 
+chdir(dirname(__DIR__));
+
 // Retrieve configuration
-$appConfig = include __DIR__.'/../config/config.php';
+$appConfig = include 'config/config.php';
 Application::init($appConfig)->run();

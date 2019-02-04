@@ -1,7 +1,7 @@
 <?php
-chdir(dirname(__DIR__));
 return [
     'modules' => [
+        'SlmQueue',
         'Core',
         'Auth',
         'Jobs',
@@ -10,5 +10,6 @@ return [
         'Settings',
         'Organizations',
         'SimpleImport',
+        'Geo',
     ],
 ];
