@@ -3,3 +3,4 @@ phpunit.xml
 vendor
 behat.yml
 composer.lock
+.idea/

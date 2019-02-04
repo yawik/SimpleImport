@@ -8,9 +8,11 @@
  */
 namespace SimpleImport\CrawlerProcessor;
 
+use Jobs\Entity\Job;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\DataFetch\JsonFetch;
 use SimpleImport\DataFetch\PlainTextFetch;
+use SimpleImport\Queue\GuessLanguageJob;
 use Zend\Json\Json;
 use Zend\Log\LoggerInterface;
 use SimpleImport\Entity\Item;
@@ -48,6 +50,11 @@ class JobProcessor implements ProcessorInterface
      * @var InputFilterInterface
      */
     private $dataInputFilter;
+
+    /**
+     * @var \SlmQueue\Controller\Plugin\QueuePlugin
+     */
+    private $queuePlugin;
     
     /**
      * @param JsonFetch $jsonFetch
@@ -69,7 +76,22 @@ class JobProcessor implements ProcessorInterface
         $this->jobHydrator = $jobHydrator;
         $this->dataInputFilter = $dataInputFilter;
     }
-    
+
+    /**
+     * @param \SlmQueue\Controller\Plugin\QueuePlugin $queuePlugin
+     *
+     * @return self
+     */
+    public function setQueuePlugin(\SlmQueue\Controller\Plugin\QueuePlugin $queuePlugin)
+    {
+        $this->queuePlugin = $queuePlugin;
+        $queuePlugin('simpleimport');
+
+        return $this;
+    }
+
+
+
     /**
      * {@inheritDoc}
      * @see \SimpleImport\CrawlerProcessor\ProcessorInterface::execute()
@@ -164,6 +186,7 @@ class JobProcessor implements ProcessorInterface
                         // update the job
                         $job->setStatus($crawler->getOptions()->getRecoverState());
                         $this->jobHydrator->hydrate($item->getImportData(), $job);
+                        $this->guessLanguage($job);
                         $result->incrementUpdated();
                     }
                 } else {
@@ -205,6 +228,7 @@ class JobProcessor implements ProcessorInterface
                 if (false !== $plainText) { $job->setMetaData('plainText', $plainText); }
                 $this->jobHydrator->hydrate($importData, $job);
                 $this->jobRepository->store($job);
+                $this->guessLanguage($job);
                 $item->setDocumentId($job->getId());
                 $result->incrementInserted();
             }
@@ -226,5 +250,12 @@ class JobProcessor implements ProcessorInterface
         }
         
         return $formatted;
+    }
+
+    private function guessLanguage(Job $job)
+    {
+        if (!$this->queuePlugin || $job->getLanguage()) { return; }
+
+        $this->queuePlugin->push(GuessLanguageJob::class, ['jobId' => $job->getId()]);
     }
 }
