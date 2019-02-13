@@ -10,11 +10,10 @@
 /** */
 namespace SimpleImport\Queue;
 
-use Core\Queue\Exception\FatalJobException;
-use Core\Queue\Exception\RecoverableJobException;
+use Core\Queue\Job\MongoJob;
 use Jobs\Repository\Job;
 use SimpleImport\Service\LanguageGuesser;
-use SlmQueue\Job\AbstractJob;
+use Jobs\Entity\JobInterface as JobEntityInterface;
 use Zend\Log\LoggerAwareInterface;
 use Zend\Log\LoggerAwareTrait;
 
@@ -24,16 +23,25 @@ use Zend\Log\LoggerAwareTrait;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  * @todo write test 
  */
-class GuessLanguageJob extends AbstractJob implements LoggerAwareInterface
+class GuessLanguageJob extends MongoJob implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
     private $repository;
     private $guesser;
-    private $jobId;
+
     protected $content = [
         'jobId' => null,
     ];
+
+    protected static function filterPayload($payload)
+    {
+        if ($payload instanceOf JobEntityInterface) {
+            return ['jobId' => $payload->getId()];
+        }
+
+        return parent::filterPayload($payload);
+    }
 
     public function __construct(Job $repository, LanguageGuesser $guesser)
     {
@@ -43,19 +51,21 @@ class GuessLanguageJob extends AbstractJob implements LoggerAwareInterface
 
     public function execute()
     {
+        if (!$this->repository || !$this->guesser) {
+            return $this->failure('Cannot execute without dependencies.');
+        }
+
         /* @var \Jobs\Entity\Job $job */
         $logger = $this->getLogger();
         $jobId = $this->getJobId();
         $job   = $this->repository->find($jobId);
 
         if (!$job) {
-            $logger->err('A job with the id "' . $jobId . '" does not exist.');
-            throw new FatalJobException('A job with the id "' . $jobId . '" does not exist."');
+            return $this->failure('A job with the id "' . $jobId . '" does not exist.');
         }
 
         if ($job->getLanguage()) {
-            $logger->info('Job has a language set already. [ jobId: ' . $jobId . ']');
-            return;
+            return $this->success('Job has a language set already. [ jobId: ' . $jobId . ']');
         }
 
         $templValues = $job->getTemplateValues();
@@ -91,15 +101,14 @@ MESSAGE;
 
 
             $logger->err(sprintf($message, var_export($result['error'], true)));
-            $logger->notice('Will retry in 30 seconds.');
-            throw new RecoverableJobException('Could not detect language for job "' . $jobId . '"', ['delay' => 30]);
+            return $this->recoverable('Could not detect language.', ['delay' => 30]);
         }
 
         $job->setLanguage($result['language']);
         $this->repository->store($job);
 
         $logger->info(sprintf('Set language to "%s" for job "%s"', $result['language'], $jobId));
-        return;
+        return $this->success();
     }
 
     public function setJobId($jobId)
