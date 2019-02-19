@@ -1,7 +1,6 @@
 <?php
 return [
     'modules' => [
-        'SlmQueue',
         'Core',
         'Auth',
         'Jobs',

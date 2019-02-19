@@ -40,7 +40,7 @@
         "yawik/cv": "^0.32@dev",
         "yawik/organizations": "^0.32@dev",
         "yawik/composer-plugin": "^0.32@dev",
-        "yawik/core": "dev-develop",
+        "yawik/core": "^0.32@dev",
         "yawik/geo": "^0.32@dev",
         "willdurand/geocoder": "^3.3.2"
     },
@@ -52,6 +52,10 @@
         "psr-4": { "SimpleImport\\": "src/"}
     },
     "autoload-dev": {
+	"psr-4": {
+            "SimpleImportTest\\": "test/SimpleImportTest/",
+	    "CoreTestUtils\\": "vendor/yawik/core/test/CoreTestUtils/"
+	},
         "psr-0": {
             "": "test/"
         }
