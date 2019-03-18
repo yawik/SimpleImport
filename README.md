@@ -5,7 +5,7 @@ This module provides import tasks
 
 Build status:
 
-[![Build Status](https://api.travis-ci.org/yawik/SimpleImport.svg)](https://travis-ci.org/yawik/SimpleImport)
+[![Build Status](https://api.travis-ci.org/yawik/SimpleImport.svg?branch=master)](https://travis-ci.org/yawik/SimpleImport)
 [![Coverage Status](https://coveralls.io/repos/github/yawik/SimpleImport/badge.svg?branch=master)](https://coveralls.io/github/yawik/SimpleImport?branch=master)
 
 Requirements

@@ -186,15 +186,12 @@ class JobProcessor implements ProcessorInterface
                     try {
                         $plainText = $this->plainTextFetch->fetch($importData['link']);
                     } catch (RuntimeException $e) {
-                        $logger->err(sprintf(
+                        $logger->warn(sprintf(
                             'Cannot fetch HTML digest for a job, import ID: "%s", link: "%s", reason: "%s"',
                             $item->getImportId(),
                             $importData['link'],
                             $e->getMessage())
                         );
-                    
-                        $result->incrementInvalid();
-                        continue;
                     }
                 }
                 

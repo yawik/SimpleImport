@@ -8,13 +8,14 @@
  */
 namespace SimpleImport\Entity;
 
+use Core\Entity\AbstractIdentifiableEntity;
 use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ODM\EmbeddedDocument
+ * @ODM\Document(collection="simpleimport.items")
  */
-class Item
+class Item extends AbstractIdentifiableEntity
 {
     
     /**
@@ -58,6 +59,13 @@ class Item
      * @ODM\Field(type="tz_date")
      */
     private $dateSynced;
+
+    /**
+     *
+     * @ODM\ReferenceOne(targetDocument="SimpleImport\Entity\Crawler", inversedBy="items", storeAs="id")
+     * @var Crawler
+     */
+    private $crawler;
     
     /**
      * @param string $importId
@@ -191,4 +199,26 @@ class Item
         
         return $this->dateSynced >= $this->dateModified;
     }
+
+    /**
+     * @return Crawler
+     */
+    public function getCrawler()
+    {
+        return $this->crawler;
+    }
+
+    /**
+     * @param Crawler $crawler
+     *
+     * @return self
+     */
+    public function setCrawler($crawler)
+    {
+        $this->crawler = $crawler;
+
+        return $this;
+    }
+
+
 }

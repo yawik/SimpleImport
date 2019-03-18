@@ -79,7 +79,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $importId = 'importId1';
         $item = new Item($importId, []);
         $this->target->addItem($item);
-        $this->assertSame([$importId => $item], $this->target->getItems());
+        $this->assertSame([$item], $this->target->getItems());
     }
 
     /**
@@ -94,13 +94,13 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $nonSyncedImportId = 'importId1';
         $nonSyncedItem = new Item($nonSyncedImportId, []);
         $this->target->addItem($nonSyncedItem);
-        $this->assertSame([$nonSyncedImportId => $nonSyncedItem], $this->target->getItemsToSync());
+        $this->assertSame([$nonSyncedItem], $this->target->getItemsToSync());
 
         $syncedImportId = 'importId2';
         $syncedItem = new Item($syncedImportId, []);
         $syncedItem->setDateSynced(new DateTime());
         $this->target->addItem($syncedItem);
-        $this->assertSame([$nonSyncedImportId => $nonSyncedItem], $this->target->getItemsToSync(),
+        $this->assertSame([$nonSyncedItem], $this->target->getItemsToSync(),
             'Synchronized items may not be returned');
     }
 

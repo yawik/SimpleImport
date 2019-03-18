@@ -201,6 +201,11 @@ class JobDataInputFilter extends InputFilter
                 'allowEmpty' => false,
                 'filters' => [ [ 'name' => 'StringTrim' ] ],
             ],
+            'description' => [
+                'required' => false,
+                'allowEmpty' => false,
+                'filters' => [ [ 'name' => 'StringTrim' ] ],
+            ],
         ], 'templateValues');
     }
 }

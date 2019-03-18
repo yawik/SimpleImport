@@ -2,10 +2,10 @@
 
 require __DIR__.'/../../../vendor/autoload.php';
 
-use Core\Bootstrap;
+use Core\Application;
+
+chdir(dirname(__DIR__));
 
 // Retrieve configuration
-$appConfig = include __DIR__.'/../../config/config.php';
-
-// Run the application!
-Bootstrap::runApplication($appConfig);
+$appConfig = include 'config/config.php';
+Application::init($appConfig)->run();
