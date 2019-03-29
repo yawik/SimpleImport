@@ -33,12 +33,14 @@ return [
     'options' => [
         'SimpleImport/Options/Module' => [
             'class' => Options\ModuleOptions::class
-        ]
+        ],
+        Options\LanguageGuesserOptions::class => []
     ],
     'service_manager' => [
         'factories' => [
             'SimpleImport/CrawlerProcessorManager' => Factory\CrawlerProcessor\ManagerFactory::class,
-            'SimpleImport/JobGeocodeLocation' => Factory\Job\GeocodeLocationFactory::class
+            'SimpleImport/JobGeocodeLocation' => Factory\Job\GeocodeLocationFactory::class,
+            Service\LanguageGuesser::class => Service\LanguageGuesserFactory::class,
         ]
     ],
     'controllers' => [
@@ -46,6 +48,7 @@ return [
             'SimpleImport/ConsoleController' => Factory\Controller\ConsoleControllerFactory::class,
             Controller\DeleteCrawlerConsoleController::class => Factory\Controller\DeleteCrawlerConsoleControllerFactory::class,
             Controller\UpdateCrawlerConsoleController::class => Factory\Controller\UpdateCrawlerConsoleControllerFactory::class,
+            Controller\GuessLanguageConsoleController::class => Factory\Controller\GuessLanguageConsoleControllerFactory::class,
         ]
     ],
     'controller_plugins' => [
@@ -54,6 +57,31 @@ return [
         ],
         'aliases' => [
             'siLoadCrawler' => Controller\Plugin\LoadCrawler::class,
+        ],
+    ],
+    'slm_queue' => [
+        'queues' => [
+            'simpleimport' => [
+                'collection' => 'simpleimport.queue',
+            ],
+        ],
+        'worker_strategies' => [
+            'queues' => [
+                'simpleimport' => [
+                    \Core\Queue\Strategy\LogStrategy::class => ['log' => 'Log/SimpleImport/Queue'],
+                    \SlmQueue\Strategy\ProcessQueueStrategy::class,
+                ],
+            ],
+        ],
+        'queue_manager' => [
+            'factories' => [
+                'simpleimport' => \Core\Queue\MongoQueueFactory::class,
+            ],
+        ],
+        'job_manager' => [
+            'factories' => [
+                Queue\GuessLanguageJob::class => Queue\GuessLanguageJobFactory::class,
+            ],
         ],
     ],
 
@@ -107,6 +135,15 @@ return [
                         ],
                     ],
                 ],
+                'simpleimport-guess-language' => [
+                    'options' => [
+                        'route' => 'simpleimport guess-language [--limit=]',
+                        'defaults' => [
+                            'controller' => Controller\GuessLanguageConsoleController::class,
+                            'action' => 'index',
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
@@ -116,11 +153,32 @@ return [
                 [
                     'name' => 'stream',
                     'options' => [
-                        'stream' => __DIR__ . '/../../../var/log/simple-import.log'
+                        'stream' => getcwd() . '/var/log/simple-import.log'
                     ]
                 ]
             ]
-        ]
+        ],
+        'Log/SimpleImport/Queue' => [
+            'writers' => [
+                [
+                    'name' => 'stream',
+                    'priority' => 1000,
+                    'options' => [
+                        'stream' => getcwd().'/var/log/simpleimport.queue.log',
+                        'formatter'  => [
+                            'name' => 'simple',
+                            'options' => [
+                                'format' => '%timestamp% (%pid%) %priorityName%: %message% %extra%',
+                                'dateTimeFormat' => 'd.m.Y H:i:s',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'processors' => [
+                ['name' => \Core\Log\Processor\ProcessId::class],
+            ],
+        ],
     ],
     'input_filters' => [
         'factories' => [
