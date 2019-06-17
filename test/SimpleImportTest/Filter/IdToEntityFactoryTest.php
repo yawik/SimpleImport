@@ -6,12 +6,13 @@
  * @license MIT
  * @copyright  2013 - 2018 Cross Solution <http://cross-solution.de>
  */
-  
+
 /** */
 namespace SimpleImportTest\Filter;
 
-use CoreTestUtils\TestCase\ServiceManagerMockTrait;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\ContainerDoubleTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use SimpleImport\Filter\IdToEntity;
 use SimpleImport\Filter\IdToEntityFactory;
@@ -22,14 +23,14 @@ use Zend\ServiceManager\ServiceManager;
 
 /**
  * Tests for \SimpleImport\Filter\IdToEntityFactory
- * 
+ *
  * @covers \SimpleImport\Filter\IdToEntityFactory
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
- *  
+ *
  */
 class IdToEntityFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    use TestInheritanceTrait, ServiceManagerMockTrait;
+    use TestInheritanceTrait, ContainerDoubleTrait, SetupTargetTrait;
 
     /**
      * @var string|IdToEntityFactory
@@ -40,7 +41,7 @@ class IdToEntityFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testInvokationThrowsExceptionIfDocumentNameIsMissing()
     {
-        $container = $this->getServiceManagerMock();
+        $container = new ServiceManager();
 
         $this->expectException(ServiceNotCreatedException::class);
         $this->expectExceptionMessage('Missing option "document"');
@@ -67,14 +68,23 @@ class IdToEntityFactoryTest extends \PHPUnit_Framework_TestCase
         $documentName = 'TestEntityClass';
         $repository   = $this->getMockBuilder(DocumentRepository::class)->disableOriginalConstructor()->getMock();
 
-        $container = $this->getServiceManagerMock();
+        $repositories = $this->createContainerDouble(
+            [
+                $documentName => $repository,
+            ],
+            [
+                'target' => AbstractPluginManager::class
+            ]
+        );
 
-        $repositories = $this->getPluginManagerMock([
-            $documentName => $repository,
-        ], $container);
-
-        $container->setService('repositories', $repositories);
-        $container->setExpectedCallCount('get', 'repositories', 1);
+        $container = $this->createContainerDouble(
+            [
+                'repositories' => [$repositories, 1]
+            ],
+            [
+                'target' => ServiceManager::class
+            ]
+        );
 
         $options = [
             'document' => $documentName,

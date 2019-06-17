@@ -6,26 +6,32 @@
  * @license MIT
  * @copyright  2013 - 2018 Cross Solution <http://cross-solution.de>
  */
-  
+
 /** */
 namespace SimpleImportTest\Controller;
 
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\ContainerDoubleTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
+
+use Prophecy\Argument;
+
 use SimpleImport\Controller\DeleteCrawlerConsoleController;
 use Zend\Console\ColorInterface;
 use Zend\Mvc\Console\Controller\AbstractConsoleController;
-use Zend\Mvc\Console\View\ViewModel;
+
+use Zend\Mvc\Controller\PluginManager;
 
 /**
  * Tests for \SimpleImport\Controller\DeleteCrawlerConsoleController
- * 
+ *
  * @covers \SimpleImport\Controller\DeleteCrawlerConsoleController
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
- *  
+ *
  */
 class DeleteCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
 {
-    use TestInheritanceTrait;
+    use SetupTargetTrait, TestInheritanceTrait, ContainerDoubleTrait;
 
     /**
      *
@@ -33,11 +39,18 @@ class DeleteCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
      * @var array|DeleteCrawlerConsoleController|\PHPUnit_Framework_MockObject_MockObject
      */
     private $target = [
-        DeleteCrawlerConsoleController::class,
-        'getTargetArgs',
-        'mock' => [ 'siLoadCrawler' ],
-        '@testInheritance' => ['as_reflection' => true],
+        'create' => [
+            [
+                'for' => ['testInheritance'],
+                'reflection' => DeleteCrawlerConsoleController::class,
+            ]
+        ]
     ];
+    //     DeleteCrawlerConsoleController::class,
+    //     'getTargetArgs',
+    //     'mock' => [ 'siLoadCrawler' ],
+    //     '@testInheritance' => ['as_reflection' => true],
+    // ];
 
     private $inheritance = [ AbstractConsoleController::class ];
 
@@ -56,7 +69,7 @@ class DeleteCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
      */
     private $jobRepo;
 
-    private function getTargetArgs()
+    private function initTarget()
     {
         $this->crawlerRepo = $this->getMockBuilder(\SimpleImport\Repository\Crawler::class)
                                   ->disableOriginalConstructor()
@@ -67,7 +80,7 @@ class DeleteCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
                                   ->setMethods(['find'])
                                   ->getMock();
 
-        return [ $this->crawlerRepo, $this->jobRepo ];
+        return new DeleteCrawlerConsoleController($this->crawlerRepo, $this->jobRepo);
     }
 
     public function testDeletingCrawler()
@@ -78,9 +91,6 @@ class DeleteCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
         $crawler = $this->getMockBuilder(\SimpleImport\Entity\Crawler::class)->disableOriginalConstructor()
             ->setMethods(['getItems', 'getName', 'getId'])->getMock();
 
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        $this->target->expects($this->exactly(1))->method('siLoadCrawler')
-                     ->willReturn($crawler);
 
         /* @var \PHPUnit_Framework_MockObject_MockObject|\Zend\Console\Adapter\AdapterInterface $console */
         $console = $this->getMockBuilder(\Zend\Console\Adapter\AdapterInterface::class)
@@ -92,6 +102,13 @@ class DeleteCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
             sprintf('Crawler "%s" (%s) deleted.', $name, $id),
             ColorInterface::GREEN
         );
+
+        $plugins = $this->createContainerProphecy(
+            ['siLoadCrawler' => [$crawler, 1]],
+            ['target' => PluginManager::class, 'args_get' => [null]]
+        );
+        $plugins->setController($this->target)->shouldBeCalled();
+        $plugins = $plugins->reveal();
 
         $item = $this->getMockBuilder(\SimpleImport\Entity\Item::class)->disableOriginalConstructor()
             ->setMethods(['getDocumentId'])->getMock();
@@ -113,6 +130,8 @@ class DeleteCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->crawlerRepo->expects($this->once())->method('remove')->with($crawler);
 
+
+        $this->target->setPluginManager($plugins);
         $this->target->setConsole($console);
 
         $this->target->indexAction();

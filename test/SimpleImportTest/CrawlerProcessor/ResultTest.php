@@ -11,8 +11,7 @@
 
 namespace SimpleImportTest\CrawlerProcessor;
 
-use CoreTestUtils\TestCase\TestSetterGetterTrait;
-use CoreTestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\Factory\ProgressBarFactory;
 use Core\Console\ProgressBar;
@@ -22,7 +21,7 @@ use Core\Console\ProgressBar;
  */
 class ResultTest extends \PHPUnit_Framework_TestCase
 {
-    use TestSetterGetterTrait, SetupTargetTrait;
+    use TestSetterAndGetterTrait;
 
     /**
      * @var Result
@@ -45,31 +44,29 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $this->target = new Result($this->progressBarFactory);
     }
 
-    public function propertiesProvider()
+    public function setterAndGetterData()
     {
         return [
-            ['toProcess', [
-                'value' => '40'
-            ]],
+            ['toProcess', '40'],
             ['inserted', [
-                'default' => 0,
-                'ignore_setter' => true,
+                'value' => 0,
+                'setter' => false,
             ]],
             ['updated', [
-                'default' => 0,
-                'ignore_setter' => true,
+                'value' => 0,
+                'setter' => false,
             ]],
             ['deleted', [
-                'default' => 0,
-                'ignore_setter' => true,
+                'value' => 0,
+                'setter' => false,
             ]],
             ['invalid', [
-                'default' => 0,
-                'ignore_setter' => true,
+                'value' => 0,
+                'setter' => false,
             ]],
             ['unchanged', [
-                'default' => 0,
-                'ignore_setter' => true,
+                'value' => 0,
+                'setter' => false,
             ]],
         ];
     }

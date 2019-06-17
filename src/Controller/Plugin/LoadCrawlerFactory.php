@@ -6,7 +6,7 @@
  * @license MIT
  * @copyright  2013 - 2018 Cross Solution <http://cross-solution.de>
  */
-  
+
 /** */
 namespace SimpleImport\Controller\Plugin;
 
@@ -15,7 +15,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Factory for \SimpleImport\Controller\Plugin\LoadCrawler
- * 
+ *
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  */
 class LoadCrawlerFactory implements FactoryInterface
@@ -30,12 +30,11 @@ class LoadCrawlerFactory implements FactoryInterface
      *
      * @return LoadCrawler
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $repositories = $container->get('repositories');
         $repository   = $repositories->get('SimpleImport/Crawler');
-        $service      = new LoadCrawler($repository);
-        
-        return $service;    
+
+        return new LoadCrawler($repository);
     }
 }

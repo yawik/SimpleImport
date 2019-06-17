@@ -11,10 +11,11 @@
 
 namespace SimpleImportTest\Validator;
 
-use CoreTestUtils\TestCase\TestDefaultAttributesTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestDefaultAttributesTrait;
 use Jobs\Entity\StatusInterface;
 use SimpleImport\Validator\CrawlerOptions;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Zend\Validator\AbstractValidator;
 use SimpleImport\Entity\Crawler;
 use Jobs\Entity\Status;
@@ -25,7 +26,7 @@ use Jobs\Entity\Status;
 class CrawlerOptionsTest extends \PHPUnit_Framework_TestCase
 {
 
-    use TestInheritanceTrait, TestDefaultAttributesTrait;
+    use TestInheritanceTrait, TestDefaultAttributesTrait, SetupTargetTrait;
 
     /**
      * @var CrawlerOptions
@@ -43,7 +44,7 @@ class CrawlerOptionsTest extends \PHPUnit_Framework_TestCase
      * @see TestDefaultAttributesTrait
      * @var array
      */
-    private $attributes = [
+    private $defaultAttributes = [
         'messageTemplates' => [
             CrawlerOptions::INVALID_INITIAL_STATE => "Invalid initial state. Possible values are: %validStates%.",
             CrawlerOptions::INVALID_RECOVER_STATE => "Invalid recover state. Possible values are: %validStates%.",

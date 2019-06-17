@@ -12,7 +12,7 @@
 namespace SimpleImportTest\Validator;
 
 use SimpleImport\Validator\OrganizationExists;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Zend\Validator\AbstractValidator;
 use Organizations\Repository\Organization as OrganizationRepository;
 use Organizations\Entity\Organization;
@@ -29,6 +29,8 @@ class OrganizationExistsTest extends \PHPUnit_Framework_TestCase
      * @var OrganizationExists
      */
     private $target;
+
+    private $inheritanceTarget = OrganizationExists::class;
 
     /**
      * @var OrganizationRepository

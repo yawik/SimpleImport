@@ -10,8 +10,9 @@
 /** */
 namespace SimpleImportTest\Entity;
 
-use CoreTestUtils\TestCase\TestInheritanceTrait;
-use CoreTestUtils\TestCase\TestSetterGetterTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\Entity\Item;
 use SimpleImport\Entity\JobOptions;
@@ -27,7 +28,7 @@ use ReflectionClass;
  */
 class CrawlerTest extends \PHPUnit_Framework_TestCase
 {
-    use TestInheritanceTrait, TestSetterGetterTrait;
+    use TestInheritanceTrait, TestSetterAndGetterTrait, SetupTargetTrait;
 
     /**
      * The "Class under Test"
@@ -48,13 +49,13 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
      *
      * @var array
      */
-    private $properties = [
+    private $setterAndGetter = [
         [ 'name', 'example-crawler' ],
-        [ 'organization', '@Organizations\Entity\Organization' ],
+        [ 'organization', ['value_object' => 'Organizations\Entity\Organization'] ],
         [ 'type', 'job' ],
         [ 'feedUri', 'http://ftp.yawik.org/example.json' ],
         [ 'runDelay', 10 ],
-        [ 'DateLastRun', '@DateTime' ],
+        [ 'DateLastRun', ['value_object' => 'DateTime'] ],
     ];
 
     /**

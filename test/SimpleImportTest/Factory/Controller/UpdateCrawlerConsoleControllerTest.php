@@ -6,12 +6,13 @@
  * @license MIT
  * @copyright  2013 - 2018 Cross Solution <http://cross-solution.de>
  */
-  
+
 /** */
 namespace SimpleImportTest\Factory\Controller;
 
-use CoreTestUtils\TestCase\ServiceManagerMockTrait;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\ContainerDoubleTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\Controller\UpdateCrawlerConsoleController;
 use SimpleImport\Factory\Controller\UpdateCrawlerConsoleControllerFactory;
 use SimpleImport\InputFilter\CrawlerInputFilter;
@@ -21,14 +22,14 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Tests for \SimpleImport\Factory\Controller\UpdateCrawlerConsoleControllerFactory
- * 
+ *
  * @covers \SimpleImport\Factory\Controller\UpdateCrawlerConsoleControllerFactory
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
- *  
+ *
  */
 class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
 {
-    use TestInheritanceTrait, ServiceManagerMockTrait;
+    use TestInheritanceTrait, ContainerDoubleTrait, SetupTargetTrait;
 
     private $target = UpdateCrawlerConsoleControllerFactory::class;
 
@@ -49,26 +50,41 @@ class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
         $application->expects($this->once())->method('getMvcEvent')->willReturn($event);
 
         if ($isIndexRoute) {
-            $container = $this->getServiceManagerMock([
-                'Application' => ['service' => $application, 'count_get' => 1],
-                'InputFilterManager' => ['service' => null, 'count_get' => 0],
-            ]);
+            $container = $this->createContainerDouble(
+                [
+                    'Application' => ['service' => $application, 'count_get' => 1],
+                    'InputFilterManager' => ['service' => null, 'count_get' => 0],
+                ],
+                [
+                    'target' => \Interop\Container\ContainerInterface::class
+                ]
+            );
 
             return $container;
 
         }
 
-        $container = $this->getServiceManagerMock([
-            'Application' => ['service' => $application, 'count_get' => 1],
-        ]);
 
         $filter = new CrawlerInputFilter();
-        $filters = $this->createPluginManagerMock([
-             CrawlerInputFilter::class => ['service' => $filter, 'count_get' => 1]
-        ], $container);
+        $filters = $this->createContainerDouble(
+            [
+                CrawlerInputFilter::class => ['service' => $filter, 'count_get' => 1]
+            ],
+            [
+                'target' => \Zend\ServiceManager\AbstractPluginManager::class
+            ]
+        );
 
-        $container->setService('InputFilterManager', $filters);
-        $container->setExpectedCallCount('get', 'InputFilterManager', 1);
+        $container = $this->createContainerDouble(
+            [
+                'Application' => ['service' => $application, 'count_get' => 1],
+                'InputFilterManager' => [$filters, 1],
+            ],
+            [
+                'target' => \Interop\Container\ContainerInterface::class
+            ]
+        );
+
 
         return [$container, $filter];
 

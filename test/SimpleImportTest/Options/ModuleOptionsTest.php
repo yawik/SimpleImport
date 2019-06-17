@@ -9,8 +9,8 @@
 
 namespace SimpleImportTest\Options;
 
-use CoreTestUtils\TestCase\TestSetterGetterTrait;
-use CoreTestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
 use SimpleImport\Options\ModuleOptions;
 
 /**
@@ -24,11 +24,11 @@ use SimpleImport\Options\ModuleOptions;
  */
 class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
 {
-    use TestSetterGetterTrait, SetupTargetTrait;
+    use TestSetterAndGetterTrait, SetupTargetTrait;
 
     private $target = ModuleOptions::class;
 
-    public function propertiesProvider()
+    public function setterAndGetterData()
     {
         return [
             ['importRunDelay', [
