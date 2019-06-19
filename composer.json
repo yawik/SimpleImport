@@ -80,6 +80,7 @@
         ],
         "serve": "php -S localhost:8000 -t test/sandbox/public",
         "start-selenium": "./vendor/bin/selenium-server-standalone -p 4444 -Dwebdriver.chrome.driver=./vendor/bin/chromedriver",
-        "test": "phpunit"
+        "test": "phpunit",
+        "db.init": "mongorestore --drop"
     }
 }

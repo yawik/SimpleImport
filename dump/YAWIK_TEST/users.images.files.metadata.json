@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"YAWIK-TEST.users.images.files"},{"v":2,"key":{"permissions.view":1},"name":"permissions.view_1","sparse":false,"ns":"YAWIK-TEST.users.images.files"},{"v":2,"key":{"permissions.change":1},"name":"permissions.change_1","ns":"YAWIK-TEST.users.images.files","sparse":false}],"uuid":"d541a8e2874e4a958081e13980c82dd0"}
