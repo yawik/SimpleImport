@@ -6,3 +6,4 @@ node_modules/
 var/
 .idea/
 package-lock.json
+composer.lock
