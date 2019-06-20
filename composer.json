@@ -35,6 +35,7 @@
     "prefer-stable": true,
     "minimum-stability": "dev",
     "require": {
+        "geocoder-php/google-maps-provider": "^4.4",
         "guzzlehttp/guzzle": "^6.3",
         "php-http/guzzle6-adapter": "^1.1",
         "yawik/jobs": ">=0.32"
