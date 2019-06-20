@@ -28,13 +28,16 @@
         "platform": {
             "ext-mongo": "1.6.16"
         },
-        "process-timeout": 0
+        "process-timeout": 0,
+        "sort-packages": true,
+        "preferred-install": "dist"
     },
     "prefer-stable": true,
     "minimum-stability": "dev",
     "require": {
-        "yawik/jobs": ">=0.32",
-        "willdurand/geocoder": "^4.0.0"
+        "guzzlehttp/guzzle": "^6.3",
+        "php-http/guzzle6-adapter": "^1.1",
+        "yawik/jobs": ">=0.32"
     },
     "require-dev": {
         "yawik/auth": ">=0.32",
@@ -52,10 +55,10 @@
         "psr-4": { "SimpleImport\\": "src/"}
     },
     "autoload-dev": {
-	"psr-4": {
+        "psr-4": {
             "SimpleImportTest\\": "test/SimpleImportTest/",
-	    "CoreTestUtils\\": "vendor/yawik/core/test/CoreTestUtils/"
-	},
+            "CoreTestUtils\\": "vendor/yawik/core/test/CoreTestUtils/"
+        },
         "psr-0": {
             "": "test/"
         }
