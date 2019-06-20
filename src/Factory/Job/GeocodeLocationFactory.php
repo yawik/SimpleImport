@@ -9,10 +9,11 @@
 namespace SimpleImport\Factory\Job;
 
 
+use GuzzleHttp\Client as GuzzleClient;
+use Http\Adapter\Guzzle6\Client as HttpClient;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Ivory\HttpAdapter\CurlHttpAdapter;
-use Geocoder\Provider\GoogleMaps as GoogleMapsProvider;
+use Geocoder\Provider\GoogleMaps\GoogleMaps as GoogleMapsProvider;
 use SimpleImport\Job\GeocodeLocation;
 
 class GeocodeLocationFactory implements FactoryInterface
@@ -25,14 +26,29 @@ class GeocodeLocationFactory implements FactoryInterface
     {
         /** @var \SimpleImport\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('SimpleImport/Options/Module');
-        
+
+        $client = $this->createHttpAdapter();
+        $region = $moduleOptions->getGeocodeRegion();
+        $apiKey = $moduleOptions->getGeocodeGoogleApiKey();
         $geocoder = new GoogleMapsProvider(
-            new CurlHttpAdapter(),
-            $moduleOptions->getGeocodeLocale(),
-            $moduleOptions->getGeocodeRegion(),
-            $moduleOptions->getGeocodeUseSsl(),
-            $moduleOptions->getGeocodeGoogleApiKey());
+            $client,
+            $region,
+            $apiKey
+        );
         
         return new GeocodeLocation($geocoder);
+    }
+
+    private function createHttpAdapter()
+    {
+        $config = [
+            'timeout' => 2.0,
+            'verify' => false,
+        ];
+
+        $guzzle = new GuzzleClient($config);
+        $adapter = new HttpClient($guzzle);
+
+        return $adapter;
     }
 }

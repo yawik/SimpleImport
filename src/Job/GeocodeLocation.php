@@ -9,8 +9,9 @@
 namespace SimpleImport\Job;
 
 use Geo\Entity\Geometry\Point;
-use Geocoder\Geocoder;
 use Geocoder\Model\Address;
+use Geocoder\Provider\Provider as GeoCoderProvider;
+use Geocoder\Query\GeocodeQuery;
 use Jobs\Entity\Location;
 use Exception;
 
@@ -18,18 +19,18 @@ class GeocodeLocation
 {
     
     /**
-     * @var Geocoder
+     * @var GeoCoderProvider
      */
     private $geocoder;
     
     /**
-     * @param Geocoder $geocoder
+     * @param GeoCoderProvider $geocoder
      */
-    public function __construct(Geocoder $geocoder)
+    public function __construct(GeoCoderProvider $geocoder)
     {
         $this->geocoder = $geocoder;
     }
-    
+
     /**
      * @param string $address
      * @return Location[] Job locations
@@ -37,14 +38,16 @@ class GeocodeLocation
     public function getLocations($address)
     {
         $locations = [];
-        
+        $geoCoder = $this->geocoder;
+
         try {
-            $addresses = $this->geocoder->geocode($address);
+            $query = GeocodeQuery::create($address);
+            $addresses = $geoCoder->geocodeQuery($query);
         } catch (Exception $e) {
             return $locations;
         }
         
-        /** @var \Geocoder\Model\Address $address */
+        /** @var Address $address */
         foreach ($addresses as $address) {
             $locations[] = $this->createLocationFromAddress($address);
         }

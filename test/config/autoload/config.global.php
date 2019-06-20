@@ -10,8 +10,8 @@ return [
         'configuration' => [
             'odm_default' => [
                 'default_db'    => 'YAWIK_TEST',
-                'proxy_dir'     => __DIR__.'/../../cache/DoctrineMongoODMModule/Proxy',
-                'hydrator_dir'  => __DIR__.'/../../cache/DoctrineMongoODMModule/Hydrator',
+                'proxy_dir'     => __DIR__.'/../../sandbox/var/cache/DoctrineMongoODMModule/Proxy',
+                'hydrator_dir'  => __DIR__.'/../../sandbox/var/cache/DoctrineMongoODMModule/Hydrator',
             ]
         ],
     ],
