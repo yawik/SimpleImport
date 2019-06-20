@@ -5,3 +5,4 @@ behat.yml
 node_modules/
 var/
 .idea/
+package-lock.json
