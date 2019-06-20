@@ -15,6 +15,7 @@ use SimpleImport\Controller\DeleteCrawlerConsoleController;
 use Zend\Console\ColorInterface;
 use Zend\Mvc\Console\Controller\AbstractConsoleController;
 use Zend\Mvc\Console\View\ViewModel;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for \SimpleImport\Controller\DeleteCrawlerConsoleController
@@ -23,7 +24,7 @@ use Zend\Mvc\Console\View\ViewModel;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *  
  */
-class DeleteCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
+class DeleteCrawlerConsoleControllerTest extends TestCase
 {
     use TestInheritanceTrait;
 

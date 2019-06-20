@@ -11,6 +11,7 @@
 
 namespace SimpleImportTest\DataFetch;
 
+use PHPUnit\Framework\TestCase;
 use SimpleImport\DataFetch\HttpFetch;
 use Zend\Http\Client;
 use Zend\Http\Response;
@@ -19,7 +20,7 @@ use Exception;
 /**
  * @coversDefaultClass \SimpleImport\DataFetch\HttpFetch
  */
-class HttpFetchTest extends \PHPUnit_Framework_TestCase
+class HttpFetchTest extends TestCase
 {
 
     /**
@@ -33,7 +34,7 @@ class HttpFetchTest extends \PHPUnit_Framework_TestCase
     private $client;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

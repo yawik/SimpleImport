@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Hydrator;
 
+use PHPUnit\Framework\TestCase;
+
 use CoreTestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\InputFilter\CrawlerInputFilter;
@@ -21,7 +23,7 @@ use Zend\Validator\AbstractValidator;
 /**
  * @coversDefaultClass \SimpleImport\InputFilter\CrawlerInputFilter
  */
-class CrawlerInputFilterTest extends \PHPUnit_Framework_TestCase
+class CrawlerInputFilterTest extends TestCase
 {
     use TestInheritanceTrait;
 
@@ -43,7 +45,7 @@ class CrawlerInputFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * {@inheritDoc}
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
 
     /**

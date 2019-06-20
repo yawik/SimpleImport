@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Hydrator;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\Hydrator\JobHydrator;
 use SimpleImport\Job\GeocodeLocation;
 use SimpleImport\Hydrator\Job\ClassificationsHydrator;
@@ -22,7 +24,7 @@ use stdClass;
 /**
  * @coversDefaultClass \SimpleImport\Hydrator\JobHydrator
  */
-class JobHydratorTest extends \PHPUnit_Framework_TestCase
+class JobHydratorTest extends TestCase
 {
 
     /**
@@ -41,7 +43,7 @@ class JobHydratorTest extends \PHPUnit_Framework_TestCase
     private $classificationsHydrator;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

@@ -11,6 +11,7 @@
 
 namespace SimpleImportTest\CrawlerProcessor;
 
+use PHPUnit\Framework\TestCase;
 use SimpleImport\CrawlerProcessor\JobProcessor;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\DataFetch\JsonFetch;
@@ -27,7 +28,7 @@ use RuntimeException;
 /**
  * @coversDefaultClass \SimpleImport\CrawlerProcessor\JobProcessor
  */
-class JobProcessorTest extends \PHPUnit_Framework_TestCase
+class JobProcessorTest extends TestCase
 {
 
     use TestInheritanceTrait;
@@ -70,7 +71,7 @@ class JobProcessorTest extends \PHPUnit_Framework_TestCase
     private $inheritance = [ProcessorInterface::class];
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

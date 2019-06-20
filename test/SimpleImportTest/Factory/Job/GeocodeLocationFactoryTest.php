@@ -9,6 +9,8 @@
 
 namespace SimpleImportTest\Factory\Job;
 
+use PHPUnit\Framework\TestCase;
+
 use Interop\Container\ContainerInterface;
 use SimpleImport\Factory\Job\GeocodeLocationFactory;
 use SimpleImport\Options\ModuleOptions;
@@ -17,7 +19,7 @@ use SimpleImport\Job\GeocodeLocation;
 /**
  * @coversDefaultClass \SimpleImport\Factory\Job\GeocodeLocationFactory
  */
-class GeocodeLocationFactoryTest extends \PHPUnit_Framework_TestCase
+class GeocodeLocationFactoryTest extends TestCase
 {
 
     /**

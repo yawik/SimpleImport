@@ -11,6 +11,7 @@
 namespace SimpleImportTest\Controller\Plugin;
 
 use CoreTestUtils\TestCase\TestInheritanceTrait;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Controller\Plugin\LoadCrawler;
 use SimpleImport\Entity\Crawler;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -24,7 +25,7 @@ use Zend\Mvc\Controller\Plugin\Params;
  * @covers \SimpleImport\Controller\Plugin\LoadCrawler
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  */
-class LoadCrawlerTest extends \PHPUnit_Framework_TestCase
+class LoadCrawlerTest extends TestCase
 {
     use TestInheritanceTrait;
 

@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Hydrator\Job;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 use Core\Form\Hydrator\Strategy\TreeSelectStrategy;
 use Jobs\Repository\Categories;
@@ -22,7 +24,7 @@ use stdClass;
 /**
  * @coversDefaultClass \SimpleImport\Hydrator\Job\ClassificationsHydrator
  */
-class ClassificationsHydratorTest extends \PHPUnit_Framework_TestCase
+class ClassificationsHydratorTest extends TestCase
 {
 
     /**
@@ -46,7 +48,7 @@ class ClassificationsHydratorTest extends \PHPUnit_Framework_TestCase
     private $availableClassifications;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

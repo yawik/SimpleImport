@@ -12,6 +12,7 @@ namespace SimpleImportTest\Factory\Controller;
 
 use CoreTestUtils\TestCase\ServiceManagerMockTrait;
 use CoreTestUtils\TestCase\TestInheritanceTrait;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Controller\UpdateCrawlerConsoleController;
 use SimpleImport\Factory\Controller\UpdateCrawlerConsoleControllerFactory;
 use SimpleImport\InputFilter\CrawlerInputFilter;
@@ -26,7 +27,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *  
  */
-class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
+class UpdateCrawlerConsoleControllerTest extends TestCase
 {
     use TestInheritanceTrait, ServiceManagerMockTrait;
 

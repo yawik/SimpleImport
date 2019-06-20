@@ -13,13 +13,14 @@ namespace SimpleImportTest\Entity;
 
 use CoreTestUtils\TestCase\TestSetterGetterTrait;
 use CoreTestUtils\TestCase\SetupTargetTrait;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Entity\Item;
 use DateTime;
 
 /**
  * @coversDefaultClass \SimpleImport\Entity\Item
  */
-class ItemTest extends \PHPUnit_Framework_TestCase
+class ItemTest extends TestCase
 {
     use TestSetterGetterTrait;
     use SetupTargetTrait;

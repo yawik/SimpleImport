@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Validator;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\Validator\OrganizationExists;
 use CoreTestUtils\TestCase\TestInheritanceTrait;
 use Zend\Validator\AbstractValidator;
@@ -20,7 +22,7 @@ use Organizations\Entity\Organization;
 /**
  * @coversDefaultClass \SimpleImport\Validator\OrganizationExists
  */
-class OrganizationExistsTest extends \PHPUnit_Framework_TestCase
+class OrganizationExistsTest extends TestCase
 {
 
     use TestInheritanceTrait;
@@ -43,7 +45,7 @@ class OrganizationExistsTest extends \PHPUnit_Framework_TestCase
     private $inheritance = [AbstractValidator::class];
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Job;
 
+use PHPUnit\Framework\TestCase;
+
 use Geocoder\Query\GeocodeQuery;
 use SimpleImport\Job\GeocodeLocation;
 use Geocoder\Geocoder;
@@ -26,7 +28,7 @@ use Exception;
 /**
  * @coversDefaultClass \SimpleImport\Job\GeocodeLocation
  */
-class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
+class GeocodeLocationTest extends TestCase
 {
 
     /**
@@ -40,7 +42,7 @@ class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
     private $geocoder;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

@@ -10,6 +10,8 @@
 /** */
 namespace SimpleImportTest\Validator;
 
+use PHPUnit\Framework\TestCase;
+
 use CoreTestUtils\TestCase\TestInheritanceTrait;
 use CoreTestUtils\TestCase\TestSetterGetterTrait;
 use SimpleImport\Validator\EntityExists;
@@ -22,7 +24,7 @@ use Zend\Validator\AbstractValidator;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *  
  */
-class EntityExistsTest extends \PHPUnit_Framework_TestCase
+class EntityExistsTest extends TestCase
 {
     use TestInheritanceTrait, TestSetterGetterTrait;
 

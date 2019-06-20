@@ -11,13 +11,14 @@
 
 namespace SimpleImportTest\DataFetch;
 
+use PHPUnit\Framework\TestCase;
 use SimpleImport\DataFetch\HttpFetch;
 use SimpleImport\DataFetch\PlainTextFetch;
 
 /**
  * @coversDefaultClass \SimpleImport\DataFetch\PlainTextFetch
  */
-class PlainTextFetchTest extends \PHPUnit_Framework_TestCase
+class PlainTextFetchTest extends TestCase
 {
 
     /**
@@ -31,7 +32,7 @@ class PlainTextFetchTest extends \PHPUnit_Framework_TestCase
     private $httpFetch;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {
