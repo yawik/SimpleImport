@@ -9,6 +9,8 @@
 
 namespace SimpleImportTest\Factory\CrawlerProcessor;
 
+use PHPUnit\Framework\TestCase;
+
 use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 use SimpleImport\Factory\CrawlerProcessor\JobProcessorFactory;

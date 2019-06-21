@@ -42,9 +42,9 @@ class GeocodeLocationTest extends TestCase
     private $geocoder;
 
     /**
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->geocoder = $this->getMockBuilder(Geocoder::class)
             ->getMock();
@@ -63,7 +63,6 @@ class GeocodeLocationTest extends TestCase
             ->will($this->throwException(new Exception()));
 
         $locations = $this->target->getLocations('an invalid place');
-        $this->assertInternalType('array', $locations);
         $this->assertEmpty($locations);
     }
 
@@ -95,7 +94,6 @@ class GeocodeLocationTest extends TestCase
             ->willReturn($addressCollection);
 
         $locations = $this->target->getLocations($place);
-        $this->assertInternalType('array', $locations);
         $this->assertCount(1, $locations);
 
         /** @var Location $location */

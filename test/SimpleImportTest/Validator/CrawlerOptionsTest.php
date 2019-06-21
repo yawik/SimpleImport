@@ -13,13 +13,14 @@ namespace SimpleImportTest\Validator;
 
 use PHPUnit\Framework\TestCase;
 
-use CoreTestUtils\TestCase\TestDefaultAttributesTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Jobs\Entity\StatusInterface;
 use SimpleImport\Validator\CrawlerOptions;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Zend\Validator\AbstractValidator;
 use SimpleImport\Entity\Crawler;
 use Jobs\Entity\Status;
+use LogicException;
 
 /**
  * @coversDefaultClass \SimpleImport\Validator\CrawlerOptions
@@ -27,7 +28,7 @@ use Jobs\Entity\Status;
 class CrawlerOptionsTest extends TestCase
 {
 
-    use TestInheritanceTrait, TestDefaultAttributesTrait;
+    use TestInheritanceTrait, SetupTargetTrait;
 
     /**
      * @var CrawlerOptions
@@ -41,25 +42,14 @@ class CrawlerOptionsTest extends TestCase
      */
     private $inheritance = [AbstractValidator::class];
 
-    /**
-     * @see TestDefaultAttributesTrait
-     * @var array
-     */
-    private $attributes = [
-        'messageTemplates' => [
-            CrawlerOptions::INVALID_INITIAL_STATE => "Invalid initial state. Possible values are: %validStates%.",
-            CrawlerOptions::INVALID_RECOVER_STATE => "Invalid recover state. Possible values are: %validStates%.",
-        ],
-        'messageVariables' => [ 'validStates' => 'validStates' ],
-    ];
 
     /**
      * @covers ::isValid()
-     * @expectedException LogicException
-     * @expectedExceptionMessage There is no type key in the context
      */
     public function testIsValidWithInvalidContext()
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('There is no type key in the context');
         $this->target->isValid('some value');
     }
 

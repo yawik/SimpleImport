@@ -6,52 +6,58 @@
  * @license MIT
  * @copyright  2013 - 2018 Cross Solution <http://cross-solution.de>
  */
-  
+
 /** */
 namespace SimpleImportTest\Controller\Plugin;
 
-use CoreTestUtils\TestCase\ServiceManagerMockTrait;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
-use PHPUnit\Framework\TestCase;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\ContainerDoubleTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
+
 use SimpleImport\Controller\Plugin\LoadCrawler;
 use SimpleImport\Controller\Plugin\LoadCrawlerFactory;
 use SimpleImport\Repository\Crawler;
 use Zend\ServiceManager\Factory\FactoryInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for \SimpleImport\Controller\Plugin\LoadCrawlerFactory
- * 
+ *
  * @covers \SimpleImport\Controller\Plugin\LoadCrawlerFactory
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
- *  
+ *
  */
 class LoadCrawlerFactoryTest extends TestCase
 {
-    use TestInheritanceTrait, ServiceManagerMockTrait;
+    use TestInheritanceTrait, ContainerDoubleTrait, SetupTargetTrait;
 
     private $target = LoadCrawlerFactory::class;
 
     private $inheritance = [ FactoryInterface::class ];
 
-    public function testCreatesService()
+    public function p() { return ['set' => ['test']];}
+    /**
+     * @dataProvider p
+     * @return void
+     */
+    public function testCreatesService($p)
     {
-        $container = $this->getServiceManagerMock();
         $repository = $this->getMockBuilder(Crawler::class)
                            ->disableOriginalConstructor()->getMock();
 
-        $repositories = $this->createPluginManagerMock(
+        $repositories = $this->createContainerDouble(
             [
-                'SimpleImport/Crawler' => ['service' => $repository, 'count_get' => 1]
-            ],
-            $container
+                'SimpleImport/Crawler' => [$repository, 1]
+            ]
         );
 
-        $container->setService('repositories', $repositories);
-        $container->setExpectedCallCount('get', 'repositories', 1);
+        $container = $this->createContainerDouble(
+            ['repositories' => [$repositories, 1]],
+            ['target' => \Interop\Container\ContainerInterface::class]
+        );
 
         $service = $this->target->__invoke($container, 'irrelevant');
 
         $this->assertInstanceOf(LoadCrawler::class, $service);
-        $this->assertAttributeSame($repository, 'repository', $service);
     }
 }

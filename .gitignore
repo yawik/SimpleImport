@@ -1,9 +1,7 @@
-*~
 phpunit.xml
 vendor
 behat.yml
 node_modules/
 /var/
-.idea/
 package-lock.json
-composer.lock
+.phpunit.result.cache

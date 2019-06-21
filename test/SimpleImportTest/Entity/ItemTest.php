@@ -11,9 +11,10 @@
 
 namespace SimpleImportTest\Entity;
 
-use CoreTestUtils\TestCase\TestSetterGetterTrait;
-use CoreTestUtils\TestCase\SetupTargetTrait;
 use PHPUnit\Framework\TestCase;
+
+use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
 use SimpleImport\Entity\Item;
 use DateTime;
 
@@ -22,38 +23,38 @@ use DateTime;
  */
 class ItemTest extends TestCase
 {
-    use TestSetterGetterTrait;
+    use TestSetterAndGetterTrait;
     use SetupTargetTrait;
 
     /**
      * @var Item
      */
-    private $target = [Item::class, ['id1', []]];
+    private $target = [Item::class, 'id1', []];
 
     /**
      * @return array
      */
-    public function propertiesProvider()
+    public function setterAndGetterData()
     {
         return [
             [ 'importId', [
                 'value' => 'id1',
-                'ignore_setter' => true,
+                'setter' => false,
             ]],
             [ 'importData', [
                 'value' => ['key' => 'value'],
             ]],
             [ 'documentId', 'documentId1'],
             [ 'dateCreated', [
-                'value' => '@DateTime',
-                'getter_assert' => function($g, $return) {
-                    $this->assertInstanceOf(DateTime::class, $return);
+                'value_object' => 'DateTime',
+                'assert' => function($g, $return) {
+                    static::assertInstanceOf(DateTime::class, $return);
                 },
-                'ignore_setter' => true,
+                'setter' => false,
             ]],
-            [ 'dateModified', '@DateTime' ],
-            [ 'dateDeleted', '@DateTime' ],
-            [ 'dateSynced', '@DateTime' ],
+            [ 'dateModified', ['value_object' => 'DateTime'] ],
+            [ 'dateDeleted', ['value_object' => 'DateTime'] ],
+            [ 'dateSynced', ['value_object' => 'DateTime'] ],
         ];
     }
 

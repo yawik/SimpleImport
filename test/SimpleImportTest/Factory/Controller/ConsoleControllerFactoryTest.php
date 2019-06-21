@@ -9,6 +9,8 @@
 
 namespace SimpleImportTest\Factory\Controller;
 
+use PHPUnit\Framework\TestCase;
+
 use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 use SimpleImport\Factory\Controller\ConsoleControllerFactory;

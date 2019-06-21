@@ -37,7 +37,7 @@
     "prefer-stable": true,
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.2",
         "geocoder-php/cache-provider": "^4.1",
         "geocoder-php/google-maps-provider": "^4.4",
         "guzzlehttp/guzzle": "^6.3",
@@ -48,7 +48,6 @@
         "zendframework/zend-cache": "^2.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5.14 || ^7.5.13",
         "yawik/applications": ">=0.32",
         "yawik/auth": ">=0.32",
         "yawik/behat": "^0.32@dev",
@@ -58,7 +57,9 @@
         "yawik/geo": ">=0.32",
         "yawik/install": "^0.33.14",
         "yawik/organizations": ">=0.32",
-        "yawik/settings": ">=0.32"
+        "yawik/settings": ">=0.32",
+        "phpunit/phpunit": "^8.0",
+        "cross-solution/phpunit-utils": "^2.0"
     },
     "autoload": {
         "psr-4": {

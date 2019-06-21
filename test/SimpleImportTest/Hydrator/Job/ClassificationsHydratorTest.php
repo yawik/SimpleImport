@@ -20,6 +20,7 @@ use Jobs\Entity\Classifications;
 use Jobs\Entity\Category;
 use Core\Entity\Tree\EmbeddedLeafs;
 use stdClass;
+use InvalidArgumentException;
 
 /**
  * @coversDefaultClass \SimpleImport\Hydrator\Job\ClassificationsHydrator
@@ -48,9 +49,9 @@ class ClassificationsHydratorTest extends TestCase
     private $availableClassifications;
 
     /**
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->treeStrategy = $this->getMockBuilder(TreeSelectStrategy::class)
             ->getMock();
@@ -137,11 +138,11 @@ class ClassificationsHydratorTest extends TestCase
     /**
      * @covers ::__construct()
      * @covers ::hydrate()
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Object must be instance
      */
     public function testHydrateInvalidObjectPassed()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Object must be instance');
         $this->target->hydrate([], new stdClass());
     }
 

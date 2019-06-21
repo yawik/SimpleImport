@@ -6,18 +6,21 @@
  * @license MIT
  * @copyright  2013 - 2018 Cross Solution <http://cross-solution.de>
  */
-  
+
 /** */
 namespace SimpleImportTest\Controller\Plugin;
 
-use CoreTestUtils\TestCase\TestInheritanceTrait;
-use PHPUnit\Framework\TestCase;
+
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
+
 use SimpleImport\Controller\Plugin\LoadCrawler;
 use SimpleImport\Entity\Crawler;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use SimpleImport\Repository\Crawler as CrawlerRepository;
 use Zend\Mvc\Controller\Plugin\Params;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for \SimpleImport\Controller\Plugin\LoadCrawler
@@ -27,19 +30,15 @@ use Zend\Mvc\Controller\Plugin\Params;
  */
 class LoadCrawlerTest extends TestCase
 {
-    use TestInheritanceTrait;
+    //use TestInheritanceTrait;
+    use SetupTargetTrait, TestInheritanceTrait;
 
-    /**
-     *
-     *
-     * @var array|\ReflectionClass|LoadCrawler
-     */
     private $target = [
-        LoadCrawler::class,
-        'targetArgs',
-        '@testInheritance' => [
-            'args' => false,
-            'as_reflection' => true
+        'create' => [
+            [
+                'for' => ['testInheritance'],
+                'reflection' => LoadCrawler::class,
+            ],
         ],
     ];
 
@@ -52,7 +51,7 @@ class LoadCrawlerTest extends TestCase
      */
     private $crawlerRepositoryMock;
 
-    private function targetArgs()
+    private function initTarget()
     {
         $repository = $this->getMockBuilder(CrawlerRepository::class)
             ->disableOriginalConstructor()
@@ -61,7 +60,7 @@ class LoadCrawlerTest extends TestCase
 
         $this->crawlerRepositoryMock = $repository;
 
-        return [ $repository ];
+        return [LoadCrawler::class, $repository];
     }
 
     private function setupControllerMock($name, $id)

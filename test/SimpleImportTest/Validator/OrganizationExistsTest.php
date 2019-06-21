@@ -14,7 +14,7 @@ namespace SimpleImportTest\Validator;
 use PHPUnit\Framework\TestCase;
 
 use SimpleImport\Validator\OrganizationExists;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Zend\Validator\AbstractValidator;
 use Organizations\Repository\Organization as OrganizationRepository;
 use Organizations\Entity\Organization;
@@ -32,6 +32,8 @@ class OrganizationExistsTest extends TestCase
      */
     private $target;
 
+    private $inheritanceTarget = OrganizationExists::class;
+
     /**
      * @var OrganizationRepository
      */
@@ -45,9 +47,9 @@ class OrganizationExistsTest extends TestCase
     private $inheritance = [AbstractValidator::class];
 
     /**
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->repository = $this->getMockBuilder(OrganizationRepository::class)
             ->disableOriginalConstructor()

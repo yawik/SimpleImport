@@ -11,7 +11,7 @@
 
 namespace SimpleImportTest\Controller;
 
-use PHPUnit\Framework\TestCase;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\Controller\ConsoleController;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\Repository\Crawler as CrawlerRepository;
@@ -24,9 +24,9 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\Log\LoggerInterface;
 use Zend\Console\Adapter\AdapterInterface as ConsoleAdapter;
 use Zend\Mvc\Console\Controller\AbstractConsoleController;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
 use Doctrine\Common\Persistence\ObjectManager;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \SimpleImport\Controller\ConsoleController
@@ -85,9 +85,9 @@ class ConsoleControllerTest extends TestCase
     private $inheritance = [AbstractConsoleController::class];
 
     /**
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->crawlerRepository = $this->getMockBuilder(CrawlerRepository::class)
             ->setMethods(['getCrawlersToImport', 'create', 'getDocumentManager', 'store', 'findOneByName', 'find'])

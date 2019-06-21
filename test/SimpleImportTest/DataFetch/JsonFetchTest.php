@@ -32,9 +32,9 @@ class JsonFetchTest extends TestCase
     private $httpFetch;
 
     /**
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->httpFetch = $this->getMockBuilder(HttpFetch::class)
             ->disableOriginalConstructor()
@@ -64,11 +64,11 @@ class JsonFetchTest extends TestCase
     /**
      * @covers ::__construct()
      * @covers ::fetch()
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Invalid data
      */
     public function testFetchWithInvalidData()
     {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Invalid data');
         $this->httpFetch->expects($this->once())
             ->method('fetch')
             ->willReturn('invalidJsonData');

@@ -11,7 +11,7 @@
 
 namespace SimpleImportTest\CrawlerProcessor;
 
-use PHPUnit\Framework\TestCase;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
 use SimpleImport\CrawlerProcessor\JobProcessor;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\DataFetch\JsonFetch;
@@ -21,9 +21,10 @@ use Zend\Log\LoggerInterface;
 use Jobs\Repository\Job as JobRepository;
 use Zend\Hydrator\HydrationInterface;
 use Zend\InputFilter\InputFilterInterface;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\CrawlerProcessor\ProcessorInterface;
 use RuntimeException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \SimpleImport\CrawlerProcessor\JobProcessor
@@ -31,12 +32,19 @@ use RuntimeException;
 class JobProcessorTest extends TestCase
 {
 
-    use TestInheritanceTrait;
+    use TestInheritanceTrait, SetupTargetTrait;
 
     /**
      * @var JobProcessor
      */
-    private $target;
+    private $target = [
+        'create' => [
+            [
+                'for' => 'testInheritance',
+                'reflection' => JobProcessor::class
+            ]
+        ]
+    ];
 
     /**
      * @var JsonFetch
@@ -71,9 +79,9 @@ class JobProcessorTest extends TestCase
     private $inheritance = [ProcessorInterface::class];
 
     /**
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function initTarget()
     {
         $this->jsonFetch = $this->getMockBuilder(JsonFetch::class)
             ->disableOriginalConstructor()
@@ -93,7 +101,7 @@ class JobProcessorTest extends TestCase
         $this->dataInputFilter = $this->getMockBuilder(InputFilterInterface::class)
             ->getMock();
 
-        $this->target = new JobProcessor(
+        return new JobProcessor(
             $this->jsonFetch,
             $this->plainTextFetch,
             $this->jobRepository,

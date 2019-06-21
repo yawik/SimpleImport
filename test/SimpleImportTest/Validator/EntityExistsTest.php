@@ -6,27 +6,28 @@
  * @license MIT
  * @copyright  2013 - 2018 Cross Solution <http://cross-solution.de>
  */
-  
+
 /** */
 namespace SimpleImportTest\Validator;
 
 use PHPUnit\Framework\TestCase;
 
-use CoreTestUtils\TestCase\TestInheritanceTrait;
-use CoreTestUtils\TestCase\TestSetterGetterTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use SimpleImport\Validator\EntityExists;
 use Zend\Validator\AbstractValidator;
 
 /**
  * Tests for \SimpleImport\Validator\EntityExists
- * 
+ *
  * @covers \SimpleImport\Validator\EntityExists
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
- *  
+ *
  */
 class EntityExistsTest extends TestCase
 {
-    use TestInheritanceTrait, TestSetterGetterTrait;
+    use TestInheritanceTrait, TestSetterAndGetterTrait, SetupTargetTrait;
 
     /**
      *
@@ -34,19 +35,42 @@ class EntityExistsTest extends TestCase
      * @var array|\ReflectionClass|EntityExists|null
      */
     private $target = [
-        EntityExists::class,
-        '@testInheritance' => [ 'as_reflection' => true ],
-        '@testConstruct' => false,
+        'default' => [
+            'target' => EntityExists::class
+        ],
+        'create' => [
+            [
+                'for' => 'testInheritance',
+                'reflection' => true,
+            ],
+            [
+                'for' => 'testConstruct',
+                'target' => false
+            ],
+        ],
     ];
 
     private $inheritance = [ AbstractValidator::class ];
 
-    public function propertiesProvider()
+    private function getSetterAndGetterTarget()
     {
+        return new class extends EntityExists
+        {
+            public function getEntityClass()
+            {
+                return $this->entityClass;
+            }
+        };
+    }
+
+    public function setterAndGetterData()
+    {
+        $object = new \stdClass;
+
         return [
-            ['entityClass', ['value' => ['invalid'], 'setter_exception' => [\InvalidArgumentException::class, 'Entity class must be given']]],
-            ['entityClass', ['value' => new \stdClass, 'expect_property' => \stdClass::class]],
-            ['entityClass', ['value' => 'entityClass', 'expect_property' => 'entityClass']],
+            ['entityClass', ['value' => ['invalid'], 'exception' => [\InvalidArgumentException::class, 'Entity class must be given']]],
+            ['entityClass', ['value' => new \stdClass, 'assert' => function($v, $a) { static::assertEquals(\stdClass::class, $a); }]],
+            ['entityClass', 'entityClass'],
         ];
     }
 
@@ -115,7 +139,7 @@ class EntityExistsTest extends TestCase
         $messages = $this->target->getMessages();
 
         $this->assertArrayHasKey(EntityExists::NOT_EXIST, $messages);
-        $this->assertContains("NonExistentClass with ID '$expectedValue'", $messages[EntityExists::NOT_EXIST]);
+        $this->assertStringContainsString("NonExistentClass with ID '$expectedValue'", $messages[EntityExists::NOT_EXIST]);
     }
 
 

@@ -10,15 +10,18 @@
 /** */
 namespace SimpleImportTest\Entity;
 
-use CoreTestUtils\TestCase\TestInheritanceTrait;
-use CoreTestUtils\TestCase\TestSetterGetterTrait;
 use PHPUnit\Framework\TestCase;
+
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\Entity\Item;
 use SimpleImport\Entity\JobOptions;
 use InvalidArgumentException;
 use DateTime;
 use ReflectionClass;
+use LogicException;
 
 /**
  * @coversDefaultClass \SimpleImport\Entity\Crawler
@@ -28,7 +31,7 @@ use ReflectionClass;
  */
 class CrawlerTest extends TestCase
 {
-    use TestInheritanceTrait, TestSetterGetterTrait;
+    use TestInheritanceTrait, TestSetterAndGetterTrait, SetupTargetTrait;
 
     /**
      * The "Class under Test"
@@ -49,22 +52,22 @@ class CrawlerTest extends TestCase
      *
      * @var array
      */
-    private $properties = [
+    private $setterAndGetter = [
         [ 'name', 'example-crawler' ],
-        [ 'organization', '@Organizations\Entity\Organization' ],
+        [ 'organization', ['value_object' => 'Organizations\Entity\Organization'] ],
         [ 'type', 'job' ],
         [ 'feedUri', 'http://ftp.yawik.org/example.json' ],
         [ 'runDelay', 10 ],
-        [ 'DateLastRun', '@DateTime' ],
+        [ 'DateLastRun', ['value_object' => 'DateTime'] ],
     ];
 
     /**
      * @covers ::setType()
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid type
      */
     public function testSetTypeInvalid()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid type');
         $this->target->setType('inV4lid');
     }
 
@@ -124,21 +127,21 @@ class CrawlerTest extends TestCase
 
     /**
      * @covers ::getOptions()
-     * @expectedException LogicException
-     * @expectedExceptionMessage The options class cannot be resolved
      */
     public function testGetOptionsWithoutTypeSet()
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The options class cannot be resolved');
         $this->target->getOptions();
     }
 
     /**
      * @covers ::getOptions()
-     * @expectedException LogicException
-     * @expectedExceptionMessage The options class resolving failed
      */
     public function testGetOptionsWithInvalidTypeSet()
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The options class resolving failed');
         $reflectionClass = new ReflectionClass($this->target);
         $reflectionProperty = $reflectionClass->getProperty('type');
         $reflectionProperty->setAccessible(true);
@@ -174,11 +177,11 @@ class CrawlerTest extends TestCase
 
     /**
      * @covers ::setOptionsFromArray()
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid option key
      */
     public function testSetOptionsFromArrayWithInvalidKey()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid option key');
         $this->target->setType(Crawler::TYPE_JOB);
         $this->target->setOptionsFromArray(['inv4lid' => 'someValue']);
     }
