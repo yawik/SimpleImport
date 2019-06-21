@@ -3,7 +3,7 @@ phpunit.xml
 vendor
 behat.yml
 node_modules/
-var/
+/var/
 .idea/
 package-lock.json
 composer.lock

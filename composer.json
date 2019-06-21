@@ -38,12 +38,14 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0",
+        "geocoder-php/cache-provider": "^4.1",
         "geocoder-php/google-maps-provider": "^4.4",
         "guzzlehttp/guzzle": "^6.3",
         "php-http/cache-plugin": "^1.6",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message": "^1.7",
-        "yawik/jobs": ">=0.32"
+        "yawik/jobs": ">=0.32",
+        "zendframework/zend-cache": "^2.8"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5.14 || ^7.5.13",

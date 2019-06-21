@@ -49,7 +49,11 @@ class GeocodeLocation
         
         /** @var Address $address */
         foreach ($addresses as $address) {
-            $locations[] = $this->createLocationFromAddress($address);
+            try{
+                $locations[] = $this->createLocationFromAddress($address);
+            }catch (\Exception $e){
+
+            }
         }
         
         return $locations;
@@ -80,11 +84,12 @@ class GeocodeLocation
         if ($postalCode) {
             $location->setPostalCode($postalCode);
         }
-        
-        $region = $address->getAdminLevels()->first();
-        
-        if ($region) {
-            $location->setRegion($region->getName());
+
+        if(!empty($address->getAdminLevels())){
+            $region = $address->getAdminLevels()->first();
+            if ($region) {
+                $location->setRegion($region->getName());
+            }
         }
         
         $coordinates = $address->getCoordinates();
