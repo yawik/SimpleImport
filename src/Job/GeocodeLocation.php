@@ -14,21 +14,44 @@ use Geocoder\Provider\Provider as GeoCoderProvider;
 use Geocoder\Query\GeocodeQuery;
 use Jobs\Entity\Location;
 use Exception;
+use Zend\Log\LoggerAwareTrait;
+use Zend\Log\LoggerAwareInterface;
+use Zend\Log\LoggerInterface;
 
-class GeocodeLocation
+class GeocodeLocation implements LoggerAwareInterface
 {
-    
+    use LoggerAwareTrait;
+
     /**
      * @var GeoCoderProvider
      */
     private $geocoder;
-    
+
     /**
      * @param GeoCoderProvider $geocoder
      */
     public function __construct(GeoCoderProvider $geocoder)
     {
         $this->geocoder = $geocoder;
+    }
+
+    public function getLogger()
+    {
+        if (!$this->logger) {
+            $this->setLogger(new class implements LoggerInterface
+            {
+                public function emerg($message, $extra = []) {}
+                public function alert($message, $extra = []) {}
+                public function crit($message, $extra = []) {}
+                public function err($message, $extra = []) {}
+                public function warn($message, $extra = []) {}
+                public function notice($message, $extra = []) {}
+                public function info($message, $extra = []) {}
+                public function debug($message, $extra = []) {}
+            });
+        }
+
+        return $this->logger;
     }
 
     /**
@@ -44,21 +67,24 @@ class GeocodeLocation
             $query = GeocodeQuery::create($address);
             $addresses = $geoCoder->geocodeQuery($query);
         } catch (Exception $e) {
+            $this->getLogger()->err('Failed to fetch locations: ' . $e->getMessage());
+            $this->getLogger()->debug($e);
             return $locations;
         }
-        
+
         /** @var Address $address */
         foreach ($addresses as $address) {
             try{
                 $locations[] = $this->createLocationFromAddress($address);
             }catch (\Exception $e){
-
+                $this->getLogger()->err('Failed to create locations: ' . $e->getMessage());
+                $this->getLogger()->debug($e);
             }
         }
-        
+
         return $locations;
     }
-    
+
     /**
      * @param Address $address
      * @return Location
@@ -66,21 +92,21 @@ class GeocodeLocation
     private function createLocationFromAddress(Address $address)
     {
         $location = new Location();
-        
+
         $country = $address->getCountry();
-        
+
         if ($country) {
             $location->setCountry($country->getName());
         }
-        
+
         $city = $address->getLocality();
-        
+
         if ($city) {
             $location->setCity($city);
         }
-        
+
         $postalCode = $address->getPostalCode();
-        
+
         if ($postalCode) {
             $location->setPostalCode($postalCode);
         }
@@ -91,14 +117,14 @@ class GeocodeLocation
                 $location->setRegion($region->getName());
             }
         }
-        
+
         $coordinates = $address->getCoordinates();
-        
+
         if ($coordinates) {
             $point = new Point([$coordinates->getLongitude(), $coordinates->getLatitude()]);
             $location->setCoordinates($point);
         }
-        
+
         return $location;
     }
 }
