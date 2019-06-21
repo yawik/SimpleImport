@@ -33,7 +33,18 @@ return [
     ],
     'options' => [
         'SimpleImport/Options/Module' => [
-            'class' => Options\ModuleOptions::class
+            'class' => Options\ModuleOptions::class,
+            'options' => [
+                'cache' => [
+                    'adapter' => [
+                        'name' => 'filesystem',
+                        'options' => [
+                            'cacheDir' => 'var/cache/geocoder',
+                        ],
+                    ],
+                    'plugins' => ['serializer'],
+                ],
+            ],
         ],
         Options\LanguageGuesserOptions::class => []
     ],
