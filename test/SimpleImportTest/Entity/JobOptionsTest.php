@@ -11,8 +11,6 @@
 
 namespace SimpleImportTest\Entity;
 
-use PHPUnit\Framework\TestCase;
-
 use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Jobs\Entity\StatusInterface;

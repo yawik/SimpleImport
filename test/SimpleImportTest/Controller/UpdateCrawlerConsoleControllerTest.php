@@ -16,7 +16,6 @@ use Cross\TestUtils\TestCase\TestInheritanceTrait;
 
 use Organizations\Entity\Organization;
 use Organizations\Entity\OrganizationName;
-use PHPUnit\Framework\TestCase;
 use SimpleImport\Controller\Plugin\LoadCrawler;
 use SimpleImport\Controller\UpdateCrawlerConsoleController;
 use SimpleImport\Entity\Crawler;
