@@ -9,6 +9,7 @@
 
 namespace SimpleImportTest\Factory\Job;
 
+use Geocoder\Provider\Provider;
 use PHPUnit\Framework\TestCase;
 
 use Interop\Container\ContainerInterface;
@@ -27,12 +28,12 @@ class GeocodeLocationFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $container = $this->getMockBuilder(ContainerInterface::class)
-            ->getMock();
+        $provider = $this->createMock(Provider::class);
+        $container = $this->createMock(ContainerInterface::class);
         $container->expects($this->exactly(1))
             ->method('get')
             ->will($this->returnValueMap([
-                ['SimpleImport/Options/Module', new ModuleOptions()],
+                ['SimpleImport/Geocoder/CacheProvider', $provider],
             ]));
 
 
