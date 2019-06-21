@@ -41,7 +41,7 @@ install:
   - pecl install -f ${PECLMONGO}
   - phpenv config-add .travis/phpenv.ini
   # TODO: change to --prefer-dist when CoreTestUtils become separate packages
-  - COMPOSER_MEMORY_LIMIT=-1 composer install --dev
+  - COMPOSER_MEMORY_LIMIT=-1 composer install 
 
 before_script:
   # behat preparation

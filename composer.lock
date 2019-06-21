@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef3a2d8862644e860b1e608a0345887e",
+    "content-hash": "4df4695646502ad6727a7f91bbc265e4",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -3363,16 +3363,16 @@
         },
         {
             "name": "yawik/core",
-            "version": "dev-develop",
+            "version": "v0.33.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/core.git",
-                "reference": "0d66e78b4b901834e6f2110d25793ca5e95827cd"
+                "reference": "3a4b380702596438de0f7c3fc8813b0dbf57de1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yawik/core/zipball/0d66e78b4b901834e6f2110d25793ca5e95827cd",
-                "reference": "0d66e78b4b901834e6f2110d25793ca5e95827cd",
+                "url": "https://api.github.com/repos/yawik/core/zipball/3a4b380702596438de0f7c3fc8813b0dbf57de1d",
+                "reference": "3a4b380702596438de0f7c3fc8813b0dbf57de1d",
                 "shasum": ""
             },
             "require": {
@@ -3463,7 +3463,7 @@
                 "yawik",
                 "zf3"
             ],
-            "time": "2019-04-12T08:21:01+00:00"
+            "time": "2019-06-05T08:13:32+00:00"
         },
         {
             "name": "yawik/jobs",
@@ -9802,8 +9802,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "yawik/behat": 20,
-        "yawik/core": 20
+        "yawik/behat": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

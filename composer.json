@@ -52,7 +52,7 @@
         "yawik/auth": ">=0.32",
         "yawik/behat": "^0.32@dev",
         "yawik/composer-plugin": ">=0.32",
-        "yawik/core": "dev-develop",
+        "yawik/core": ">=0.32",
         "yawik/cv": ">=0.32",
         "yawik/geo": ">=0.32",
         "yawik/install": "^0.33.14",
