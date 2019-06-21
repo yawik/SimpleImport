@@ -13,6 +13,7 @@ namespace SimpleImportTest\CrawlerProcessor;
 
 use CoreTestUtils\TestCase\TestSetterGetterTrait;
 use CoreTestUtils\TestCase\SetupTargetTrait;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\Factory\ProgressBarFactory;
 use Core\Console\ProgressBar;
@@ -20,7 +21,7 @@ use Core\Console\ProgressBar;
 /**
  * @coversDefaultClass \SimpleImport\CrawlerProcessor\Result
  */
-class ResultTest extends \PHPUnit_Framework_TestCase
+class ResultTest extends TestCase
 {
     use TestSetterGetterTrait, SetupTargetTrait;
 
@@ -35,7 +36,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     private $progressBarFactory;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

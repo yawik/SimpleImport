@@ -10,6 +10,8 @@
 /** */
 namespace SimpleImportTest\Filter;
 
+use PHPUnit\Framework\TestCase;
+
 use CoreTestUtils\TestCase\ServiceManagerMockTrait;
 use CoreTestUtils\TestCase\TestInheritanceTrait;
 use Doctrine\ODM\MongoDB\DocumentRepository;
@@ -27,7 +29,7 @@ use Zend\ServiceManager\ServiceManager;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *  
  */
-class IdToEntityFactoryTest extends \PHPUnit_Framework_TestCase
+class IdToEntityFactoryTest extends TestCase
 {
     use TestInheritanceTrait, ServiceManagerMockTrait;
 

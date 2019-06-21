@@ -12,6 +12,7 @@ namespace SimpleImportTest\Factory\Controller;
 
 use CoreTestUtils\TestCase\ServiceManagerMockTrait;
 use CoreTestUtils\TestCase\TestInheritanceTrait;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Factory\Controller\DeleteCrawlerConsoleControllerFactory;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
@@ -22,7 +23,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *  
  */
-class DeleteCrawlerConsoleControllerFactoryTest extends \PHPUnit_Framework_TestCase
+class DeleteCrawlerConsoleControllerFactoryTest extends TestCase
 {
     use TestInheritanceTrait, ServiceManagerMockTrait;
 

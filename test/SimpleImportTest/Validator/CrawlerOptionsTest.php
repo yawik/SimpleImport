@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Validator;
 
+use PHPUnit\Framework\TestCase;
+
 use CoreTestUtils\TestCase\TestDefaultAttributesTrait;
 use Jobs\Entity\StatusInterface;
 use SimpleImport\Validator\CrawlerOptions;
@@ -22,7 +24,7 @@ use Jobs\Entity\Status;
 /**
  * @coversDefaultClass \SimpleImport\Validator\CrawlerOptions
  */
-class CrawlerOptionsTest extends \PHPUnit_Framework_TestCase
+class CrawlerOptionsTest extends TestCase
 {
 
     use TestInheritanceTrait, TestDefaultAttributesTrait;

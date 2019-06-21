@@ -12,6 +12,7 @@ namespace SimpleImportTest\Controller\Plugin;
 
 use CoreTestUtils\TestCase\ServiceManagerMockTrait;
 use CoreTestUtils\TestCase\TestInheritanceTrait;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Controller\Plugin\LoadCrawler;
 use SimpleImport\Controller\Plugin\LoadCrawlerFactory;
 use SimpleImport\Repository\Crawler;
@@ -24,7 +25,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *  
  */
-class LoadCrawlerFactoryTest extends \PHPUnit_Framework_TestCase
+class LoadCrawlerFactoryTest extends TestCase
 {
     use TestInheritanceTrait, ServiceManagerMockTrait;
 

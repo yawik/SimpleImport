@@ -10,6 +10,7 @@
 namespace SimpleImportTest\Factory\CrawlerProcessor;
 
 use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Factory\CrawlerProcessor\JobProcessorFactory;
 use SimpleImport\CrawlerProcessor\JobProcessor;
 use SimpleImport\Options\ModuleOptions;
@@ -20,7 +21,7 @@ use Jobs\Repository\Categories as JobCategoriesRepository;
 /**
  * @coversDefaultClass \SimpleImport\Factory\CrawlerProcessor\JobProcessorFactory
  */
-class JobProcessorFactoryTest extends \PHPUnit_Framework_TestCase
+class JobProcessorFactoryTest extends TestCase
 {
 
     /**

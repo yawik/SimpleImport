@@ -8,11 +8,8 @@
  */
 namespace SimpleImport\Factory\Job;
 
-
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Ivory\HttpAdapter\CurlHttpAdapter;
-use Geocoder\Provider\GoogleMaps as GoogleMapsProvider;
 use SimpleImport\Job\GeocodeLocation;
 
 class GeocodeLocationFactory implements FactoryInterface
@@ -23,16 +20,7 @@ class GeocodeLocationFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var \SimpleImport\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $container->get('SimpleImport/Options/Module');
-        
-        $geocoder = new GoogleMapsProvider(
-            new CurlHttpAdapter(),
-            $moduleOptions->getGeocodeLocale(),
-            $moduleOptions->getGeocodeRegion(),
-            $moduleOptions->getGeocodeUseSsl(),
-            $moduleOptions->getGeocodeGoogleApiKey());
-        
-        return new GeocodeLocation($geocoder);
+        $cacheProvider = $container->get('SimpleImport/Geocoder/CacheProvider');
+        return new GeocodeLocation($cacheProvider);
     }
 }

@@ -14,6 +14,7 @@ use CoreTestUtils\TestCase\TestInheritanceTrait;
 use CoreTestUtils\TestCase\TestSetterGetterTrait;
 use Organizations\Entity\Organization;
 use Organizations\Entity\OrganizationName;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Controller\Plugin\LoadCrawler;
 use SimpleImport\Controller\UpdateCrawlerConsoleController;
 use SimpleImport\Entity\Crawler;
@@ -27,7 +28,7 @@ use Zend\Mvc\Console\Controller\AbstractConsoleController;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *  
  */
-class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
+class UpdateCrawlerConsoleControllerTest extends TestCase
 {
     use TestInheritanceTrait, TestSetterGetterTrait;
 

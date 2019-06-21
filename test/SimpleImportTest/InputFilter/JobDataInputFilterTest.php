@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Hydrator;
 
+use PHPUnit\Framework\TestCase;
+
 use CoreTestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\InputFilter\JobDataInputFilter;
 use Zend\InputFilter\InputFilter;
@@ -20,7 +22,7 @@ use Zend\Validator\AbstractValidator;
 /**
  * @coversDefaultClass \SimpleImport\InputFilter\JobDataInputFilter
  */
-class JobDataInputFilterTest extends \PHPUnit_Framework_TestCase
+class JobDataInputFilterTest extends TestCase
 {
     use TestInheritanceTrait;
 
@@ -42,7 +44,7 @@ class JobDataInputFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * {@inheritDoc}
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

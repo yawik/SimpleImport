@@ -11,6 +11,7 @@
 
 namespace SimpleImportTest\Controller;
 
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Controller\ConsoleController;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\Repository\Crawler as CrawlerRepository;
@@ -31,7 +32,7 @@ use DateTime;
  * @coversDefaultClass \SimpleImport\Controller\ConsoleController
  * @covers \SimpleImport\Controller\ConsoleController
  */
-class ConsoleControllerTest extends \PHPUnit_Framework_TestCase
+class ConsoleControllerTest extends TestCase
 {
 
     use TestInheritanceTrait;
@@ -84,7 +85,7 @@ class ConsoleControllerTest extends \PHPUnit_Framework_TestCase
     private $inheritance = [AbstractConsoleController::class];
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

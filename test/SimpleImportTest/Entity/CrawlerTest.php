@@ -12,6 +12,7 @@ namespace SimpleImportTest\Entity;
 
 use CoreTestUtils\TestCase\TestInheritanceTrait;
 use CoreTestUtils\TestCase\TestSetterGetterTrait;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\Entity\Item;
 use SimpleImport\Entity\JobOptions;
@@ -25,7 +26,7 @@ use ReflectionClass;
  * @author Carsten Bleek <bleek@cross-solution.de>
  * @author Miroslav Fedeleš <miroslav.fedeles@gmail.com>
  */
-class CrawlerTest extends \PHPUnit_Framework_TestCase
+class CrawlerTest extends TestCase
 {
     use TestInheritanceTrait, TestSetterGetterTrait;
 

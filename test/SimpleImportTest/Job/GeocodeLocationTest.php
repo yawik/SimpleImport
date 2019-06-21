@@ -11,6 +11,9 @@
 
 namespace SimpleImportTest\Job;
 
+use PHPUnit\Framework\TestCase;
+
+use Geocoder\Query\GeocodeQuery;
 use SimpleImport\Job\GeocodeLocation;
 use Geocoder\Geocoder;
 use Geocoder\Model\Address;
@@ -18,13 +21,14 @@ use Geocoder\Model\Coordinates;
 use Geocoder\Model\AdminLevelCollection;
 use Geocoder\Model\AdminLevel;
 use Geocoder\Model\Country;
+use Geocoder\Model\AddressCollection;
 use Jobs\Entity\Location;
 use Exception;
 
 /**
  * @coversDefaultClass \SimpleImport\Job\GeocodeLocation
  */
-class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
+class GeocodeLocationTest extends TestCase
 {
 
     /**
@@ -38,7 +42,7 @@ class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
     private $geocoder;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {
@@ -55,7 +59,7 @@ class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
     public function testGetLocationsInvalidPlace()
     {
         $this->geocoder->expects($this->once())
-            ->method('geocode')
+            ->method('geocodeQuery')
             ->will($this->throwException(new Exception()));
 
         $locations = $this->target->getLocations('an invalid place');
@@ -71,6 +75,8 @@ class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
     public function testGetLocationsValid()
     {
         $address = new Address(
+            'test',
+            new AdminLevelCollection([new AdminLevel(1, 'Zürich', 'ZU')]),
             new Coordinates(47.29368780000001, 8.5554861),
             null,
             null,
@@ -78,14 +84,15 @@ class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
             '8800',
             'Thalwil',
             null,
-            new AdminLevelCollection([new AdminLevel(1, 'Zürich', 'ZU')]),
             new Country('Schweiz', 'CH')
         );
+
         $place = 'a valid place';
+        $addressCollection = new AddressCollection([$address]);
         $this->geocoder->expects($this->once())
-            ->method('geocode')
-            ->with($place)
-            ->willReturn([$address]);
+            ->method('geocodeQuery')
+            ->with($this->isInstanceOf(GeocodeQuery::class))
+            ->willReturn($addressCollection);
 
         $locations = $this->target->getLocations($place);
         $this->assertInternalType('array', $locations);

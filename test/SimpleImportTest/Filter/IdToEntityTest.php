@@ -10,6 +10,8 @@
 /** */
 namespace SimpleImportTest\Filter;
 
+use PHPUnit\Framework\TestCase;
+
 use CoreTestUtils\TestCase\TestInheritanceTrait;
 use CoreTestUtils\TestCase\TestSetterGetterTrait;
 use Doctrine\ODM\MongoDB\DocumentRepository;
@@ -23,7 +25,7 @@ use Zend\Filter\FilterInterface;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *  
  */
-class IdToEntityTest extends \PHPUnit_Framework_TestCase
+class IdToEntityTest extends TestCase
 {
     use TestInheritanceTrait, TestSetterGetterTrait;
 
