@@ -10,6 +10,8 @@
 /** */
 namespace SimpleImportTest\Factory\Controller;
 
+use PHPUnit\Framework\TestCase;
+
 use Cross\TestUtils\TestCase\ContainerDoubleTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Cross\TestUtils\TestCase\SetupTargetTrait;
@@ -23,7 +25,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *
  */
-class DeleteCrawlerConsoleControllerFactoryTest extends \PHPUnit_Framework_TestCase
+class DeleteCrawlerConsoleControllerFactoryTest extends TestCase
 {
     use TestInheritanceTrait, ContainerDoubleTrait, SetupTargetTrait;
 

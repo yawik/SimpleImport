@@ -10,6 +10,8 @@
 /** */
 namespace SimpleImportTest\Filter;
 
+use PHPUnit\Framework\TestCase;
+
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\ContainerDoubleTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
@@ -28,7 +30,7 @@ use Zend\ServiceManager\ServiceManager;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *
  */
-class IdToEntityFactoryTest extends \PHPUnit_Framework_TestCase
+class IdToEntityFactoryTest extends TestCase
 {
     use TestInheritanceTrait, ContainerDoubleTrait, SetupTargetTrait;
 
@@ -66,7 +68,9 @@ class IdToEntityFactoryTest extends \PHPUnit_Framework_TestCase
     public function testInvokationCreatesService($notFoundValue)
     {
         $documentName = 'TestEntityClass';
-        $repository   = $this->getMockBuilder(DocumentRepository::class)->disableOriginalConstructor()->getMock();
+        $repository   = $this->getMockBuilder(DocumentRepository::class)->disableOriginalConstructor()
+            ->setMethods(['find'])->getMock();
+        $repository->expects($this->once())->method('find')->with('test')->willReturn(null);
 
         $repositories = $this->createContainerDouble(
             [
@@ -94,6 +98,6 @@ class IdToEntityFactoryTest extends \PHPUnit_Framework_TestCase
         $actual = $this->target->__invoke($container, 'irrelevant', $options);
 
         $this->assertInstanceOf(IdToEntity::class, $actual);
-        $this->assertAttributeEquals($notFoundValue, 'notFoundValue', $actual);
+        static::assertEquals($notFoundValue ?? 'test', $actual->filter('test'));
     }
 }

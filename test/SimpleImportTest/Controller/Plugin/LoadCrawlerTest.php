@@ -20,6 +20,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use SimpleImport\Repository\Crawler as CrawlerRepository;
 use Zend\Mvc\Controller\Plugin\Params;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for \SimpleImport\Controller\Plugin\LoadCrawler
@@ -27,7 +28,7 @@ use Zend\Mvc\Controller\Plugin\Params;
  * @covers \SimpleImport\Controller\Plugin\LoadCrawler
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  */
-class LoadCrawlerTest extends \PHPUnit_Framework_TestCase
+class LoadCrawlerTest extends TestCase
 {
     //use TestInheritanceTrait;
     use SetupTargetTrait, TestInheritanceTrait;

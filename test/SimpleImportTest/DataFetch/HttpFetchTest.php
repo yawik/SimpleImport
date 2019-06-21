@@ -11,15 +11,18 @@
 
 namespace SimpleImportTest\DataFetch;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\DataFetch\HttpFetch;
 use Zend\Http\Client;
 use Zend\Http\Response;
 use Exception;
+use RuntimeException;
 
 /**
  * @coversDefaultClass \SimpleImport\DataFetch\HttpFetch
  */
-class HttpFetchTest extends \PHPUnit_Framework_TestCase
+class HttpFetchTest extends TestCase
 {
 
     /**
@@ -33,9 +36,9 @@ class HttpFetchTest extends \PHPUnit_Framework_TestCase
     private $client;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
@@ -70,11 +73,11 @@ class HttpFetchTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct()
      * @covers ::fetch()
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Unable to fetch remote data
      */
     public function testUnableFetchRemoteData()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to fetch remote data');
         $this->client->expects($this->once())
             ->method('send')
             ->will($this->throwException(new Exception()));
@@ -85,11 +88,11 @@ class HttpFetchTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct()
      * @covers ::fetch()
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Invalid HTTP status
      */
     public function testFetchWithUnsuccessfulResponse()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Invalid HTTP status');
         $response = new Response();
         $response->setStatusCode(404);
 

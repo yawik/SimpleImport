@@ -9,6 +9,8 @@
 
 namespace SimpleImportTest\Options;
 
+use PHPUnit\Framework\TestCase;
+
 use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use SimpleImport\Options\ModuleOptions;
@@ -22,7 +24,7 @@ use SimpleImport\Options\ModuleOptions;
  * @covers  SimpleImport\Options\ModuleOptions
  * @package SimpleImport\Options
  */
-class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
+class ModuleOptionsTest extends TestCase
 {
     use TestSetterAndGetterTrait, SetupTargetTrait;
 

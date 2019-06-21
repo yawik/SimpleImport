@@ -15,11 +15,12 @@ use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\Factory\ProgressBarFactory;
 use Core\Console\ProgressBar;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \SimpleImport\CrawlerProcessor\Result
  */
-class ResultTest extends \PHPUnit_Framework_TestCase
+class ResultTest extends TestCase
 {
     use TestSetterAndGetterTrait;
 
@@ -34,9 +35,9 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     private $progressBarFactory;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->progressBarFactory = $this->getMockBuilder(ProgressBarFactory::class)
             ->getMock();

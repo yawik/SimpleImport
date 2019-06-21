@@ -10,9 +10,10 @@
 /** */
 namespace SimpleImportTest\Filter;
 
+use PHPUnit\Framework\TestCase;
+
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
-use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use SimpleImport\Filter\IdToEntity;
 use Zend\Filter\FilterInterface;
@@ -24,9 +25,9 @@ use Zend\Filter\FilterInterface;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *
  */
-class IdToEntityTest extends \PHPUnit_Framework_TestCase
+class IdToEntityTest extends TestCase
 {
-    use TestInheritanceTrait, TestSetterAndGetterTrait, SetupTargetTrait;
+    use TestInheritanceTrait, SetupTargetTrait;
 
     /**
      *
@@ -52,10 +53,6 @@ class IdToEntityTest extends \PHPUnit_Framework_TestCase
     ];
 
     private $inheritance = [ FilterInterface::class ];
-
-    private $setterAndGetter = [
-        [ 'notFoundValue', ['value' => 'customNotFoundValue', 'property' => true ]],
-    ];
 
     /**
      *

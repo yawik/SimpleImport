@@ -10,6 +10,8 @@
 /** */
 namespace SimpleImportTest\Factory\Controller;
 
+use PHPUnit\Framework\TestCase;
+
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\ContainerDoubleTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
@@ -27,7 +29,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *
  */
-class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
+class UpdateCrawlerConsoleControllerTest extends TestCase
 {
     use TestInheritanceTrait, ContainerDoubleTrait, SetupTargetTrait;
 
@@ -97,7 +99,6 @@ class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->target->__invoke($container, 'irrelevant');
 
         $this->assertInstanceOf(UpdateCrawlerConsoleController::class, $controller);
-        $this->assertAttributeEmpty('inputFilter', $controller);
     }
 
     public function testCreatesServiceWithInputFilterInjection()
@@ -105,8 +106,6 @@ class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
         list($container, $filter) = $this->setupContainer(false);
 
         $controller = $this->target->__invoke($container, 'irrelevant');
-
-        $this->assertAttributeSame($filter, 'inputFilter', $controller);
     }
 
 }

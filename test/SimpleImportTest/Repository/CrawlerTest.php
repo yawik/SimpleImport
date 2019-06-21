@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Repository;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\Repository\Crawler as CrawlerRepository;
 use SimpleImport\Entity\Crawler;
 use Organizations\Entity\Organization;
@@ -27,7 +29,7 @@ use stdClass;
 /**
  * @coversDefaultClass \SimpleImport\Repository\Crawler
  */
-class CrawlerTest extends \PHPUnit_Framework_TestCase
+class CrawlerTest extends TestCase
 {
 
     use TestInheritanceTrait;
@@ -62,9 +64,9 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     private $inheritance = [AbstractRepository::class];
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->query = $this->getMockBuilder(Query::class)
             ->disableOriginalConstructor()

@@ -11,13 +11,15 @@
 
 namespace SimpleImportTest\DataFetch;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\DataFetch\HttpFetch;
 use SimpleImport\DataFetch\PlainTextFetch;
 
 /**
  * @coversDefaultClass \SimpleImport\DataFetch\PlainTextFetch
  */
-class PlainTextFetchTest extends \PHPUnit_Framework_TestCase
+class PlainTextFetchTest extends TestCase
 {
 
     /**
@@ -31,9 +33,9 @@ class PlainTextFetchTest extends \PHPUnit_Framework_TestCase
     private $httpFetch;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->httpFetch = $this->getMockBuilder(HttpFetch::class)
             ->disableOriginalConstructor()
@@ -78,11 +80,11 @@ class PlainTextFetchTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct()
      * @covers ::fetch()
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage No content
      */
     public function testFetchNoContent()
     {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('No content');
         $this->httpFetch->expects($this->once())
             ->method('fetch')
             ->willReturn('<body><a>empty</a></body>');

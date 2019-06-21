@@ -10,6 +10,8 @@
 /** */
 namespace SimpleImportTest\Validator;
 
+use PHPUnit\Framework\TestCase;
+
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
@@ -23,7 +25,7 @@ use Zend\Validator\AbstractValidator;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *
  */
-class EntityExistsTest extends \PHPUnit_Framework_TestCase
+class EntityExistsTest extends TestCase
 {
     use TestInheritanceTrait, TestSetterAndGetterTrait, SetupTargetTrait;
 
@@ -50,14 +52,25 @@ class EntityExistsTest extends \PHPUnit_Framework_TestCase
 
     private $inheritance = [ AbstractValidator::class ];
 
+    private function getSetterAndGetterTarget()
+    {
+        return new class extends EntityExists
+        {
+            public function getEntityClass()
+            {
+                return $this->entityClass;
+            }
+        };
+    }
+
     public function setterAndGetterData()
     {
         $object = new \stdClass;
 
         return [
             ['entityClass', ['value' => ['invalid'], 'exception' => [\InvalidArgumentException::class, 'Entity class must be given']]],
-            ['entityClass', ['value' => new \stdClass, 'property' => [\stdClass::class]]],
-            ['entityClass', ['value' => 'entityClass', 'property' => true]],
+            ['entityClass', ['value' => new \stdClass, 'assert' => function($v, $a) { static::assertEquals(\stdClass::class, $a); }]],
+            ['entityClass', 'entityClass'],
         ];
     }
 
@@ -126,7 +139,7 @@ class EntityExistsTest extends \PHPUnit_Framework_TestCase
         $messages = $this->target->getMessages();
 
         $this->assertArrayHasKey(EntityExists::NOT_EXIST, $messages);
-        $this->assertContains("NonExistentClass with ID '$expectedValue'", $messages[EntityExists::NOT_EXIST]);
+        $this->assertStringContainsString("NonExistentClass with ID '$expectedValue'", $messages[EntityExists::NOT_EXIST]);
     }
 
 

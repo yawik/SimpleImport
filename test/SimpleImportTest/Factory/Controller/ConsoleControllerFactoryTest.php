@@ -9,6 +9,8 @@
 
 namespace SimpleImportTest\Factory\Controller;
 
+use PHPUnit\Framework\TestCase;
+
 use Interop\Container\ContainerInterface;
 use SimpleImport\Factory\Controller\ConsoleControllerFactory;
 use SimpleImport\Controller\ConsoleController;
@@ -21,7 +23,7 @@ use Zend\Log\LoggerInterface;
 /**
  * @coversDefaultClass \SimpleImport\Factory\Controller\ConsoleControllerFactory
  */
-class ConsoleControllerFactoryTest extends \PHPUnit_Framework_TestCase
+class ConsoleControllerFactoryTest extends TestCase
 {
 
     /**

@@ -10,6 +10,8 @@
 /** */
 namespace SimpleImportTest\Entity;
 
+use PHPUnit\Framework\TestCase;
+
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
@@ -19,6 +21,7 @@ use SimpleImport\Entity\JobOptions;
 use InvalidArgumentException;
 use DateTime;
 use ReflectionClass;
+use LogicException;
 
 /**
  * @coversDefaultClass \SimpleImport\Entity\Crawler
@@ -26,7 +29,7 @@ use ReflectionClass;
  * @author Carsten Bleek <bleek@cross-solution.de>
  * @author Miroslav Fedeleš <miroslav.fedeles@gmail.com>
  */
-class CrawlerTest extends \PHPUnit_Framework_TestCase
+class CrawlerTest extends TestCase
 {
     use TestInheritanceTrait, TestSetterAndGetterTrait, SetupTargetTrait;
 
@@ -60,11 +63,11 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::setType()
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid type
      */
     public function testSetTypeInvalid()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid type');
         $this->target->setType('inV4lid');
     }
 
@@ -124,21 +127,21 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::getOptions()
-     * @expectedException LogicException
-     * @expectedExceptionMessage The options class cannot be resolved
      */
     public function testGetOptionsWithoutTypeSet()
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The options class cannot be resolved');
         $this->target->getOptions();
     }
 
     /**
      * @covers ::getOptions()
-     * @expectedException LogicException
-     * @expectedExceptionMessage The options class resolving failed
      */
     public function testGetOptionsWithInvalidTypeSet()
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The options class resolving failed');
         $reflectionClass = new ReflectionClass($this->target);
         $reflectionProperty = $reflectionClass->getProperty('type');
         $reflectionProperty->setAccessible(true);
@@ -174,11 +177,11 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::setOptionsFromArray()
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid option key
      */
     public function testSetOptionsFromArrayWithInvalidKey()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid option key');
         $this->target->setType(Crawler::TYPE_JOB);
         $this->target->setOptionsFromArray(['inv4lid' => 'someValue']);
     }

@@ -9,13 +9,15 @@
 
 namespace SimpleImportTest\Factory;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\Factory\ProgressBarFactory;
 use Core\Console\ProgressBar;
 
 /**
  * @coversDefaultClass \SimpleImport\Factory\ProgressBarFactory
  */
-class ProgressBarFactoryTest extends \PHPUnit_Framework_TestCase
+class ProgressBarFactoryTest extends TestCase
 {
 
     /**

@@ -24,11 +24,12 @@ use Zend\InputFilter\InputFilterInterface;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\CrawlerProcessor\ProcessorInterface;
 use RuntimeException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \SimpleImport\CrawlerProcessor\JobProcessor
  */
-class JobProcessorTest extends \PHPUnit_Framework_TestCase
+class JobProcessorTest extends TestCase
 {
 
     use TestInheritanceTrait, SetupTargetTrait;
@@ -78,7 +79,7 @@ class JobProcessorTest extends \PHPUnit_Framework_TestCase
     private $inheritance = [ProcessorInterface::class];
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
     protected function initTarget()
     {

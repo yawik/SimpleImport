@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Hydrator;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\Hydrator\JobHydrator;
 use SimpleImport\Job\GeocodeLocation;
 use SimpleImport\Hydrator\Job\ClassificationsHydrator;
@@ -18,11 +20,12 @@ use Jobs\Entity\Job;
 use Jobs\Entity\Location;
 use Jobs\Entity\AtsMode;
 use stdClass;
+use InvalidArgumentException;
 
 /**
  * @coversDefaultClass \SimpleImport\Hydrator\JobHydrator
  */
-class JobHydratorTest extends \PHPUnit_Framework_TestCase
+class JobHydratorTest extends TestCase
 {
 
     /**
@@ -41,9 +44,9 @@ class JobHydratorTest extends \PHPUnit_Framework_TestCase
     private $classificationsHydrator;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->geocodeLocation = $this->getMockBuilder(GeocodeLocation::class)
             ->disableOriginalConstructor()
@@ -120,11 +123,11 @@ class JobHydratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct()
      * @covers ::hydrate()
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Object must be instance
      */
     public function testHydrateInvalidObjectPassed()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Object must be instance');
         $this->target->hydrate([], new stdClass());
     }
 }

@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Job;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\Job\GeocodeLocation;
 use Geocoder\Geocoder;
 use Geocoder\Model\Address;
@@ -24,7 +26,7 @@ use Exception;
 /**
  * @coversDefaultClass \SimpleImport\Job\GeocodeLocation
  */
-class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
+class GeocodeLocationTest extends TestCase
 {
 
     /**
@@ -38,9 +40,9 @@ class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
     private $geocoder;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->geocoder = $this->getMockBuilder(Geocoder::class)
             ->getMock();
@@ -59,7 +61,6 @@ class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new Exception()));
 
         $locations = $this->target->getLocations('an invalid place');
-        $this->assertInternalType('array', $locations);
         $this->assertEmpty($locations);
     }
 
@@ -88,7 +89,6 @@ class GeocodeLocationTest extends \PHPUnit_Framework_TestCase
             ->willReturn([$address]);
 
         $locations = $this->target->getLocations($place);
-        $this->assertInternalType('array', $locations);
         $this->assertCount(1, $locations);
 
         /** @var Location $location */

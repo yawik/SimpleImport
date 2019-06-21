@@ -13,7 +13,6 @@ namespace SimpleImportTest\Controller;
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\ContainerDoubleTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
-use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 
 use Organizations\Entity\Organization;
 use Organizations\Entity\OrganizationName;
@@ -28,6 +27,7 @@ use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Mvc\Controller\PluginManager;
 
 use Zend\Stdlib\Parameters;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for \SimpleImport\Controller\UpdateCrawlerConsoleController
@@ -36,9 +36,9 @@ use Zend\Stdlib\Parameters;
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  *
  */
-class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
+class UpdateCrawlerConsoleControllerTest extends TestCase
 {
-    use SetupTargetTrait, TestInheritanceTrait, TestSetterAndGetterTrait, ContainerDoubleTrait;
+    use SetupTargetTrait, TestInheritanceTrait, ContainerDoubleTrait;
 
     /**
      *
@@ -65,14 +65,6 @@ class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
     ];
 
     private $inheritance = [ AbstractConsoleController::class ];
-
-    public function setterAndGetterData() {
-        $filter = new CrawlerInputFilter();
-
-        return [
-            ['inputFilter', ['value' => $filter, 'property' => true]]
-        ];
-    }
 
     private function initTarget()
     {
@@ -158,12 +150,12 @@ class UpdateCrawlerConsoleControllerTest extends \PHPUnit_Framework_TestCase
 
         $output = $this->target->indexAction();
 
-        $this->assertContains('TestCrawler (TestId) [' . Crawler::TYPE_JOB . ']', $output);
-        $this->assertContains('Organization: TestCompany (TestOrgId)', $output);
-        $this->assertContains('TestUri', $output);
-        $this->assertContains('1234', $output);
-        $this->assertContains('Jobs initial state: active', $output);
-        $this->assertContains($date->format('d.m.Y H:i:s'), $output);
+        $this->assertStringContainsString('TestCrawler (TestId) [' . Crawler::TYPE_JOB . ']', $output);
+        $this->assertStringContainsString('Organization: TestCompany (TestOrgId)', $output);
+        $this->assertStringContainsString('TestUri', $output);
+        $this->assertStringContainsString('1234', $output);
+        $this->assertStringContainsString('Jobs initial state: active', $output);
+        $this->assertStringContainsString($date->format('d.m.Y H:i:s'), $output);
     }
 
     public function testIndexActionPrintsListOfCrawlers()

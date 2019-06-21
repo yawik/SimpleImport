@@ -45,9 +45,9 @@
         "willdurand/geocoder": "^3.3.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7",
+        "phpunit/phpunit": "^8.0",
         "yawik/behat": "^0.32@dev",
-        "cross-solution/phpunit-utils": "~1.1"
+        "cross-solution/phpunit-utils": "2.0.x-dev"
     },
     "autoload": {
         "psr-4": { "SimpleImport\\": "src/"}

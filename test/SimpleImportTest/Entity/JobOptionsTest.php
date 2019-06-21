@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Entity;
 
+use PHPUnit\Framework\TestCase;
+
 use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Jobs\Entity\StatusInterface;
@@ -19,7 +21,7 @@ use SimpleImport\Entity\JobOptions;
 /**
  * @coversDefaultClass \SimpleImport\Entity\JobOptions
  */
-class JobOptionsTest extends \PHPUnit_Framework_TestCase
+class JobOptionsTest extends TestCase
 {
     use TestSetterAndGetterTrait;
     use SetupTargetTrait;
