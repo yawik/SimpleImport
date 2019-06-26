@@ -49,7 +49,7 @@ class GeocodeLocationTest extends TestCase
         $this->geocoder = $this->getMockBuilder(Geocoder::class)
             ->getMock();
 
-        $this->target = new GeocodeLocation($this->geocoder);
+        $this->target = new GeocodeLocation($this->geocoder,'de');
     }
 
     /**

@@ -28,11 +28,19 @@ class GeocodeLocation implements LoggerAwareInterface
     private $geocoder;
 
     /**
-     * @param GeoCoderProvider $geocoder
+     * @var string
      */
-    public function __construct(GeoCoderProvider $geocoder)
+    private $locale;
+
+    /**
+     * GeocodeLocation constructor.
+     * @param GeoCoderProvider $geocoder
+     * @param string $locale
+     */
+    public function __construct(GeoCoderProvider $geocoder, string $locale)
     {
         $this->geocoder = $geocoder;
+        $this->locale = $locale;
     }
 
     public function getLogger()
@@ -55,16 +63,18 @@ class GeocodeLocation implements LoggerAwareInterface
     }
 
     /**
-     * @param string $address
-     * @return Location[] Job locations
+     * @param $address
+     * @return array
+     * @throws \Geocoder\Exception\Exception
      */
     public function getLocations($address)
     {
         $locations = [];
         $geoCoder = $this->geocoder;
+        $locale = $this->locale;
 
         try {
-            $query = GeocodeQuery::create($address);
+            $query = GeocodeQuery::create($address)->withLocale($locale);
             $addresses = $geoCoder->geocodeQuery($query);
         } catch (Exception $e) {
             $this->getLogger()->err('Failed to fetch locations: ' . $e->getMessage());

@@ -20,10 +20,12 @@ class GeocodeLocationFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
+        /* @var \SimpleImport\Options\ModuleOptions $options */
+        $options = $container->get('SimpleImport/Options/Module');
+        $locale = $options->getGeocodeLocale();
         $cacheProvider = $container->get('SimpleImport/Geocoder/CacheProvider');
         $logger = $container->get('SimpleImport/Log');
-        $service = new GeocodeLocation($cacheProvider);
-
+        $service = new GeocodeLocation($cacheProvider, $locale);
         $service->setLogger($logger);
 
         return $service;
