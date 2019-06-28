@@ -12,11 +12,17 @@
 namespace SimpleImportTest\CrawlerProcessor;
 
 use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Doctrine\Common\Collections\Collection;
+use Jobs\Entity\Job;
+use Organizations\Entity\Organization;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleImport\CrawlerProcessor\JobProcessor;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\DataFetch\JsonFetch;
 use SimpleImport\DataFetch\PlainTextFetch;
 use SimpleImport\Entity\Crawler;
+use SimpleImport\Entity\Item;
+use SimpleImport\Entity\JobOptions;
 use Zend\Log\LoggerInterface;
 use Jobs\Repository\Job as JobRepository;
 use Zend\Hydrator\HydrationInterface;
@@ -47,27 +53,27 @@ class JobProcessorTest extends TestCase
     ];
 
     /**
-     * @var JsonFetch
+     * @var JsonFetch|MockObject
      */
     private $jsonFetch;
 
     /**
-     * @var PlainTextFetch
+     * @var PlainTextFetch|MockObject
      */
     private $plainTextFetch;
 
     /**
-     * @var JobRepository
+     * @var JobRepository|MockObject
      */
     private $jobRepository;
 
     /**
-     * @var HydrationInterface
+     * @var HydrationInterface|MockObject
      */
     private $jobHydrator;
 
     /**
-     * @var InputFilterInterface
+     * @var InputFilterInterface|MockObject
      */
     private $dataInputFilter;
 
@@ -166,4 +172,77 @@ class JobProcessorTest extends TestCase
 
         $this->target->execute($crawler, $result, $logger);
     }
+
+    /**
+     * @see https://github.com/yawik/SimpleImport/issues/24
+     */
+    public function testExecuteWithFailedJobRepositoryStoreMethod()
+    {
+        $crawler = $this->createMock(Crawler::class);
+        $result = $this->createMock(Result::class);
+        $logger = $this->createMock(LoggerInterface::class);
+        $job = $this->createMock(Job::class);
+        $item = $this->createMock(Item::class);
+        $organization = $this->createMock(Organization::class);
+        $jobOptions = $this->createMock(JobOptions::class);
+        $itemCollection = $this->createMock(Collection::class);
+
+        $jobRepository = $this->jobRepository;
+        $jsonFetch = $this->jsonFetch;
+        $dataInputFilter = $this->dataInputFilter;
+
+        $jsonFetch->expects($this->once())
+            ->method('fetch')
+            ->with('some-uri')
+            ->willReturn(['jobs' => [$job]]);
+
+        $jobRepository->expects($this->once())
+            ->method('store')
+            ->with($job)
+            ->willThrowException(new \Exception('some exception'));
+
+        $jobRepository->expects($this->any())
+            ->method('create')
+            ->willReturn($job);
+
+        // disable processing on method trackChanges
+        // to remove more complicated mock
+        $dataInputFilter->expects($this->any())
+            ->method('getMessages')
+            ->willReturn([]);
+
+        $crawler->expects($this->once())
+            ->method('getFeedUri')
+            ->willReturn('some-uri');
+
+        $crawler->expects($this->once())
+            ->method('getItemsToSync')
+            ->willReturn([$item]);
+        $crawler->expects($this->once())
+            ->method('getItems')
+            ->willReturn([$item]);
+        $crawler->expects($this->any())
+            ->method('getOrganization')
+            ->willReturn($organization);
+        $crawler->expects($this->any())
+            ->method('getOptions')
+            ->willReturn($jobOptions);
+        $crawler->expects($this->any())
+            ->method('getItemsCollection')
+            ->willReturn($itemCollection);
+
+        $item->expects($this->any())
+            ->method('getImportData')
+            ->willReturn(['link' => 'foo']);
+        $item->expects($this->once())
+            ->method('getId')
+            ->willReturn('item-id');
+        $itemCollection->expects($this->once())
+            ->method('remove')
+            ->with('item-id');
+
+        $target = $this->target;
+        $target->execute($crawler, $result, $logger);
+    }
+
 }
