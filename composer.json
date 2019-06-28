@@ -68,8 +68,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "SimpleImportTest\\": "test/SimpleImportTest/",
-            "CoreTestUtils\\": "vendor/yawik/core/test/CoreTestUtils/"
+            "SimpleImportTest\\": "test/SimpleImportTest/"
         },
         "psr-0": {
             "": "test/"
