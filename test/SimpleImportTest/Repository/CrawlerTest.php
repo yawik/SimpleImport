@@ -11,13 +11,15 @@
 
 namespace SimpleImportTest\Repository;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\Repository\Crawler as CrawlerRepository;
 use SimpleImport\Entity\Crawler;
 use Organizations\Entity\Organization;
 use Core\Repository\AbstractRepository;
 use Doctrine\ODM\MongoDB\Query\Builder as QueryBuilder;
 use Doctrine\ODM\MongoDB\Query\Query;
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\UnitOfWork;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
@@ -27,7 +29,7 @@ use stdClass;
 /**
  * @coversDefaultClass \SimpleImport\Repository\Crawler
  */
-class CrawlerTest extends \PHPUnit_Framework_TestCase
+class CrawlerTest extends TestCase
 {
 
     use TestInheritanceTrait;
@@ -36,6 +38,8 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
      * @var CrawlerRepository
      */
     private $target;
+
+    private $inheritanceTarget = CrawlerRepository::class;
 
     /**
      * @var QueryBuilder
@@ -60,9 +64,9 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     private $inheritance = [AbstractRepository::class];
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->query = $this->getMockBuilder(Query::class)
             ->disableOriginalConstructor()

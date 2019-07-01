@@ -6,26 +6,28 @@
  * @license MIT
  * @copyright  2013 - 2018 Cross Solution <http://cross-solution.de>
  */
-  
+
 /** */
 namespace SimpleImportTest\Filter;
 
-use CoreTestUtils\TestCase\TestInheritanceTrait;
-use CoreTestUtils\TestCase\TestSetterGetterTrait;
+use PHPUnit\Framework\TestCase;
+
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use SimpleImport\Filter\IdToEntity;
 use Zend\Filter\FilterInterface;
 
 /**
  * Tests for \SimpleImport\Filter\IdToEntity
- * 
+ *
  * @covers \SimpleImport\Filter\IdToEntity
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
- *  
+ *
  */
-class IdToEntityTest extends \PHPUnit_Framework_TestCase
+class IdToEntityTest extends TestCase
 {
-    use TestInheritanceTrait, TestSetterGetterTrait;
+    use TestInheritanceTrait, SetupTargetTrait;
 
     /**
      *
@@ -33,18 +35,24 @@ class IdToEntityTest extends \PHPUnit_Framework_TestCase
      * @var array|\PHPUnit_Framework_MockObject_MockObject|IdToEntity|\ReflectionClass
      */
     private $target = [
-        IdToEntity::class,
-        'setupMocks',
-        '@testInheritance' => ['as_reflection' => true],
-        '@testSetterAndGetter' => [ 'mock' => ['__invoke'], 'args' => false ],
-        '@testInvokation' => [ 'mock' => ['filter'], 'args' => false ]
+        'default' => [
+            'target' => IdToEntity::class,
+            'arguments' => ['@setupRepositoryMock']
+        ],
+        'create' => [
+            [
+                'for' => 'testInheritance',
+                'reflection' => true
+            ],
+            [
+                'for' => ['testSetterAndGetter', 'testInvokation'],
+                'callback' => 'createSimpleTarget',
+            ],
+
+        ],
     ];
 
     private $inheritance = [ FilterInterface::class ];
-
-    private $properties = [
-        [ 'notFoundValue', ['value' => 'customNotFoundValue', 'expect_property' => 'customNotFoundValue' ]],
-    ];
 
     /**
      *
@@ -53,14 +61,30 @@ class IdToEntityTest extends \PHPUnit_Framework_TestCase
      */
     private $repositoryMock;
 
-    private function setupMocks()
+    private function setupRepositoryMock()
     {
         $this->repositoryMock = $this->getMockBuilder(DocumentRepository::class)
             ->disableOriginalConstructor()
             ->setMethods(['find', 'getDocumentName'])
             ->getMock();
 
-        return [$this->repositoryMock];
+        return $this->repositoryMock;
+    }
+
+    public function createSimpleTarget()
+    {
+        return new class extends IdToEntity
+        {
+            public $value;
+            public function __construct()
+            { }
+
+            public function filter($value)
+            {
+                $this->value = $value;
+            }
+        };
+
     }
     /**
      * @testdox Invokation proxies to filter
@@ -68,10 +92,9 @@ class IdToEntityTest extends \PHPUnit_Framework_TestCase
     public function testInvokation()
     {
         $value = 'testId';
-
-        $this->target->expects($this->once())->method('filter')->with($value);
-
         $this->target->__invoke($value);
+
+        static::assertEquals($value, $this->target->value);
     }
 
     public function nullValuesProvider()

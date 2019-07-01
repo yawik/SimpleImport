@@ -11,13 +11,14 @@
 
 namespace SimpleImportTest\DataFetch;
 
+use PHPUnit\Framework\TestCase;
 use SimpleImport\DataFetch\HttpFetch;
 use SimpleImport\DataFetch\JsonFetch;
 
 /**
  * @coversDefaultClass \SimpleImport\DataFetch\JsonFetch
  */
-class JsonFetchTest extends \PHPUnit_Framework_TestCase
+class JsonFetchTest extends TestCase
 {
 
     /**
@@ -31,9 +32,9 @@ class JsonFetchTest extends \PHPUnit_Framework_TestCase
     private $httpFetch;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->httpFetch = $this->getMockBuilder(HttpFetch::class)
             ->disableOriginalConstructor()
@@ -63,11 +64,11 @@ class JsonFetchTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct()
      * @covers ::fetch()
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Invalid data
      */
     public function testFetchWithInvalidData()
     {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Invalid data');
         $this->httpFetch->expects($this->once())
             ->method('fetch')
             ->willReturn('invalidJsonData');

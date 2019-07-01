@@ -11,17 +11,18 @@
 
 namespace SimpleImportTest\Entity;
 
-use CoreTestUtils\TestCase\TestSetterGetterTrait;
-use CoreTestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
+use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Jobs\Entity\StatusInterface;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Entity\JobOptions;
 
 /**
  * @coversDefaultClass \SimpleImport\Entity\JobOptions
  */
-class JobOptionsTest extends \PHPUnit_Framework_TestCase
+class JobOptionsTest extends TestCase
 {
-    use TestSetterGetterTrait;
+    use TestSetterAndGetterTrait;
     use SetupTargetTrait;
 
     /**
@@ -34,8 +35,10 @@ class JobOptionsTest extends \PHPUnit_Framework_TestCase
      *
      * @var array
      */
-    private $properties = [
-        [ 'initialState', [ 'default' => StatusInterface::ACTIVE, 'value' => 'someState' ]],
-        [ 'recoverState', [ 'default' => StatusInterface::ACTIVE, 'value' => 'someState' ]],
+    private $setterAndGetter= [
+        [ 'initialState', [ 'value' => StatusInterface::ACTIVE, 'setter' => false ]],
+        [ 'initialState', [ 'value' => 'someState' ]],
+        [ 'recoverState', [ 'value' => StatusInterface::ACTIVE, 'setter' => false ]],
+        [ 'recoverState', [ 'value' => 'someState' ]],
     ];
 }

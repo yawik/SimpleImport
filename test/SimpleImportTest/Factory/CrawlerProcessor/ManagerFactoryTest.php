@@ -9,6 +9,8 @@
 
 namespace SimpleImportTest\Factory\CrawlerProcessor;
 
+use PHPUnit\Framework\TestCase;
+
 use Interop\Container\ContainerInterface;
 use SimpleImport\Factory\CrawlerProcessor\ManagerFactory;
 use SimpleImport\CrawlerProcessor\Manager;
@@ -16,7 +18,7 @@ use SimpleImport\CrawlerProcessor\Manager;
 /**
  * @coversDefaultClass \SimpleImport\Factory\CrawlerProcessor\ManagerFactory
  */
-class ManagerFactoryTest extends \PHPUnit_Framework_TestCase
+class ManagerFactoryTest extends TestCase
 {
 
     /**

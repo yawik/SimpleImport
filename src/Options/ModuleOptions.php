@@ -12,6 +12,7 @@ use Zend\Stdlib\AbstractOptions;
 
 class ModuleOptions extends AbstractOptions
 {
+    const SERVICE_ID = 'SimpleImport/Options/Module';
 
     /**
      * Default delay when to proceed another import run in minutes
@@ -58,6 +59,27 @@ class ModuleOptions extends AbstractOptions
         'industries',
         'employmentTypes',
     ];
+
+    /**
+     * @var array
+     */
+    private $cache = [];
+
+    /**
+     * @return array
+     */
+    public function getCache(): array
+    {
+        return $this->cache;
+    }
+
+    /**
+     * @param array $cache
+     */
+    public function setCache(array $cache)
+    {
+        $this->cache = $cache;
+    }
 
     /**
      * @return int

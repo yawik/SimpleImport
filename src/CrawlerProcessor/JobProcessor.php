@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @filesource
  * @copyright (c) 2013 - 2017 Cross Solution (http://cross-solution.de)
@@ -6,6 +7,7 @@
  * @author Miroslav Fedeleš <miroslav.fedeles@gmail.com>
  * @since 0.30
  */
+
 namespace SimpleImport\CrawlerProcessor;
 
 use Jobs\Entity\Job;
@@ -13,6 +15,7 @@ use SimpleImport\Entity\Crawler;
 use SimpleImport\DataFetch\JsonFetch;
 use SimpleImport\DataFetch\PlainTextFetch;
 use SimpleImport\Queue\GuessLanguageJob;
+use SlmQueue\Controller\Plugin\QueuePlugin;
 use Zend\Json\Json;
 use Zend\Log\LoggerInterface;
 use SimpleImport\Entity\Item;
@@ -78,11 +81,11 @@ class JobProcessor implements ProcessorInterface
     }
 
     /**
-     * @param \SlmQueue\Controller\Plugin\QueuePlugin $queuePlugin
+     * @param QueuePlugin $queuePlugin
      *
      * @return self
      */
-    public function setQueuePlugin(\SlmQueue\Controller\Plugin\QueuePlugin $queuePlugin)
+    public function setQueuePlugin(QueuePlugin $queuePlugin)
     {
         $this->queuePlugin = $queuePlugin;
         $queuePlugin('simpleimport');
@@ -94,7 +97,6 @@ class JobProcessor implements ProcessorInterface
 
     /**
      * {@inheritDoc}
-     * @see \SimpleImport\CrawlerProcessor\ProcessorInterface::execute()
      */
     public function execute(Crawler $crawler, Result $result, LoggerInterface $logger)
     {
@@ -115,12 +117,13 @@ class JobProcessor implements ProcessorInterface
         $this->syncChanges($crawler, $result, $logger);
         
     }
-    
+
     /**
      * @param Crawler $crawler
      * @param Result $result
      * @param LoggerInterface $logger
      * @param array $data
+     * @throws \Exception
      */
     private function trackChanges(Crawler $crawler, Result $result, LoggerInterface $logger, array $data)
     {
@@ -164,11 +167,13 @@ class JobProcessor implements ProcessorInterface
             }
         }
     }
-    
+
     /**
      * @param Crawler $crawler
      * @param Result $result
      * @param LoggerInterface $logger
+     * @throws \Doctrine\ODM\MongoDB\LockException
+     * @throws \Doctrine\ODM\MongoDB\Mapping\MappingException
      */
     private function syncChanges(Crawler $crawler, Result $result, LoggerInterface $logger)
     {
@@ -193,7 +198,8 @@ class JobProcessor implements ProcessorInterface
                     // the realated job does not exists
                     $logger->err(sprintf('Job with ID "%s" does not exists', $item->getDocumentId()));
                 }
-            } else {
+            }
+            else {
                 $importData = $item->getImportData();
 
                 if (array_key_exists('templateValues', $importData)
@@ -205,7 +211,8 @@ class JobProcessor implements ProcessorInterface
                     )
                 ) {
                     $plainText = false;
-                } else {
+                }
+                else {
                     try {
                         $plainText = $this->plainTextFetch->fetch($importData['link']);
                     } catch (RuntimeException $e) {
@@ -215,22 +222,37 @@ class JobProcessor implements ProcessorInterface
                             $importData['link'],
                             $e->getMessage())
                         );
+                        $plainText = false;
                     }
                 }
                 
                 // create a new job
+                /* @var Job $job */
                 $job = $this->jobRepository->create(null);
                 $job->setOrganization($crawler->getOrganization());
                 $job->setStatus($crawler->getOptions()->getInitialState());
                 if (false !== $plainText) { $job->setMetaData('plainText', $plainText); }
+
                 $this->jobHydrator->hydrate($importData, $job);
-                $this->jobRepository->store($job);
-                $this->guessLanguage($job);
-                $item->setDocumentId($job->getId());
-                $result->incrementInserted();
+                try{
+                    $this->jobRepository->store($job);
+                }catch (\Exception $exception){
+                    if(!$job->getId()){
+                        $crawler->getItemsCollection()->remove($item->getId());
+                    }
+                }
+
+                if($job->getId()){
+                    $this->guessLanguage($job);
+                    $item->setDocumentId($job->getId());
+                    $result->incrementInserted();
+                }
             }
-            
-            $item->setDateSynced(new DateTime());
+
+            if($item->getDocumentId()){
+                // only set date synced when document id is defined
+                $item->setDateSynced(new DateTime());
+            }
         }
     }
     

@@ -11,6 +11,8 @@
 
 namespace SimpleImportTest\Hydrator\Job;
 
+use PHPUnit\Framework\TestCase;
+
 use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 use Core\Form\Hydrator\Strategy\TreeSelectStrategy;
 use Jobs\Repository\Categories;
@@ -18,11 +20,12 @@ use Jobs\Entity\Classifications;
 use Jobs\Entity\Category;
 use Core\Entity\Tree\EmbeddedLeafs;
 use stdClass;
+use InvalidArgumentException;
 
 /**
  * @coversDefaultClass \SimpleImport\Hydrator\Job\ClassificationsHydrator
  */
-class ClassificationsHydratorTest extends \PHPUnit_Framework_TestCase
+class ClassificationsHydratorTest extends TestCase
 {
 
     /**
@@ -46,9 +49,9 @@ class ClassificationsHydratorTest extends \PHPUnit_Framework_TestCase
     private $availableClassifications;
 
     /**
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->treeStrategy = $this->getMockBuilder(TreeSelectStrategy::class)
             ->getMock();
@@ -135,11 +138,11 @@ class ClassificationsHydratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct()
      * @covers ::hydrate()
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Object must be instance
      */
     public function testHydrateInvalidObjectPassed()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Object must be instance');
         $this->target->hydrate([], new stdClass());
     }
 

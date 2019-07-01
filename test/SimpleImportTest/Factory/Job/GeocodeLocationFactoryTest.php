@@ -9,15 +9,19 @@
 
 namespace SimpleImportTest\Factory\Job;
 
+use Geocoder\Provider\Provider;
+use PHPUnit\Framework\TestCase;
+
 use Interop\Container\ContainerInterface;
 use SimpleImport\Factory\Job\GeocodeLocationFactory;
 use SimpleImport\Options\ModuleOptions;
 use SimpleImport\Job\GeocodeLocation;
+use Zend\Log\LoggerInterface;
 
 /**
  * @coversDefaultClass \SimpleImport\Factory\Job\GeocodeLocationFactory
  */
-class GeocodeLocationFactoryTest extends \PHPUnit_Framework_TestCase
+class GeocodeLocationFactoryTest extends TestCase
 {
 
     /**
@@ -25,14 +29,22 @@ class GeocodeLocationFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvoke()
     {
-        $container = $this->getMockBuilder(ContainerInterface::class)
-            ->getMock();
-        $container->expects($this->exactly(1))
+        $provider = $this->createMock(Provider::class);
+        $options = $this->createMock(ModuleOptions::class);
+        $logger = $this->createMock(LoggerInterface::class);
+
+        $options->expects($this->once())
+            ->method('getGeocodeLocale')
+            ->willReturn('de');
+
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap([
-                ['SimpleImport/Options/Module', new ModuleOptions()],
+                ['SimpleImport/Geocoder/CacheProvider', $provider],
+                ['SimpleImport/Options/Module', $options],
+                ['SimpleImport/Log', $logger]
             ]));
-
 
         $geocodeLocation = (new GeocodeLocationFactory())->__invoke($container, GeocodeLocation::class);
         $this->assertInstanceOf(GeocodeLocation::class, $geocodeLocation);

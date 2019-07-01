@@ -11,7 +11,10 @@
 
 namespace SimpleImportTest\Hydrator;
 
-use CoreTestUtils\TestCase\TestInheritanceTrait;
+use PHPUnit\Framework\TestCase;
+
+use Cross\TestUtils\TestCase\SetupTargetTrait;
+use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\InputFilter\JobDataInputFilter;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\ValidatorPluginManager;
@@ -20,18 +23,21 @@ use Zend\Validator\AbstractValidator;
 /**
  * @coversDefaultClass \SimpleImport\InputFilter\JobDataInputFilter
  */
-class JobDataInputFilterTest extends \PHPUnit_Framework_TestCase
+class JobDataInputFilterTest extends TestCase
 {
-    use TestInheritanceTrait;
+    use TestInheritanceTrait, SetupTargetTrait;
 
     /**
      * @var JobDataInputFilter
      */
-    private $target = [JobDataInputFilter::class, [[
-        'professions',
-        'industries',
-        'employmentTypes',
-    ]]];
+    private $target = [
+        JobDataInputFilter::class,
+        [
+            'professions',
+            'industries',
+            'employmentTypes',
+        ]
+    ];
 
     /**
      * @see TestInheritanceTrait
@@ -42,11 +48,11 @@ class JobDataInputFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * {@inheritDoc}
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->setupTargetInstance();
+        $this->setupTarget();
 
         $validatorMock = $this->getMockBuilder(AbstractValidator::class)
             ->getMock();

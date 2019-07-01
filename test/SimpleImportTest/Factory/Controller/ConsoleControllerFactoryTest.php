@@ -10,6 +10,7 @@
 namespace SimpleImportTest\Factory\Controller;
 
 use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
 use SimpleImport\Factory\Controller\ConsoleControllerFactory;
 use SimpleImport\Controller\ConsoleController;
 use SimpleImport\Repository\Crawler as CrawlerRepository;
@@ -21,7 +22,7 @@ use Zend\Log\LoggerInterface;
 /**
  * @coversDefaultClass \SimpleImport\Factory\Controller\ConsoleControllerFactory
  */
-class ConsoleControllerFactoryTest extends \PHPUnit_Framework_TestCase
+class ConsoleControllerFactoryTest extends TestCase
 {
 
     /**

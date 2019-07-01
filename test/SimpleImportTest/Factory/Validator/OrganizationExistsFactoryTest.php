@@ -9,6 +9,8 @@
 
 namespace SimpleImportTest\Factory\Validator;
 
+use PHPUnit\Framework\TestCase;
+
 use Interop\Container\ContainerInterface;
 use SimpleImport\Factory\Validator\OrganizationExistsFactory;
 use SimpleImport\Validator\OrganizationExists;
@@ -17,7 +19,7 @@ use Organizations\Repository\Organization as OrganizationRepository;
 /**
  * @coversDefaultClass \SimpleImport\Factory\Validator\OrganizationExistsFactory
  */
-class OrganizationExistsFactoryTest extends \PHPUnit_Framework_TestCase
+class OrganizationExistsFactoryTest extends TestCase
 {
 
     /**

@@ -11,6 +11,7 @@ namespace SimpleImport;
 
 use SimpleImport\Entity\Crawler;
 use Zend\ServiceManager\Factory\InvokableFactory;
+use SimpleImport\Bridge\Geocoder\Factory as GeocoderFactory;
 
 /**
  * create a config/autoload/SimpleImport.local.php and put modifications there.
@@ -32,13 +33,27 @@ return [
     ],
     'options' => [
         'SimpleImport/Options/Module' => [
-            'class' => Options\ModuleOptions::class
+            'class' => Options\ModuleOptions::class,
+            'options' => [
+                'cache' => [
+                    'adapter' => [
+                        'name' => 'filesystem',
+                        'options' => [
+                            'cacheDir' => 'var/cache/geocoder',
+                        ],
+                    ],
+                    'plugins' => ['serializer'],
+                ],
+            ],
         ],
         Options\LanguageGuesserOptions::class => []
     ],
     'service_manager' => [
         'factories' => [
             'SimpleImport/CrawlerProcessorManager' => Factory\CrawlerProcessor\ManagerFactory::class,
+            'SimpleImport/Geocoder/Cache' => GeocoderFactory\CacheFactory::class,
+            'SimpleImport/Geocoder/Provider' => GeocoderFactory\ProviderFactory::class,
+            'SimpleImport/Geocoder/CacheProvider' => GeocoderFactory\CacheProviderFactory::class,
             'SimpleImport/JobGeocodeLocation' => Factory\Job\GeocodeLocationFactory::class,
             Service\LanguageGuesser::class => Service\LanguageGuesserFactory::class,
         ]
