@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"YAWIK-TEST.simpleimport.crawler"}],"uuid":"50dd6f3dcdb94db69471a000ccc3fdee"}
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"YAWIK_TEST.simpleimport.crawler"}],"uuid":"455aefe349ea46bf94b0b945e899fe63"}
