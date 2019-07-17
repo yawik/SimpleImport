@@ -81,9 +81,11 @@ class JobHydrator implements HydrationInterface
         } else {
             $job->setAtsMode(new AtsMode(AtsMode::MODE_NONE));
         }
-        
-        $locations = $this->geocodeLocation->getLocations($data['location']);
-        $job->setLocations(new ArrayCollection($locations));
+
+        if(!is_null($data['location'])){
+            $locations = $this->geocodeLocation->getLocations($data['location']);
+            $job->setLocations(new ArrayCollection($locations));
+        }
         
         $this->classificationsHydrator->hydrate($data['classifications'], $job->getClassifications());
     }
