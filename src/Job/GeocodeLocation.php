@@ -63,11 +63,11 @@ class GeocodeLocation implements LoggerAwareInterface
     }
 
     /**
-     * @param $address
-     * @return array
-     * @throws \Geocoder\Exception\Exception
+     * @param   string $address
+     * @return  array
+     * @throws  \Geocoder\Exception\Exception
      */
-    public function getLocations($address)
+    public function getLocations(string $address)
     {
         $locations = [];
         $geoCoder = $this->geocoder;
