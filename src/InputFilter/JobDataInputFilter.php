@@ -167,13 +167,13 @@ class JobDataInputFilter extends InputFilter
                         'callback' => function ($classifications) use ($availableClassifications)
                         {
                             $return = [];
-                            
+
                             foreach ($availableClassifications as $availableClassification) {
                                 $return[$availableClassification] = isset($classifications[$availableClassification])
                                     ? (array)$classifications[$availableClassification]
                                     : [];
                             }
-                            
+
                             return $return;
                         }
                     ]
@@ -202,6 +202,16 @@ class JobDataInputFilter extends InputFilter
                 'filters' => [ [ 'name' => 'StringTrim' ] ],
             ],
             'description' => [
+                'required' => false,
+                'allowEmpty' => false,
+                'filters' => [ [ 'name' => 'StringTrim' ] ],
+            ],
+            'introduction' => [
+                'required' => false,
+                'allowEmpty' => false,
+                'filters' => [ [ 'name' => 'StringTrim' ] ],
+            ],
+            'boilerplate' => [
                 'required' => false,
                 'allowEmpty' => false,
                 'filters' => [ [ 'name' => 'StringTrim' ] ],
