@@ -8,6 +8,7 @@
  */
 namespace SimpleImport\InputFilter;
 
+use SimpleImport\Filter\MapClassificationsFilter;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\OptionalInputFilter;
 
@@ -177,7 +178,13 @@ class JobDataInputFilter extends InputFilter
                             return $return;
                         }
                     ]
-                ]
+                ],
+                [
+                    'name' => MapClassificationsFilter::class,
+                    'options' => [
+                        'availableClassifications' => $availableClassifications,
+                    ],
+                ],
             ]
         ])->add([
             'type' => OptionalInputFilter::class,
