@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * YAWIK
  *
@@ -10,18 +10,28 @@
 
 namespace SimpleImport;
 
+use Core\ModuleManager\Feature\VersionProviderInterface;
+use Core\ModuleManager\Feature\VersionProviderTrait;
 use Core\ModuleManager\ModuleConfigLoader;
 use SimpleImport\Controller\GuessLanguageConsoleController;
-use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
-use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
 use Zend\Console\Adapter\AdapterInterface as Console;
+use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
 use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
 
 /**
  * Bootstrap module
  */
-class Module implements DependencyIndicatorInterface, ConsoleBannerProviderInterface
+class Module implements
+    DependencyIndicatorInterface,
+    ConsoleBannerProviderInterface,
+    ConsoleUsageProviderInterface,
+    VersionProviderInterface
 {
+
+    use VersionProviderTrait;
+
+    const VERSION = '0.4.0';
 
     /**
      * Loads module specific configuration.
@@ -79,6 +89,7 @@ class Module implements DependencyIndicatorInterface, ConsoleBannerProviderInter
                 ['--rename=STRING', 'Set a new name for the crawler.'],
                 '',
             ],
-            GuessLanguageConsoleController::getConsoleUsage());
+            GuessLanguageConsoleController::getConsoleUsage()
+        );
     }
 }

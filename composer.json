@@ -21,6 +21,9 @@
             "email": "me@itstoni.com"
         }
     ],
+    "support": {
+        "source": "https://github.com/yawik/SimpleImport"
+    },
     "keywords": [
         "yawik",
         "module",
@@ -44,20 +47,20 @@
         "php-http/cache-plugin": "^1.6",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message": "^1.7",
-        "yawik/jobs": ">=0.32",
+        "yawik/jobs": "^0.33",
         "zendframework/zend-cache": "^2.8"
     },
     "require-dev": {
-        "yawik/applications": ">=0.32",
-        "yawik/auth": ">=0.32",
+        "yawik/applications": "^0.33",
+        "yawik/auth": "^0.33",
         "yawik/behat": "^0.32@dev",
-        "yawik/composer-plugin": ">=0.32",
-        "yawik/core": ">=0.32",
-        "yawik/cv": ">=0.32",
-        "yawik/geo": ">=0.32",
+        "yawik/composer-plugin": "^1",
+        "yawik/core": "^0.33",
+        "yawik/cv": "^0.33",
+        "yawik/geo": "^1.1",
         "yawik/install": "^0.33.14",
-        "yawik/organizations": ">=0.32",
-        "yawik/settings": ">=0.32",
+        "yawik/organizations": "^0.33",
+        "yawik/settings": "^0.33",
         "phpunit/phpunit": "^8.0",
         "cross-solution/phpunit-utils": "^2.0"
     },
