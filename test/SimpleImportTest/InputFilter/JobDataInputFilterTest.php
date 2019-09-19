@@ -11,11 +11,15 @@
 
 namespace SimpleImportTest\Hydrator;
 
+use Cross\TestUtils\TestCase\ContainerDoubleTrait;
+use Cross\TestUtils\TestCase\CreateProphecyTrait;
 use PHPUnit\Framework\TestCase;
 
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
+use Prophecy\Argument;
 use SimpleImport\InputFilter\JobDataInputFilter;
+use Zend\Filter\FilterPluginManager;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\ValidatorPluginManager;
 use Zend\Validator\AbstractValidator;
@@ -25,7 +29,7 @@ use Zend\Validator\AbstractValidator;
  */
 class JobDataInputFilterTest extends TestCase
 {
-    use TestInheritanceTrait, SetupTargetTrait;
+    use TestInheritanceTrait, SetupTargetTrait, ContainerDoubleTrait, CreateProphecyTrait;
 
     /**
      * @var JobDataInputFilter
@@ -66,6 +70,25 @@ class JobDataInputFilterTest extends TestCase
         $this->target->getFactory()
             ->getDefaultValidatorChain()
             ->setPluginManager($validatorPluginManager);
+
+        $filterMock = new \SimpleImport\Filter\MapClassificationsFilter(
+            [
+                'industries' => [
+                    'test' => 'MAPPED',
+                ],
+            ]
+        );
+
+        $filterPluginManager = $this->createContainerDouble(
+            [
+                \SimpleImport\Filter\MapClassificationsFilter::class => $filterMock
+            ],
+            [
+                'target' => FilterPluginManager::class
+            ]
+        );
+
+        $this->target->getFactory()->getDefaultFilterChain()->setPluginManager($filterPluginManager);
     }
 
     /**
@@ -93,6 +116,38 @@ class JobDataInputFilterTest extends TestCase
      */
     public function testClassificationsFilter()
     {
+        $target = new class extends JobDataInputFilter
+        {
+            public function __construct() {}
+            public function initTest($classifications) {
+                parent::__construct($classifications);
+            }
+
+        };
+
+        $filterMock = new \SimpleImport\Filter\MapClassificationsFilter(
+            [
+                'industries' => [
+                    'test' => 'MAPPED',
+                ],
+            ]
+        );
+        $filterMockFactory = new class ($filterMock) {
+            private $filterMock;
+            public function __construct($filterMock) {
+                $this->filterMock = $filterMock;
+            }
+            public function __invoke($container, $name, $options)
+            {
+                return $this->filterMock;
+            }
+        };
+
+        $filterPluginManager = $target->getFactory()->getDefaultFilterChain()->getPluginManager();
+        $filterPluginManager->setFactory(\SimpleImport\Filter\MapClassificationsFilter::class, $filterMockFactory);
+
+        $target->initTest(['industries']);
+
         $classifications = [
             'unknownClassification' => [
                 'firstUnknown'
@@ -100,17 +155,23 @@ class JobDataInputFilterTest extends TestCase
             'industries' => [
                 'firstIndustry',
                 'secondIndustry',
+                'test',
+                'Test',
+                'tEst',
             ],
         ];
-        $this->target->setData([
+        $mappedExpected = [
+            'firstIndustry',
+            'secondIndustry',
+            'MAPPED',
+        ];
+        $target->setData([
             'classifications' => $classifications
         ]);
 
-        $filtered = $this->target->getValue('classifications');
+        $filtered = $target->getValue('classifications');
         $this->assertArrayNotHasKey('unknownClassification', $filtered, 'Unknown classifications should be stripped off');
-        $this->assertArrayHasKey('professions', $filtered, 'Filtered value should always contain known classifications');
-        $this->assertArrayHasKey('employmentTypes', $filtered, 'Filtered value should always contain known classifications');
         $this->assertArrayHasKey('industries', $filtered, 'Filtered value should always contain known classifications');
-        $this->assertSame($classifications['industries'], $filtered['industries'], 'Filtered value should contain its passed value');
+        $this->assertSame($mappedExpected, $filtered['industries'], 'Filtered value should contain its passed value');
     }
 }
