@@ -46,7 +46,8 @@ return [
                 ],
             ],
         ],
-        Options\LanguageGuesserOptions::class => []
+        Options\LanguageGuesserOptions::class => [],
+        Options\MapClassificationsOptions::class => [],
     ],
     'service_manager' => [
         'factories' => [
@@ -203,6 +204,7 @@ return [
     'filters' => [
         'factories' => [
             Filter\IdToEntity::class => Filter\IdToEntityFactory::class,
+            Filter\MapClassificationsFilter::class => Filter\MapClassificationsFilterFactory::class,
         ],
     ],
     'validators' => [
