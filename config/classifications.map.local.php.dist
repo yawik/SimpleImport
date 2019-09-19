@@ -1,0 +1,207 @@
+<?php declare(strict_types=1);
+/**
+ * YAWIK SimpleImport
+ * Map classifications configuration
+ */
+
+namespace SimpleImport\Config\ClassificationOptions;
+
+const EMPLOYMENT_TYPE_FULLTIME       = 'Vollzeit';
+const EMPLOYMENT_TYPE_PARTTIME       = 'Teilzeit';
+const EMPLOYMENT_TYPE_TEMPORARY      = 'Zeitarbeit';
+const EMPLOYMENT_TYPE_CONTRACT       = 'Freie Mitarbeit';
+const EMPLOYMENT_TYPE_INTERNSHIP     = 'Praktikum';
+const EMPLOYMENT_TYPE_MINIJOB        = 'Minijob';
+const EMPLOYMENT_TYPE_APPRENTICESHIP = 'Ausbildung';
+
+/*
+ * Map syntax
+ * [
+ *  'job category' => ['crawled classification', ...],
+ *
+ *  // map to multiple categories
+ *  [
+ *      ['job category', ...],
+ *      [
+ *          'crawled classification', ...],
+ *      ],
+ * ]
+ *
+ * Mapping is case insensitive.
+ */
+
+/* Map for industries classifications */
+$industries = [];
+
+/* Map for professions classifications */
+$professions = [];
+
+/* Map for employmentTypes classifications */
+$employmentTypes = [
+    EMPLOYMENT_TYPE_FULLTIME => [
+        'vollzeit',
+        'full-time',
+        'fulltime',
+        'festanstellung',
+        'festanstellung vollzeit',
+        'vollzeit-schicht',
+        'try & hire, festanstellung',
+        'permanent full-time',
+        'festanstellung, vollzeit',
+        'full time',
+        'full-time employee',
+        'vollzeit (38 stunden)',
+        'vollzeit (befristet)',
+        'teilzeit, vollzeit',
+        'vollzeit unbefristet',
+        'wechselschicht',
+        'full_time',
+        'unbefristet / vollzeit',
+        '38,5',
+        'unbefristet',
+        'vollzeit (40.0 stunden)',
+        'schicht, vollzeit',
+        'vollzeit 39 std.',
+        'vollzeit - wechselschicht',
+        '2-schicht-betrieb',
+        'nachtschicht',
+        'tagschicht',
+        '3-schicht-betrieb',
+        'direktvermittlung',
+        'in vollzeit, aktuell 39 stunden/woche.',
+        'ohne wechselschicht',
+        'befristet / unbefristet',
+    ],
+
+    EMPLOYMENT_TYPE_PARTTIME => [
+        'teilzeit',
+        'teilzeit - flexibel',
+        'parttime',
+        'variabel',
+        'teilzeit (50 %)',
+        'teilzeit - vormittag',
+        'part-time',
+        'teilzeit bis zu 20h',
+        'teilzeit bis zu 30h',
+        'teilzeit flexibel',
+        'teilzeit (15-20 stunden)',
+        'teilzeit-flexibel',
+        'in teilzeit, 30 stunden/woche.',
+        'unbefristet / teilzeit',
+        'permanent part-time',
+    ],
+
+    [
+        [EMPLOYMENT_TYPE_FULLTIME, EMPLOYMENT_TYPE_PARTTIME],
+        [
+            'voll-/teilzeit',
+            'offen',
+            'teilzeit & vollzeit',
+            'vollzeit/teilzeit',
+            'voll- oder teilzeit',
+            'vollzeit, teilzeit',
+            'vollzeit,teilzeit',
+            'teilzeit/vollzeit',
+            'voll- / teilzeit',
+            'teilzeit / vollzeit',
+            'teilzeit oder vollzeit',
+            'voll- und teilzeit',
+            'voll - und teilzeit',
+            'vollzeit 38,5 std. oder teilzeit: arbeitszeitmodell nach absprache',
+            'voll- oder teilzeit (38.0 stunden)',
+            'vollzeit (wechselschicht)',
+            'vollzeit / teilzeit',
+            'voll- oder teilzeit (zwischen 15 und 38  stunden)',
+        ],
+    ],
+
+    [
+        [EMPLOYMENT_TYPE_FULLTIME, EMPLOYMENT_TYPE_PARTTIME, EMPLOYMENT_TYPE_MINIJOB],
+        [
+            'minijob, teilzeit, vollzeit',
+            'vollzeit, teilzeit, geringfügig',
+            'teilzeit, vollzeit oder auf aushilfsbasis',
+        ],
+    ],
+
+    EMPLOYMENT_TYPE_TEMPORARY => [
+        'arbeitnehmerüberlassung mit option auf Übernahme',
+        'festanstellung (zeitarbeit)',
+        'temporär',
+        'personalvermittlung',
+    ],
+
+    EMPLOYMENT_TYPE_MINIJOB => [
+        '450€ basis',
+        'geringfügiger beschäftigung',
+        'geringfügige beschäftigung',
+        'mini-job',
+        'minijob',
+        'aushilfsjob',
+        'geringfügig',
+        'auf geringfügiger basis',
+        'auf nebenberuflicher basis im rahmen der Übungsleiterpauschale.',
+    ],
+
+    EMPLOYMENT_TYPE_CONTRACT => [
+        'contract',
+        'freiberufler',
+    ],
+
+    EMPLOYMENT_TYPE_INTERNSHIP => [
+        'praktikanten',
+        'praktikum',
+        'praktika',
+        'intern',
+    ],
+
+    [
+        [EMPLOYMENT_TYPE_INTERNSHIP, EMPLOYMENT_TYPE_APPRENTICESHIP],
+        [
+            'praktikum/werkstudentische tätigkeit'
+        ],
+    ],
+
+    EMPLOYMENT_TYPE_APPRENTICESHIP => [
+        'ausbildung',
+        'ausbildung/ studium',
+        'duales studium mit skf',
+        'auszubildende',
+        'studierende',
+        'teil-/vollzeit',
+        'werkstudent',
+        'ausbildungsplatz',
+    ],
+
+    [
+        [EMPLOYMENT_TYPE_TEMPORARY, EMPLOYMENT_TYPE_FULLTIME],
+        [
+            'temporär, festanstellung',
+            'temporär, try & hire',
+            'temporär, try & hire, festanstellung',
+        ],
+    ],
+];
+
+/* Do not change below this line */
+
+// Normalize maps
+$f = function ($map) {
+    $normalized = [];
+    foreach ($map as $category => $classifications) {
+        if (is_numeric($category)) {
+            [$category, $classifications] = $classifications;
+        }
+
+        foreach ($classifications as $value) {
+            $normalized[$value] = $category;
+        }
+    }
+    return $normalized;
+};
+
+return ['options' => [\SimpleImport\Options\MapClassificationsOptions::class => ['options' => [
+    'industries' => $f($industries),
+    'professions' => $f($professions),
+    'employmentTypes' => $f($employmentTypes),
+]]]];
