@@ -15,20 +15,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 use Jobs\Entity\Job;
 use InvalidArgumentException;
+use SimpleImport\Entity\CheckClassificationsMetaData;
 
 class JobHydrator implements HydrationInterface
 {
-    
+
     /**
      * @var GeocodeLocation
      */
     private $geocodeLocation;
-    
+
     /**
      * @var ClassificationsHydrator
      */
     private $classificationsHydrator;
-    
+
     /**
      * @param GeocodeLocation $geocodeLocation
      * @param ClassificationsHydrator $classificationsHydrator
@@ -38,7 +39,7 @@ class JobHydrator implements HydrationInterface
         $this->geocodeLocation = $geocodeLocation;
         $this->classificationsHydrator = $classificationsHydrator;
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \Zend\Hydrator\HydrationInterface::hydrate()
@@ -48,7 +49,7 @@ class JobHydrator implements HydrationInterface
         if (!$job instanceof Job) {
             throw new InvalidArgumentException(sprintf('Object must be instance of "%s"', Job::class));
         }
-        
+
         /** @var \Jobs\Entity\Job $job */
         $job->setTitle($data['title'])
             ->setLocation($data['location'])
@@ -82,11 +83,11 @@ class JobHydrator implements HydrationInterface
             $job->setAtsMode(new AtsMode(AtsMode::MODE_NONE));
         }
 
-        if(!is_null($data['location'])){
-            $locations = $this->geocodeLocation->getLocations($data['location']);
-            $job->setLocations(new ArrayCollection($locations));
-        }
-        
-        $this->classificationsHydrator->hydrate($data['classifications'], $job->getClassifications());
+        // if (!is_null($data['location'])) {
+        //     $locations = $this->geocodeLocation->getLocations($data['location']);
+        //     $job->setLocations(new ArrayCollection($locations));
+        // }
+
+        $this->classificationsHydrator->hydrate($data['classifications'], $job->getClassifications(), $job);
     }
 }

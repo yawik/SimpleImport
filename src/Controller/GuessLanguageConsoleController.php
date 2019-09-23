@@ -6,7 +6,7 @@
  * @license MIT
  * @copyright  2013 - 2018 Cross Solution <http://cross-solution.de>
  */
-  
+
 /** */
 namespace SimpleImport\Controller;
 
@@ -17,7 +17,7 @@ use Zend\Mvc\Console\Controller\AbstractConsoleController;
 
 /**
  * Update crawler configuration or displays crawler information.
- * 
+ *
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  */
 class GuessLanguageConsoleController extends AbstractConsoleController
@@ -30,7 +30,6 @@ class GuessLanguageConsoleController extends AbstractConsoleController
         return [
             'simpleimport guess-language [--limit]' => 'Find jobs without language set and pushes a guess-language job into the queue for each.',
             ['--limit=INT', 'Maximum number of jobs to fetch. 0 means fetch all.'],
-            ''
         ];
     }
 

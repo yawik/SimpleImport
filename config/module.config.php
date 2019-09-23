@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @filesource
  * @copyright (c) 2013 - 2017 Cross Solution (http://cross-solution.de)
@@ -9,9 +9,9 @@
 
 namespace SimpleImport;
 
+use SimpleImport\Bridge\Geocoder\Factory as GeocoderFactory;
 use SimpleImport\Entity\Crawler;
 use Zend\ServiceManager\Factory\InvokableFactory;
-use SimpleImport\Bridge\Geocoder\Factory as GeocoderFactory;
 
 /**
  * create a config/autoload/SimpleImport.local.php and put modifications there.
@@ -65,6 +65,7 @@ return [
             Controller\DeleteCrawlerConsoleController::class => Factory\Controller\DeleteCrawlerConsoleControllerFactory::class,
             Controller\UpdateCrawlerConsoleController::class => Factory\Controller\UpdateCrawlerConsoleControllerFactory::class,
             Controller\GuessLanguageConsoleController::class => Factory\Controller\GuessLanguageConsoleControllerFactory::class,
+            Controller\CheckClassificationsConsoleController::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
         ]
     ],
     'controller_plugins' => [
@@ -97,6 +98,7 @@ return [
         'job_manager' => [
             'factories' => [
                 Queue\GuessLanguageJob::class => Queue\GuessLanguageJobFactory::class,
+                Queue\CheckClassificationsJob::class => Queue\CheckClassificationsJobFactory::class,
             ],
         ],
     ],
@@ -160,6 +162,15 @@ return [
                         ],
                     ],
                 ],
+                'simpleimport-check-classifications' => [
+                    'options' => [
+                        'route' => 'simpleimport check-classifications [--force] <root> <categories> [<query>]',
+                        'defaults' => [
+                            'controller' => Controller\CheckClassificationsConsoleController::class,
+                            'action' => 'index',
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
@@ -180,7 +191,7 @@ return [
                     'name' => 'stream',
                     'priority' => 1000,
                     'options' => [
-                        'stream' => getcwd().'/var/log/simpleimport.queue.log',
+                        'stream' => getcwd() . '/var/log/simpleimport.queue.log',
                         'formatter'  => [
                             'name' => 'simple',
                             'options' => [

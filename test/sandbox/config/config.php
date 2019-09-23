@@ -11,5 +11,6 @@ return [
         'Organizations',
         'SimpleImport',
         'Geo',
+        'SlmQueue',
     ],
 ];
