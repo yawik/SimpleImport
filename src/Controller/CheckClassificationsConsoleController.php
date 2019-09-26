@@ -43,8 +43,8 @@ class CheckClassificationsConsoleController extends AbstractConsoleController
             'q' => $this->params('query'),
         ]);
 
-        printf("Found %d jobs.\n", $jobs->count());
-        $jobs->setItemCountPerPage($jobs->count());
+        printf("Found %d jobs.\n", $jobs->getTotalItemCount());
+        $jobs->setItemCountPerPage($jobs->getTotalItemCount());
 
         $categories = array_map('trim', explode(',', $this->params('categories', '')));
         $root = $this->params('root');
@@ -54,6 +54,7 @@ class CheckClassificationsConsoleController extends AbstractConsoleController
 
         $queue = $this->queue('simpleimport');
         $force = $this->params('force', false);
+
         foreach ($jobs as $job) {
             /** @var \Jobs\Entity\JobInterface $job */
             $metaData = CheckClassificationsMetaData::fromJob($job, $root);

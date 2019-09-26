@@ -33,7 +33,7 @@ class CheckClassificationsMetaData
 
     public static function fromJob(JobInterface $job, string $category)
     {
-        $meta = $job->getMetaData(self::KEY . $category, []);
+        $meta = $job->getMetaData(self::KEY . $category) ?? [];
         return new static($category, $meta);
     }
 
