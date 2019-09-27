@@ -10,6 +10,7 @@
 namespace SimpleImport\Queue;
 
 use Interop\Container\ContainerInterface;
+use SimpleImport\Listener\SolrJobEventListenerFacade;
 
 /**
  * Factory for \SimpleImport\Queue\CheckClassificationsJob
@@ -27,7 +28,8 @@ class CheckClassificationsJobFactory
         $repositories = $container->get('repositories');
         return new CheckClassificationsJob(
             $repositories->get('Jobs'),
-            $repositories->get('Jobs/Category')
+            $repositories->get('Jobs/Category'),
+            $container->get(SolrJobEventListenerFacade::class)
         );
     }
 }

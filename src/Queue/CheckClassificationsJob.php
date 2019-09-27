@@ -15,6 +15,7 @@ use Core\Queue\Job\MongoJob;
 use Jobs\Repository\Categories;
 use Jobs\Repository\Job;
 use SimpleImport\Entity\CheckClassificationsMetaData;
+use SimpleImport\Listener\SolrJobEventListenerFacade;
 use Zend\Log\LoggerAwareInterface;
 use Zend\Log\LoggerAwareTrait;
 
@@ -30,16 +31,21 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
 
     private $repository;
     private $categoriesRepository;
+    private $solr;
 
-    public function __construct(Job $repository, Categories $categories)
-    {
+    public function __construct(
+        Job $repository,
+        Categories $categories,
+        SolrJobEventListenerFacade $solr
+    ) {
         $this->repository = $repository;
         $this->categoriesRepository = $categories;
+        $this->solr = $solr;
     }
 
     public function execute()
     {
-        if (!$this->repository || !$this->categoriesRepository) {
+        if (!$this->repository || !$this->categoriesRepository || !$this->solr) {
             return $this->failure('Cannot execute without dependencies.');
         }
 
@@ -99,6 +105,8 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
 
         $metaData->checked('Added categories:' . join(', ', $requiredCategories));
         $metaData->storeIn($job);
+
+        $this->solr->forceUpdate($job);
 
         return $this->success('Added categories:' . join(', ', $requiredCategories));
     }
