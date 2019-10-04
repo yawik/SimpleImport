@@ -31,70 +31,87 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
      * @var string
      */
     const TYPE_JOB = 'job';
-    
+
     /**
      * @var string
      * @ODM\Field(type="string")
      */
     private $name;
-    
+
     /**
      * @var Organization
      * @ODM\ReferenceOne(targetDocument="\Organizations\Entity\Organization", storeAs="id")
      */
     private $organization;
-    
+
     /**
      * @var string
      * @ODM\Field(type="string")
      */
     private $type;
-    
+
     /**
      * @var string
      * @ODM\Field(type="string")
      */
     private $feedUri;
-    
+
     /**
      * Number of minutes the next import run will be proceeded again
-     * 
+     *
      * @var int
      * @ODM\Field(type="int")
      */
     private $runDelay;
-    
+
     /**
      * @var DateTime
      * @ODM\Field(type="tz_date")
      */
     private $dateLastRun;
-    
+
     /**
      * @var JobOptions|mixed
      * @ODM\EmbedOne
      */
     private $options;
-    
+
     /**
      * @var Collection
-     * @ODM\ReferenceMany(targetDocument="Item", mappedBy="crawler", cascade={"persist","remove"})
+     * @ODM\ReferenceMany(targetDocument="Item", mappedBy="crawler", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $items;
+
+    private $updateItemsMetaData = true;
 
     /**
      * @ODM\PrePersist
      * @ODM\PreUpdate
      */
-    public function setItemsMetaData()
+    public function updateItemsMetaData()
     {
-        $documentIds = [];
-
-        foreach ($this->items as $item) {
-            $documentIds[] = $item->getDocumentId();
+        if (!$this->updateItemsMetaData) {
+            return;
         }
 
+        $ids = [];
+        foreach ($this->items as $item) {
+            $ids[] = $item->getDocumentId();
+        }
+
+        $this->setMetaData('documentIds', $ids);
+    }
+
+    /**
+     * @param string[] $documentIds
+     * @param bool $disableUpdateOnSave if true, prevent the automatic updating
+     *                                  of the documentIds meta data
+     *                                  on the doctrine lifecycle hooks.
+     */
+    public function setItemsMetaData(array $documentIds, bool $disableUpdateOnSave = true)
+    {
         $this->setMetaData('documentIds', $documentIds);
+        $this->updateItemsMetaData = !$disableUpdateOnSave;
     }
 
     /**
@@ -114,7 +131,7 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
         $this->name = $name;
         return $this;
     }
-    
+
     /**
      * @return Organization
      */
@@ -150,11 +167,11 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
         if (!in_array($type, self::validTypes())) {
             throw new InvalidArgumentException(sprintf('Invalid type: "%s"', $type));
         }
-        
+
         $this->type = $type;
         return $this;
     }
-    
+
     /**
      * @return array
      */
@@ -248,10 +265,10 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
     public function getItem($importId)
     {
         $items = $this->items()->filter(function (Item $item) use ($importId) { return $item->getImportId() == $importId; });
-        
+
         return $items->first() ?: null;
     }
-    
+
     /**
      * @param Item $item
      * @throws InvalidArgumentException
@@ -260,7 +277,7 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
     {
         $importId = $item->getImportId();
         $items = $this->items();
-      
+
         if ($this->getItem($importId)) {
             throw new InvalidArgumentException(sprintf('Item with import ID "%s" already exists', $importId));
         }
@@ -278,7 +295,7 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
         $this->dateLastRun = $dateLastRun;
         return $this;
     }
-    
+
     /**
      * @return JobOptions
      */
@@ -288,22 +305,22 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
             if (!$this->type) {
                 throw new LogicException('The options class cannot be resolved because the type is not set');
             }
-            
+
             $map = [
                 self::TYPE_JOB => JobOptions::class
             ];
-            
+
             if (!isset($map[$this->type])) {
                 throw new LogicException(sprintf('The options class resolving failed for the type: "%s"', $this->type));
             }
-            
+
             $class = $map[$this->type];
             $this->options = new $class();
         }
-        
+
         return $this->options;
     }
-    
+
     /**
      * @param array $array
      * @throws InvalidArgumentException
@@ -312,17 +329,17 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
     public function setOptionsFromArray(array $array)
     {
         $options = $this->getOptions();
-        
+
         foreach ($array as $key => $value) {
             $setter = "set{$key}";
-            
+
             if (!is_callable([$options, $setter])) {
                 throw new InvalidArgumentException(sprintf('Invalid option key: "%s"', $key));
             }
-            
+
             $options->$setter($value);
         }
-        
+
         return $this;
     }
 
@@ -334,7 +351,17 @@ class Crawler extends AbstractIdentifiableEntity implements CrawlerInterface, Me
         if (!isset($this->items)) {
             $this->items = new ArrayCollection();
         }
-        
+
         return $this->items;
+    }
+
+    public function __toString()
+    {
+        return sprintf(
+            '%s [ %s ] ( %s )',
+            self::class,
+            $this->getName(),
+            $this->getId()
+        );
     }
 }
