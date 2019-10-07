@@ -57,7 +57,7 @@ return [
             'SimpleImport/Geocoder/CacheProvider' => GeocoderFactory\CacheProviderFactory::class,
             'SimpleImport/JobGeocodeLocation' => Factory\Job\GeocodeLocationFactory::class,
             Service\LanguageGuesser::class => Service\LanguageGuesserFactory::class,
-            Listener\SolrJobEventListenerFacadeFactory::class => Listener\SolrJobEventListenerFacadeFactory::class,
+            Listener\SolrJobEventListenerFacade::class => Listener\SolrJobEventListenerFacadeFactory::class,
         ]
     ],
     'controllers' => [

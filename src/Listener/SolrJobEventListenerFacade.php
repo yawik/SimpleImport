@@ -13,7 +13,9 @@ use Jobs\Entity\JobInterface;
 use Solr\Listener\JobEventSubscriber;
 
 /**
- * TODO: description
+ * Facade for yawik/solr JobEventSubscriber.
+ * Make this module independent from yawik/solr, yet enables updates to solr
+ * documents, if yawik/solr is enabled.
  *
  * @author Mathias Gelhausen <gelhausen@cross-solution.de>
  * TODO: write tests
