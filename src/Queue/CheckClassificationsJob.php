@@ -61,7 +61,7 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
         $logger->info('Processing job: ' . $job->getId());
         /** @var \Core\Entity\Tree\EmbeddedLeafs $classifications */
         $category = $this->getRootCategory();
-        $root = $this->categoriesRepository->findOneBy(['name' => $category]);
+        $root = $this->categoriesRepository->findOneBy(['value' => $category]);
         $metaData = CheckClassificationsMetaData::fromJob($job, $category);
         $requiredCategories = $this->getRequiredCategories();
         $classifications = $job->getClassifications()->{"get$category"}();
@@ -107,6 +107,10 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
         $metaData->storeIn($job);
 
         $this->solr->forceUpdate($job);
+
+        /* We do not want to wait for the auto flush of the core module
+         * because the queue process could be run a long time */
+        $this->repository->getDocumentManager()->flush();
 
         return $this->success('Added categories:' . join(', ', $requiredCategories));
     }
