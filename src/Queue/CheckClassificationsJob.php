@@ -29,6 +29,7 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
+    private static $flushCount = 1;
     private $repository;
     private $categoriesRepository;
     private $solr;
@@ -109,8 +110,15 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
         $this->solr->forceUpdate($job);
 
         /* We do not want to wait for the auto flush of the core module
-         * because the queue process could be run a long time */
-        $this->repository->getDocumentManager()->flush();
+         * because the queue process could be run a long time.
+         * Yet we do not want to flush after every job. So we only flush
+         * after 100 jobs.
+         * TODO: Make flushCount limit configurable
+         */
+        if (! (self::$flushCount++ % 100)) {
+            $logger->notice('Flush to database...');
+            $this->repository->getDocumentManager()->flush();
+        }
 
         return $this->success('Added categories:' . join(', ', $requiredCategories));
     }
