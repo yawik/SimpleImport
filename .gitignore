@@ -3,5 +3,4 @@ vendor
 behat.yml
 node_modules/
 /var/
-package-lock.json
 .phpunit.result.cache
