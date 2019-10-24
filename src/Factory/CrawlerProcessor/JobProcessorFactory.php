@@ -16,6 +16,7 @@ use SimpleImport\InputFilter\JobDataInputFilter;
 use SimpleImport\Hydrator\JobHydrator;
 use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 use Core\Form\Hydrator\Strategy\TreeSelectStrategy;
+use SimpleImport\Filter\ShufflePublishDateFilter;
 use Zend\Http\Client;
 
 class JobProcessorFactory implements FactoryInterface
@@ -34,9 +35,13 @@ class JobProcessorFactory implements FactoryInterface
         $jobRepository = $repositories->get('Jobs/Job');
         $moduleOptions = $container->get('SimpleImport/Options/Module');
         $classificationsHydrator = new ClassificationsHydrator(new TreeSelectStrategy(), $repositories->get('Jobs/Category'), $moduleOptions->getClassifications());
-        $jobHydrator = new JobHydrator($container->get('SimpleImport/JobGeocodeLocation'), $classificationsHydrator);
+        $jobHydrator = new JobHydrator(
+            $container->get('SimpleImport/JobGeocodeLocation'),
+            $classificationsHydrator,
+            $container->get('FilterManager')->get(ShufflePublishDateFilter::class)
+        );
         $dataInputFilter = new JobDataInputFilter($moduleOptions->getClassifications());
-        
+
         return new \SimpleImport\CrawlerProcessor\JobProcessor(
             $jsonFetch, $plainTextFetch, $jobRepository, $jobHydrator, $dataInputFilter);
     }

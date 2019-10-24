@@ -217,6 +217,7 @@ return [
         'factories' => [
             Filter\IdToEntity::class => Filter\IdToEntityFactory::class,
             Filter\MapClassificationsFilter::class => Filter\MapClassificationsFilterFactory::class,
+            Filter\ShufflePublishDateFilter::class => Filter\ShufflePublishDateFilterFactory::class,
         ],
     ],
     'validators' => [

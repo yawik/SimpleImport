@@ -20,38 +20,38 @@ class ModuleOptions extends AbstractOptions
      * @var int
      */
     private $importRunDelay = 1440;
-    
+
     /**
      * Geocode locale
-     * 
+     *
      * @var string
      */
     private $geocodeLocale = 'de';
-    
+
     /**
      * Geocode region biasing
-     * 
+     *
      * @var string
      */
     private $geocodeRegion = 'DE';
-    
+
     /**
      * Whether to use an SSL connection for Geocoding
-     * 
+     *
      * @var bool
      */
     private $geocodeUseSsl = true;
-    
+
     /**
      * An optional Geocode Google map API key
-     * 
+     *
      * @var string
      */
     private $geocodeGoogleApiKey = null;
-    
+
     /**
      * List of available classifications to import
-     * 
+     *
      * @var array
      */
     private $classifications = [
@@ -64,6 +64,11 @@ class ModuleOptions extends AbstractOptions
      * @var array
      */
     private $cache = [];
+
+    /**
+     * @var int
+     */
+    private $shuffleInterval = 0;
 
     /**
      * @return array
@@ -98,7 +103,7 @@ class ModuleOptions extends AbstractOptions
         $this->importRunDelay = $importRunDelay;
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -170,7 +175,7 @@ class ModuleOptions extends AbstractOptions
         $this->geocodeGoogleApiKey = $geocodeGoogleApiKey;
         return $this;
     }
-    
+
     /**
      * @return array
      */
@@ -187,5 +192,25 @@ class ModuleOptions extends AbstractOptions
     {
         $this->classifications = $classifications;
         return $this;
+    }
+
+    /**
+     * Get shuffleInterval
+     *
+     * @return int
+     */
+    public function getShuffleInterval(): int
+    {
+        return $this->shuffleInterval;
+    }
+
+    /**
+     * Set shuffleInterval
+     *
+     * @param int $shuffleInterval
+     */
+    public function setShuffleInterval(int $shuffleInterval): void
+    {
+        $this->shuffleInterval = $shuffleInterval;
     }
 }

@@ -16,6 +16,7 @@ use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 use Jobs\Entity\Job;
 use InvalidArgumentException;
 use SimpleImport\Entity\CheckClassificationsMetaData;
+use SimpleImport\Filter\ShufflePublishDateFilter;
 
 class JobHydrator implements HydrationInterface
 {
@@ -31,13 +32,22 @@ class JobHydrator implements HydrationInterface
     private $classificationsHydrator;
 
     /**
+     * @var ShufflePublishDateFilter
+     */
+    private $publishDateFilter;
+
+    /**
      * @param GeocodeLocation $geocodeLocation
      * @param ClassificationsHydrator $classificationsHydrator
      */
-    public function __construct(GeocodeLocation $geocodeLocation, ClassificationsHydrator $classificationsHydrator)
-    {
+    public function __construct(
+        GeocodeLocation $geocodeLocation,
+        ClassificationsHydrator $classificationsHydrator,
+        ShufflePublishDateFilter $publishDateFilter
+    ) {
         $this->geocodeLocation = $geocodeLocation;
         $this->classificationsHydrator = $classificationsHydrator;
+        $this->publishDateFilter = $publishDateFilter;
     }
 
     /**
@@ -58,7 +68,7 @@ class JobHydrator implements HydrationInterface
             ->setContactEmail($data['contactEmail'])
             ->setLanguage($data['language'])
             ->setLink($data['link'])
-            ->setDatePublishStart($data['datePublishStart'])
+            ->setDatePublishStart($this->publishDateFilter->filter($data['datePublishStart']))
             ->setLogoRef($data['logoRef']);
 
         if (isset($data['templateValues'])) {
