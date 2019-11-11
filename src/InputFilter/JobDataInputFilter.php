@@ -187,6 +187,10 @@ class JobDataInputFilter extends InputFilter
                 ],
             ]
         ])->add([
+            'name' => 'extra',
+            'required' => false,
+
+        ])->add([
             'type' => OptionalInputFilter::class,
             'html' => [
                 'required' => false,

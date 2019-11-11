@@ -16,6 +16,7 @@ use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 use Jobs\Entity\Job;
 use InvalidArgumentException;
 use SimpleImport\Entity\CheckClassificationsMetaData;
+use SimpleImport\Entity\JobMetaData;
 use SimpleImport\Filter\ShufflePublishDateFilter;
 
 class JobHydrator implements HydrationInterface
@@ -81,6 +82,15 @@ class JobHydrator implements HydrationInterface
                     $templateValues->$method($value);
                 }
             }
+        }
+
+        if (isset($data['extra'])) {
+            $extra =
+                is_string($data['extra'])
+                ? JobMetaData::fromJson($data['extra'])
+                : JobMetaData::fromArray($data['extra'])
+            ;
+            $extra->storeIn($job);
         }
 
         if ($data['datePublishEnd']) {
