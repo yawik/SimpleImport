@@ -13,12 +13,12 @@ use SimpleImport\Repository\Crawler as CrawlerRepository;
 use SimpleImport\CrawlerProcessor\Manager as CrawlerProcessors;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\Options\ModuleOptions;
-use Zend\Mvc\Console\Controller\AbstractConsoleController;
-use Zend\Console\ColorInterface;
-use Zend\Log\LoggerInterface;
-use Zend\InputFilter\InputFilterInterface;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
+use Laminas\Console\ColorInterface;
+use Laminas\Log\LoggerInterface;
+use Laminas\InputFilter\InputFilterInterface;
 use DateTime;
-use Zend\Mvc\Console\View\ViewModel;
+use Laminas\Mvc\Console\View\ViewModel;
 
 class ConsoleController extends AbstractConsoleController
 {

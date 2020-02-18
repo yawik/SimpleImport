@@ -16,7 +16,7 @@ use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use SimpleImport\Validator\EntityExists;
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 
 /**
  * Tests for \SimpleImport\Validator\EntityExists

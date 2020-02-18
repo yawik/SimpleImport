@@ -9,7 +9,7 @@
 namespace SimpleImport\CrawlerProcessor;
 
 use SimpleImport\Entity\Crawler;
-use Zend\Log\LoggerInterface;
+use Laminas\Log\LoggerInterface;
 
 interface ProcessorInterface
 {

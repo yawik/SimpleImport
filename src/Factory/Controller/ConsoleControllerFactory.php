@@ -14,7 +14,7 @@ use SimpleImport\InputFilter\CrawlerInputFilter;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\Factory\ProgressBarFactory;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ConsoleControllerFactory implements FactoryInterface
 {

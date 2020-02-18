@@ -8,7 +8,7 @@
  */
 namespace SimpleImport\Validator;
 
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use Organizations\Repository\Organization as OrganizationRepository;
 
 class OrganizationExists extends AbstractValidator
@@ -42,7 +42,7 @@ class OrganizationExists extends AbstractValidator
     
     /**
      * {@inheritDoc}
-     * @see \Zend\Validator\ValidatorInterface::isValid()
+     * @see \Laminas\Validator\ValidatorInterface::isValid()
      */
     public function isValid($value)
     {

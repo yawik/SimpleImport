@@ -12,7 +12,7 @@ namespace SimpleImport\Service;
 
 use Interop\Container\ContainerInterface;
 use SimpleImport\Options\LanguageGuesserOptions;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Factory for \SimpleImport\Service\LanguageGuesser
@@ -26,7 +26,7 @@ class LanguageGuesserFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $options = $container->get(LanguageGuesserOptions::class);
-        $client  = new \Zend\Http\Client($options->getUri());
+        $client  = new \Laminas\Http\Client($options->getUri());
         $service = new LanguageGuesser($client);
         
         return $service;    

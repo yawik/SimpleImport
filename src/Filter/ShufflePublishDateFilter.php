@@ -14,7 +14,7 @@ namespace SimpleImport\Filter;
 
 use DateInterval;
 use DateTime;
-use Zend\Filter\FilterInterface;
+use Laminas\Filter\FilterInterface;
 
 /**
  * TODO: description

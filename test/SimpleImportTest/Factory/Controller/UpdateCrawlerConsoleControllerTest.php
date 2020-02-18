@@ -18,9 +18,9 @@ use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\Controller\UpdateCrawlerConsoleController;
 use SimpleImport\Factory\Controller\UpdateCrawlerConsoleControllerFactory;
 use SimpleImport\InputFilter\CrawlerInputFilter;
-use Zend\Mvc\Console\Router\RouteMatch;
-use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\Mvc\Console\Router\RouteMatch;
+use Laminas\Mvc\MvcEvent;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Tests for \SimpleImport\Factory\Controller\UpdateCrawlerConsoleControllerFactory
@@ -39,7 +39,7 @@ class UpdateCrawlerConsoleControllerTest extends TestCase
 
     private function setupContainer($isIndexRoute)
     {
-        $application = $this->getMockBuilder(\Zend\Mvc\Application::class)
+        $application = $this->getMockBuilder(\Laminas\Mvc\Application::class)
             ->disableOriginalConstructor()
             ->setMethods(['getMvcEvent'])
             ->getMock();
@@ -73,7 +73,7 @@ class UpdateCrawlerConsoleControllerTest extends TestCase
                 CrawlerInputFilter::class => ['service' => $filter, 'count_get' => 1]
             ],
             [
-                'target' => \Zend\ServiceManager\AbstractPluginManager::class
+                'target' => \Laminas\ServiceManager\AbstractPluginManager::class
             ]
         );
 

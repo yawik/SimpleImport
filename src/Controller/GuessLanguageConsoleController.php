@@ -12,8 +12,8 @@ namespace SimpleImport\Controller;
 
 use Jobs\Entity\Status;
 use SimpleImport\Queue\GuessLanguageJob;
-use Zend\Console\ColorInterface;
-use Zend\Mvc\Console\Controller\AbstractConsoleController;
+use Laminas\Console\ColorInterface;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
 
 /**
  * Update crawler configuration or displays crawler information.

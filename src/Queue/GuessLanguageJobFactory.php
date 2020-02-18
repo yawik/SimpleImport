@@ -12,7 +12,7 @@ namespace SimpleImport\Queue;
 
 use Interop\Container\ContainerInterface;
 use SimpleImport\Service\LanguageGuesser;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Factory for \SimpleImport\Queue\GuessLanguageJob

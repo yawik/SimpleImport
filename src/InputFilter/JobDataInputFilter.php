@@ -9,8 +9,8 @@
 namespace SimpleImport\InputFilter;
 
 use SimpleImport\Filter\MapClassificationsFilter;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\OptionalInputFilter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\OptionalInputFilter;
 
 class JobDataInputFilter extends InputFilter
 {

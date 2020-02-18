@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 use SimpleImport\Validator\OrganizationExists;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use Organizations\Repository\Organization as OrganizationRepository;
 use Organizations\Entity\Organization;
 

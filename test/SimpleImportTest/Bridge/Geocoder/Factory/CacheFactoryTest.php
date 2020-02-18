@@ -6,7 +6,7 @@ use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 use SimpleImport\Bridge\Geocoder\Factory\CacheFactory;
 use SimpleImport\Options\ModuleOptions;
-use Zend\Cache\Psr\SimpleCache\SimpleCacheDecorator;
+use Laminas\Cache\Psr\SimpleCache\SimpleCacheDecorator;
 
 class CacheFactoryTest extends TestCase
 {

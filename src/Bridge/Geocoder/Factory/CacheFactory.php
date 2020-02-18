@@ -7,9 +7,9 @@ namespace SimpleImport\Bridge\Geocoder\Factory;
 
 use Interop\Container\ContainerInterface;
 use SimpleImport\Options\ModuleOptions;
-use Zend\Cache\Psr\SimpleCache\SimpleCacheDecorator;
-use Zend\Cache\StorageFactory;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\Cache\Psr\SimpleCache\SimpleCacheDecorator;
+use Laminas\Cache\StorageFactory;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class CacheFactory implements FactoryInterface
 {

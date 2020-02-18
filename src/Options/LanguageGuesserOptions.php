@@ -10,7 +10,7 @@
 /** */
 namespace SimpleImport\Options;
 
-use Zend\Stdlib\AbstractOptions;
+use Laminas\Stdlib\AbstractOptions;
 
 /**
  * ${CARET}

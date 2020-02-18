@@ -12,7 +12,7 @@ namespace SimpleImport\Controller;
 use OutOfBoundsException;
 use SimpleImport\Entity\CheckClassificationsMetaData;
 use SimpleImport\Queue\CheckClassificationsJob;
-use Zend\Mvc\Console\Controller\AbstractConsoleController;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
 
 /**
  * TODO: description
@@ -38,7 +38,7 @@ class CheckClassificationsConsoleController extends AbstractConsoleController
 
     public function indexAction()
     {
-        /** @var \Zend\Paginator\Paginator $jobs */
+        /** @var \Laminas\Paginator\Paginator $jobs */
         $jobs = $this->paginator('Jobs/Board', [], [
             'q' => $this->params('query'),
         ]);

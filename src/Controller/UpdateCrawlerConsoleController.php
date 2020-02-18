@@ -11,9 +11,9 @@
 namespace SimpleImport\Controller;
 
 use SimpleImport\InputFilter\CrawlerInputFilter;
-use Zend\Console\ColorInterface;
-use Zend\InputFilter\InputFilter;
-use Zend\Mvc\Console\Controller\AbstractConsoleController;
+use Laminas\Console\ColorInterface;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
 
 /**
  * Update crawler configuration or displays crawler information.

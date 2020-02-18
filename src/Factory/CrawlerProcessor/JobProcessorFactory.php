@@ -10,20 +10,20 @@ namespace SimpleImport\Factory\CrawlerProcessor;
 
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use SimpleImport\DataFetch;
 use SimpleImport\InputFilter\JobDataInputFilter;
 use SimpleImport\Hydrator\JobHydrator;
 use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 use Core\Form\Hydrator\Strategy\TreeSelectStrategy;
 use SimpleImport\Filter\ShufflePublishDateFilter;
-use Zend\Http\Client;
+use Laminas\Http\Client;
 
 class JobProcessorFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
-     * @see \Zend\ServiceManager\Factory\FactoryInterface::__invoke()
+     * @see \Laminas\ServiceManager\Factory\FactoryInterface::__invoke()
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

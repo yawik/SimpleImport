@@ -8,7 +8,7 @@
  */
 namespace SimpleImport\Hydrator\Job;
 
-use Zend\Hydrator\HydrationInterface;
+use Laminas\Hydrator\HydrationInterface;
 use Core\Form\Hydrator\Strategy\TreeSelectStrategy;
 use Jobs\Repository\Categories;
 use Jobs\Entity\Classifications;
@@ -55,7 +55,7 @@ class ClassificationsHydrator implements HydrationInterface
 
     /**
      * {@inheritDoc}
-     * @see \Zend\Hydrator\HydrationInterface::hydrate()
+     * @see \Laminas\Hydrator\HydrationInterface::hydrate()
      */
     public function hydrate(array $data, $classifications, ?JobInterface $job = null)
     {

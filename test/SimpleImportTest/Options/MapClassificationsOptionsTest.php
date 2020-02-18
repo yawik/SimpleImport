@@ -14,7 +14,7 @@ use Cross\TestUtils\TestCase\TestSetterAndGetterTrait;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use SimpleImport\Options\MapClassificationsOptions;
-use Zend\Stdlib\AbstractOptions;
+use Laminas\Stdlib\AbstractOptions;
 
 /**
  * Testcase for \SimpleImport\Options\MapClassificationsOptions

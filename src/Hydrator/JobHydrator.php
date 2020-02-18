@@ -8,7 +8,7 @@
  */
 namespace SimpleImport\Hydrator;
 
-use Zend\Hydrator\HydrationInterface;
+use Laminas\Hydrator\HydrationInterface;
 use Jobs\Entity\AtsMode;
 use SimpleImport\Job\GeocodeLocation;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -52,7 +52,7 @@ class JobHydrator implements HydrationInterface
 
     /**
      * {@inheritDoc}
-     * @see \Zend\Hydrator\HydrationInterface::hydrate()
+     * @see \Laminas\Hydrator\HydrationInterface::hydrate()
      */
     public function hydrate(array $data, $job)
     {

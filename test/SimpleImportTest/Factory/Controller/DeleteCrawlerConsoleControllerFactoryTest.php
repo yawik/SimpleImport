@@ -16,7 +16,7 @@ use Cross\TestUtils\TestCase\ContainerDoubleTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use SimpleImport\Factory\Controller\DeleteCrawlerConsoleControllerFactory;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Tests for \SimpleImport\Factory\Controller\DeleteCrawlerConsoleControllerFactory

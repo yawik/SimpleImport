@@ -16,13 +16,13 @@ use SimpleImport\DataFetch\JsonFetch;
 use SimpleImport\DataFetch\PlainTextFetch;
 use SimpleImport\Queue\GuessLanguageJob;
 use SlmQueue\Controller\Plugin\QueuePlugin;
-use Zend\Json\Json;
-use Zend\Log\LoggerInterface;
+use Laminas\Json\Json;
+use Laminas\Log\LoggerInterface;
 use SimpleImport\Entity\Item;
 use Jobs\Repository\Job as JobRepository;
 use Jobs\Entity\StatusInterface as JobStatusInterface;
-use Zend\Hydrator\HydrationInterface;
-use Zend\InputFilter\InputFilterInterface;
+use Laminas\Hydrator\HydrationInterface;
+use Laminas\InputFilter\InputFilterInterface;
 use DateTime;
 use RuntimeException;
 

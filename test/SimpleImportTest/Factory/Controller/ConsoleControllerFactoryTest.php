@@ -17,7 +17,7 @@ use SimpleImport\Repository\Crawler as CrawlerRepository;
 use SimpleImport\CrawlerProcessor\Manager as CrawlerProcessorManager;
 use SimpleImport\InputFilter\CrawlerInputFilter;
 use SimpleImport\Options\ModuleOptions;
-use Zend\Log\LoggerInterface;
+use Laminas\Log\LoggerInterface;
 
 /**
  * @coversDefaultClass \SimpleImport\Factory\Controller\ConsoleControllerFactory

@@ -11,8 +11,8 @@
 namespace SimpleImport\Filter;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Factory for \SimpleImport\Filter\IdToEntity

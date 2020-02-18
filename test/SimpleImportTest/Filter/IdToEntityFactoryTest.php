@@ -18,10 +18,10 @@ use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use SimpleImport\Filter\IdToEntity;
 use SimpleImport\Filter\IdToEntityFactory;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Tests for \SimpleImport\Filter\IdToEntityFactory

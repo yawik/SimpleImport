@@ -17,11 +17,11 @@ use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Prophecy\Argument;
 
 use SimpleImport\Controller\DeleteCrawlerConsoleController;
-use Zend\Console\ColorInterface;
-use Zend\Mvc\Console\Controller\AbstractConsoleController;
-use Zend\Mvc\Console\View\ViewModel;
+use Laminas\Console\ColorInterface;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
+use Laminas\Mvc\Console\View\ViewModel;
 
-use Zend\Mvc\Controller\PluginManager;
+use Laminas\Mvc\Controller\PluginManager;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -94,8 +94,8 @@ class DeleteCrawlerConsoleControllerTest extends TestCase
             ->setMethods(['getItems', 'getName', 'getId'])->getMock();
 
 
-        /* @var \PHPUnit_Framework_MockObject_MockObject|\Zend\Console\Adapter\AdapterInterface $console */
-        $console = $this->getMockBuilder(\Zend\Console\Adapter\AdapterInterface::class)
+        /* @var \PHPUnit_Framework_MockObject_MockObject|\Laminas\Console\Adapter\AdapterInterface $console */
+        $console = $this->getMockBuilder(\Laminas\Console\Adapter\AdapterInterface::class)
                         ->getMock();
 
         $crawler->expects($this->once())->method('getName')->willReturn($name);

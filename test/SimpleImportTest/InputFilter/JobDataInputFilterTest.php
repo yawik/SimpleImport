@@ -19,10 +19,10 @@ use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Prophecy\Argument;
 use SimpleImport\InputFilter\JobDataInputFilter;
-use Zend\Filter\FilterPluginManager;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\ValidatorPluginManager;
-use Zend\Validator\AbstractValidator;
+use Laminas\Filter\FilterPluginManager;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\ValidatorPluginManager;
+use Laminas\Validator\AbstractValidator;
 
 /**
  * @coversDefaultClass \SimpleImport\InputFilter\JobDataInputFilter

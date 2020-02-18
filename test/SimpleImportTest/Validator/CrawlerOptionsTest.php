@@ -17,7 +17,7 @@ use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Jobs\Entity\StatusInterface;
 use SimpleImport\Validator\CrawlerOptions;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use SimpleImport\Entity\Crawler;
 use Jobs\Entity\Status;
 use LogicException;
