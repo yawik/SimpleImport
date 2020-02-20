@@ -15,7 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 use Jobs\Entity\Job;
 use InvalidArgumentException;
-use SimpleImport\Entity\CheckClassificationsMetaData;
 use SimpleImport\Entity\JobMetaData;
 use SimpleImport\Filter\ShufflePublishDateFilter;
 
