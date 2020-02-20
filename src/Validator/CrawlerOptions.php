@@ -8,7 +8,7 @@
  */
 namespace SimpleImport\Validator;
 
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use LogicException;
 use SimpleImport\Entity\Crawler;
 use Jobs\Entity\Status;
@@ -47,7 +47,7 @@ class CrawlerOptions extends AbstractValidator
     
     /**
      * {@inheritDoc}
-     * @see \Zend\Validator\ValidatorInterface::isValid()
+     * @see \Laminas\Validator\ValidatorInterface::isValid()
      */
     public function isValid($value, $context = null)
     {

@@ -16,8 +16,8 @@ use Jobs\Repository\Categories;
 use Jobs\Repository\Job;
 use SimpleImport\Entity\CheckClassificationsMetaData;
 use SimpleImport\Listener\SolrJobEventListenerFacade;
-use Zend\Log\LoggerAwareInterface;
-use Zend\Log\LoggerAwareTrait;
+use Laminas\Log\LoggerAwareInterface;
+use Laminas\Log\LoggerAwareTrait;
 
 /**
  * ${CARET}

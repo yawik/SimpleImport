@@ -20,13 +20,13 @@ use SimpleImport\Controller\Plugin\LoadCrawler;
 use SimpleImport\Controller\UpdateCrawlerConsoleController;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\InputFilter\CrawlerInputFilter;
-use Zend\Mvc\Console\Controller\AbstractConsoleController;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
 
-use Zend\Mvc\Controller\Plugin\Params;
+use Laminas\Mvc\Controller\Plugin\Params;
 
-use Zend\Mvc\Controller\PluginManager;
+use Laminas\Mvc\Controller\PluginManager;
 
-use Zend\Stdlib\Parameters;
+use Laminas\Stdlib\Parameters;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -181,7 +181,7 @@ class UpdateCrawlerConsoleControllerTest extends TestCase
     private function setupUpdateActionTest($inputFilterValid)
     {
         $return = [];
-        $params = $this->getMockBuilder(\Zend\Mvc\Controller\Plugin\Params::class)
+        $params = $this->getMockBuilder(\Laminas\Mvc\Controller\Plugin\Params::class)
             ->disableOriginalConstructor()->setMethods(['__invoke'])->getMock();
 
         foreach (['rename', 'feed-uri', 'organization', 'rundelay', 'type', 'jobInitialState', 'jobRecoverState'] as $key) {
@@ -266,7 +266,7 @@ class UpdateCrawlerConsoleControllerTest extends TestCase
         $org->setOrganizationName(new OrganizationName('CompanyName'));
         $crawler->setDateLastRun(new \DateTime());
 
-        $console = $this->getMockBuilder(\Zend\Console\Adapter\AdapterInterface::class)
+        $console = $this->getMockBuilder(\Laminas\Console\Adapter\AdapterInterface::class)
             ->getMock();
 
         $console->expects($this->once())->method('writeLine')->with($this->stringContains('Crawler updated'));

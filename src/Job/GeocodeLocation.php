@@ -14,9 +14,9 @@ use Geocoder\Provider\Provider as GeoCoderProvider;
 use Geocoder\Query\GeocodeQuery;
 use Jobs\Entity\Location;
 use Exception;
-use Zend\Log\LoggerAwareTrait;
-use Zend\Log\LoggerAwareInterface;
-use Zend\Log\LoggerInterface;
+use Laminas\Log\LoggerAwareTrait;
+use Laminas\Log\LoggerAwareInterface;
+use Laminas\Log\LoggerInterface;
 
 class GeocodeLocation implements LoggerAwareInterface
 {

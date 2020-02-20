@@ -16,7 +16,7 @@ use Interop\Container\ContainerInterface;
 use SimpleImport\Factory\Job\GeocodeLocationFactory;
 use SimpleImport\Options\ModuleOptions;
 use SimpleImport\Job\GeocodeLocation;
-use Zend\Log\LoggerInterface;
+use Laminas\Log\LoggerInterface;
 
 /**
  * @coversDefaultClass \SimpleImport\Factory\Job\GeocodeLocationFactory

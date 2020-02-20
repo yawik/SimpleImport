@@ -13,7 +13,7 @@ namespace SimpleImport\Factory\Controller;
 use SimpleImport\Controller\UpdateCrawlerConsoleController;
 use Interop\Container\ContainerInterface;
 use SimpleImport\InputFilter\CrawlerInputFilter;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Factory for \SimpleImport\Controller\UpdateCrawlerConsoleController
@@ -34,7 +34,7 @@ class UpdateCrawlerConsoleControllerFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /* @var CrawlerInputFilter $filter
-         * @var \Zend\Router\RouteMatch $routeMatch
+         * @var \Laminas\Router\RouteMatch $routeMatch
          */
 
         $controller  = new UpdateCrawlerConsoleController();

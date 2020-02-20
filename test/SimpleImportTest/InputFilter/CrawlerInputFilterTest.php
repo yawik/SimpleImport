@@ -17,9 +17,9 @@ use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\InputFilter\CrawlerInputFilter;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\ValidatorPluginManager;
-use Zend\Validator\AbstractValidator;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\ValidatorPluginManager;
+use Laminas\Validator\AbstractValidator;
 
 /**
  * @coversDefaultClass \SimpleImport\InputFilter\CrawlerInputFilter

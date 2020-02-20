@@ -10,7 +10,7 @@
 /** */
 namespace SimpleImport\Validator;
 
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use Organizations\Repository\Organization as OrganizationRepository;
 
 /**

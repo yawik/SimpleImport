@@ -16,7 +16,7 @@ use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use SimpleImport\Filter\IdToEntity;
-use Zend\Filter\FilterInterface;
+use Laminas\Filter\FilterInterface;
 
 /**
  * Tests for \SimpleImport\Filter\IdToEntity

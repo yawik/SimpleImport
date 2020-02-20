@@ -28,7 +28,7 @@ class MapClassificationsFilterTest extends TestCase
 
     private $inheritance = [
         'target' => MapClassificationsFilter::class,
-        \Zend\Filter\FilterInterface::class,
+        \Laminas\Filter\FilterInterface::class,
     ];
 
     public function testDoesNotFilterNonArray()

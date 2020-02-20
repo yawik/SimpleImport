@@ -11,7 +11,7 @@
 namespace SimpleImport\Controller\Plugin;
 
 use SimpleImport\Repository\Crawler;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Plugin to load all crawlers or one crawler entity according to route parameters.
@@ -50,7 +50,7 @@ class LoadCrawler extends AbstractPlugin
      */
     public function __invoke()
     {
-        /* @var \Zend\Mvc\Controller\AbstractActionController $controller */
+        /* @var \Laminas\Mvc\Controller\AbstractActionController $controller */
         $controller = $this->getController();
         $params     = $controller->plugin('params');
 

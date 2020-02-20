@@ -6,7 +6,7 @@ namespace SimpleImport\Bridge\Geocoder\Factory;
 
 use Geocoder\Provider\Cache\ProviderCache;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class CacheProviderFactory implements FactoryInterface
 {

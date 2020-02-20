@@ -8,7 +8,7 @@
  */
 namespace SimpleImport\DataFetch;
 
-use Zend\Http\Client;
+use Laminas\Http\Client;
 use Exception;
 use RuntimeException;
 

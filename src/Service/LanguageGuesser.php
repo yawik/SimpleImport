@@ -10,7 +10,7 @@
 /** */
 namespace SimpleImport\Service;
 
-use Zend\Http\Client;
+use Laminas\Http\Client;
 
 /**
  * ${CARET}
@@ -46,7 +46,7 @@ class LanguageGuesser
             ];
         }
 
-        $lang = \Zend\Json\Json::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);
+        $lang = \Laminas\Json\Json::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);
 
         return [
             'ok' => true,

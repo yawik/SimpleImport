@@ -11,7 +11,7 @@
 namespace SimpleImport\Filter;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
-use Zend\Filter\FilterInterface;
+use Laminas\Filter\FilterInterface;
 
 /**
  * Filter to load an entity by its id.

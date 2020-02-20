@@ -16,10 +16,10 @@ use Cross\TestUtils\TestCase\TestInheritanceTrait;
 
 use SimpleImport\Controller\Plugin\LoadCrawler;
 use SimpleImport\Entity\Crawler;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use SimpleImport\Repository\Crawler as CrawlerRepository;
-use Zend\Mvc\Controller\Plugin\Params;
+use Laminas\Mvc\Controller\Plugin\Params;
 use PHPUnit\Framework\TestCase;
 
 /**

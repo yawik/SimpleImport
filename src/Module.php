@@ -15,10 +15,10 @@ use Core\ModuleManager\Feature\VersionProviderTrait;
 use Core\ModuleManager\ModuleConfigLoader;
 use SimpleImport\Controller\CheckClassificationsConsoleController;
 use SimpleImport\Controller\GuessLanguageConsoleController;
-use Zend\Console\Adapter\AdapterInterface as Console;
-use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
-use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
-use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
+use Laminas\Console\Adapter\AdapterInterface as Console;
+use Laminas\ModuleManager\Feature\ConsoleBannerProviderInterface;
+use Laminas\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Laminas\ModuleManager\Feature\DependencyIndicatorInterface;
 
 /**
  * Bootstrap module
@@ -32,7 +32,7 @@ class Module implements
 
     use VersionProviderTrait;
 
-    const VERSION = '0.6.0';
+    const VERSION = '0.8.0';
 
     /**
      * Loads module specific configuration.

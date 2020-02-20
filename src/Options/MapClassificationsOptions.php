@@ -10,7 +10,7 @@
 namespace SimpleImport\Options;
 
 use OutOfBoundsException;
-use Zend\Stdlib\AbstractOptions;
+use Laminas\Stdlib\AbstractOptions;
 use function array_change_key_case;
 use function in_array;
 

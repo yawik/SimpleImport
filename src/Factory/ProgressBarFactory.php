@@ -15,7 +15,7 @@ class ProgressBarFactory
     /**
      * @param int $count
      * @param string $persistenceNamespace
-     * @return \Zend\ProgressBar\ProgressBar
+     * @return \Laminas\ProgressBar\ProgressBar
      */
     public function factory($count, $persistenceNamespace = null)
     {

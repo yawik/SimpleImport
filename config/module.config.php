@@ -11,7 +11,7 @@ namespace SimpleImport;
 
 use SimpleImport\Bridge\Geocoder\Factory as GeocoderFactory;
 use SimpleImport\Entity\Crawler;
-use Zend\ServiceManager\Factory\InvokableFactory;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 /**
  * create a config/autoload/SimpleImport.local.php and put modifications there.
@@ -66,7 +66,7 @@ return [
             Controller\DeleteCrawlerConsoleController::class => Factory\Controller\DeleteCrawlerConsoleControllerFactory::class,
             Controller\UpdateCrawlerConsoleController::class => Factory\Controller\UpdateCrawlerConsoleControllerFactory::class,
             Controller\GuessLanguageConsoleController::class => Factory\Controller\GuessLanguageConsoleControllerFactory::class,
-            Controller\CheckClassificationsConsoleController::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
+            Controller\CheckClassificationsConsoleController::class => \Laminas\ServiceManager\Factory\InvokableFactory::class,
         ]
     ],
     'controller_plugins' => [

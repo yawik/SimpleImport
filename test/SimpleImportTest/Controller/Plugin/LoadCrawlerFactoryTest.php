@@ -17,7 +17,7 @@ use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\Controller\Plugin\LoadCrawler;
 use SimpleImport\Controller\Plugin\LoadCrawlerFactory;
 use SimpleImport\Repository\Crawler;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use PHPUnit\Framework\TestCase;
 
 /**

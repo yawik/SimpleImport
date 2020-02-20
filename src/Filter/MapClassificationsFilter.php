@@ -9,7 +9,7 @@
 
 namespace SimpleImport\Filter;
 
-use Zend\Filter\FilterInterface;
+use Laminas\Filter\FilterInterface;
 use function array_push;
 use function array_unique;
 use function is_array;

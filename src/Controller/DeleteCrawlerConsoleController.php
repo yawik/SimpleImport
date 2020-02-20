@@ -10,9 +10,9 @@
 /** */
 namespace SimpleImport\Controller;
 
-use Zend\Console\ColorInterface;
-use Zend\Mvc\Console\Controller\AbstractConsoleController;
-use Zend\Mvc\Console\View\ViewModel;
+use Laminas\Console\ColorInterface;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
+use Laminas\Mvc\Console\View\ViewModel;
 
 /**
  * ${CARET}

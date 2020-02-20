@@ -14,8 +14,8 @@ use Core\Queue\Job\MongoJob;
 use Jobs\Repository\Job;
 use SimpleImport\Service\LanguageGuesser;
 use Jobs\Entity\JobInterface as JobEntityInterface;
-use Zend\Log\LoggerAwareInterface;
-use Zend\Log\LoggerAwareTrait;
+use Laminas\Log\LoggerAwareInterface;
+use Laminas\Log\LoggerAwareTrait;
 
 /**
  * ${CARET}

@@ -13,8 +13,8 @@ namespace SimpleImportTest\DataFetch;
 
 use PHPUnit\Framework\TestCase;
 use SimpleImport\DataFetch\HttpFetch;
-use Zend\Http\Client;
-use Zend\Http\Response;
+use Laminas\Http\Client;
+use Laminas\Http\Response;
 use Exception;
 use RuntimeException;
 

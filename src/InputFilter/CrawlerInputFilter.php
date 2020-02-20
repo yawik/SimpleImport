@@ -8,7 +8,7 @@
  */
 namespace SimpleImport\InputFilter;
 
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 use SimpleImport\Entity\Crawler;
 use SimpleImport\Validator\CrawlerOptions;
 
@@ -17,7 +17,7 @@ class CrawlerInputFilter extends InputFilter
 
     /**
      * {@inheritDoc}
-     * @see \Zend\InputFilter\BaseInputFilter::init()
+     * @see \Laminas\InputFilter\BaseInputFilter::init()
      */
     public function init()
     {
