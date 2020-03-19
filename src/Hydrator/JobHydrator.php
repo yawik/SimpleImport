@@ -74,7 +74,6 @@ class JobHydrator implements HydrationInterface
         if (isset($data['templateValues'])) {
             $templateValues = $job->getTemplateValues();
             foreach ($data['templateValues'] as $key => $value) {
-                if (!$value) { continue; }
                 if ('tasks' == $key) { $key = 'qualifications'; }
                 $method = 'set' . $key;
                 if (method_exists($templateValues, $method)) {
