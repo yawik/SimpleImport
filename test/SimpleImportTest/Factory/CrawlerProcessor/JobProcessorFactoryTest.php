@@ -17,6 +17,7 @@ use SimpleImport\Options\ModuleOptions;
 use SimpleImport\Job\GeocodeLocation;
 use Jobs\Repository\Job as JobRepository;
 use Jobs\Repository\Categories as JobCategoriesRepository;
+use SimpleImport\Filter\ShufflePublishDateFilter;
 
 /**
  * @coversDefaultClass \SimpleImport\Factory\CrawlerProcessor\JobProcessorFactory
@@ -50,14 +51,20 @@ class JobProcessorFactoryTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $shuffleFilter = $this->getMockBuilder(ShufflePublishDateFilter::class)->disableOriginalConstructor()->getMock();
+        $filterManager = $this->getMockBuilder(ContainerInterface::class)
+                ->getMock();
+        $filterManager->expects($this->once())->method('get')->with(ShufflePublishDateFilter::class)
+            ->willReturn($shuffleFilter);
         $container = $this->getMockBuilder(ContainerInterface::class)
             ->getMock();
-        $container->expects($this->exactly(3))
+        $container->expects($this->exactly(4))
             ->method('get')
             ->will($this->returnValueMap([
                 ['repositories', $repositories],
                 ['SimpleImport/Options/Module', new ModuleOptions()],
                 ['SimpleImport/JobGeocodeLocation', $jobGeocodeLocation],
+                ['FilterManager', $filterManager],
             ]));
 
 
