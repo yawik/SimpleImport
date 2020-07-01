@@ -21,6 +21,7 @@ use Jobs\Entity\Location;
 use Jobs\Entity\AtsMode;
 use stdClass;
 use InvalidArgumentException;
+use SimpleImport\Filter\ShufflePublishDateFilter;
 
 /**
  * @coversDefaultClass \SimpleImport\Hydrator\JobHydrator
@@ -44,6 +45,11 @@ class JobHydratorTest extends TestCase
     private $classificationsHydrator;
 
     /**
+     * @var ShufflePublishDateFilter
+     */
+    private $shufflePublishDateFilter;
+
+    /**
      * @see TestCase::setUp()
      */
     protected function setUp(): void
@@ -56,7 +62,11 @@ class JobHydratorTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->target = new JobHydrator($this->geocodeLocation, $this->classificationsHydrator);
+        $this->shufflePublishDateFilter = $this->getMockBuilder(ShufflePublishDateFilter::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->target = new JobHydrator($this->geocodeLocation, $this->classificationsHydrator, $this->shufflePublishDateFilter);
     }
 
     /**
@@ -96,6 +106,7 @@ class JobHydratorTest extends TestCase
             ->method('hydrate')
             ->with($this->equalTo($data['classifications']), $this->identicalTo($job->getClassifications()));
 
+            $this->shufflePublishDateFilter->expects($this->exactly(2))->method('filter')->will($this->returnArgument(0));
         $this->target->hydrate($data, $job);
         $this->assertSame($data['title'], $job->getTitle());
         $this->assertSame($data['location'], $job->getLocation());
