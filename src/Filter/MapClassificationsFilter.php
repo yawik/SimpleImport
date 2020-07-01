@@ -92,7 +92,7 @@ class MapClassificationsFilter implements FilterInterface
     {
         $mappedValues = [];
         foreach ($values as $item) {
-            $mapped = $map[strtolower($item)] ?? false;
+            $mapped = $map[strtolower(trim($item))] ?? false;
             if ($mapped === false) {
                 $mappedValues[] = $item;
                 continue;
