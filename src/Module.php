@@ -32,7 +32,7 @@ class Module implements
 
     use VersionProviderTrait;
 
-    const VERSION = '0.9.1';
+    const VERSION = '0.10.0';
 
     /**
      * Loads module specific configuration.
