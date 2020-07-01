@@ -65,13 +65,32 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
         $root = $this->categoriesRepository->findOneBy(['value' => $category]);
         $metaData = CheckClassificationsMetaData::fromJob($job, $category);
         $requiredCategories = $this->getRequiredCategories();
+        $replaceCategories = $this->getReplaceCategories();
+        $deleteCategories = $this->getDeleteCategories();
         $classifications = $job->getClassifications()->{"get$category"}();
         $items = $classifications->getItems();
         $currentValues = [];
+        $removedValues = [];
+        $replacedValues = [];
 
         $logger->info('Check job for ' . $category . ' -> ' . join(', ', $requiredCategories));
 
         foreach ($items as $item) {
+            foreach ($deleteCategories as $deleteCategory) {
+                if ($item->getName() == $deleteCategory || $item->getValue == $deleteCategory) {
+                    $removedValues[] = $deleteCategory;
+                    continue 2;
+                }
+            }
+
+            foreach ($replaceCategories as $old => $new) {
+                if ($item->getName() == $old || $item->getValue() == $old) {
+                    $currentValues[] = $new;
+                    $replacedValues[] = "$old==$new";
+                    continue 2;
+                }
+            }
+
             $currentValues[] = $item->getName();
             foreach ($requiredCategories as $requiredCategory) {
                 if ($item->getName() == $requiredCategory
@@ -83,17 +102,34 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
                             return $i != $requiredCategory;
                         }
                     );
+                    continue 2;
                 }
             }
+
+
         }
 
-        if (!count($requiredCategories)) {
-            $metaData->checked('Job had all required categories.');
+        if (!count($requiredCategories) && !count($removedValues) && !count($replacedValues)) {
+            $metaData->checked('Job had all required categories, nothing to replace/remove.');
             $metaData->storeIn($job);
-            return $this->success('Job has already all required categories');
+            return $this->success('Job has already all required categories, nothing to delete or replace');
         }
 
-        $logger->info('Job missing categories:' . join(', ', $requiredCategories));
+        $message = '';
+
+        if (count($requiredCategories)) {
+            $message .= 'Added: ' . join(', ', $requiredCategories) . PHP_EOL;
+        }
+
+        if (count($removedValues)) {
+            $message .= 'Removed: ' . join(', ', $removedValues) . PHP_EOL;
+        }
+
+        if (count($replacedValues)) {
+            $message .= 'Replaced: ' . join(', ', $replacedValues) . PHP_EOL;
+        }
+
+        $logger->info(PHP_EOL . $message);
         $treeStrategy = new TreeSelectStrategy();
         $treeStrategy->setTreeRoot($root);
         $treeStrategy->setShouldCreateLeafs(true);
@@ -104,7 +140,7 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
 
         $treeStrategy->hydrate($newValues);
 
-        $metaData->checked('Added categories:' . join(', ', $requiredCategories));
+        $metaData->checked($message);
         $metaData->storeIn($job);
 
         $this->solr->forceUpdate($job);
@@ -140,7 +176,31 @@ class CheckClassificationsJob extends MongoJob implements LoggerAwareInterface
 
     public function getRequiredCategories(): array
     {
-        return (array) ($this->content['categories'] ?? '');
+        $categories = (array) ($this->content['categories'] ?? '');
+        $categories = array_filter($categories, function ($i) { return strpos($i, '--') !== 0 && strpos($i, '==') === false; });
+
+        return $categories;
+    }
+
+    public function getReplaceCategories(): array
+    {
+        $categories = (array) ($this->content['categories'] ?? '');
+        $categories = array_filter($categories, function ($i) { return strpos($i, '==') !== false; });
+        $return = [];
+        foreach ($categories as $category) {
+            [$old, $new] = explode('==', $category, 2);
+            $return[trim($old)] = trim($new);
+        }
+        return $return;
+    }
+
+    public function getDeleteCategories(): array
+    {
+        $categories = (array) ($this->content['categories'] ?? '');
+        $categories = array_filter($categories, function ($i) { return strpos($i, '--') === 0; });
+        $categories = array_map(function ($i) { return substr($i, 2); }, $categories);
+
+        return $categories;
     }
 
     public function setContent($value)

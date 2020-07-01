@@ -29,7 +29,12 @@ class CheckClassificationsConsoleController extends AbstractConsoleController
             =>
             'Check job classifications.',
             ['  <root>', 'Root category ("industrues", "professions" or "employmentTypes")'],
+            ['', ''],
             ['  <categories>', 'Required categories, comma separated. E.g. "Fulltime, Internship"'],
+            ['',               '(Replace categories with "old-category==new-category)'],
+            ['',               '(Delete categories with --category)'],
+            ['',               'E.g.: "Fulltime, part-time==Parttime, --internship"'],
+            ['', ''],
             ['  <query>', 'Search query for selecting jobs.'],
             '',
             ['  --force', 'Do not ignore already checked jobs.'],
