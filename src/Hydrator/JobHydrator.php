@@ -97,7 +97,12 @@ class JobHydrator implements HydrationInterface
 
         if ($data['linkApply']) {
             $job->setAtsMode(new AtsMode(AtsMode::MODE_URI, $data['linkApply']));
-        } else {
+        }
+        elseif ($data['contactEmail']){
+            // use contactEmail if linkApply empty and contactEmail is defined
+            $job->setAtsMode(new AtsMode(AtsMode::MODE_EMAIL,$data['contactEmail']));
+        }
+        else {
             $job->setAtsMode(new AtsMode(AtsMode::MODE_NONE));
         }
 
