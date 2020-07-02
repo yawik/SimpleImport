@@ -181,6 +181,17 @@ class ConsoleController extends AbstractConsoleController
         
         /** @var Crawler $crawler */
         $data = $this->crawlerInputFilter->getValues();
+
+        // check existing crawler with name
+        $name = $data['name'];
+        if($this->crawlerRepository->findOneByName($name) instanceof Crawler){
+            $console->writeLine(sprintf(
+                'Crawler with name "%s" already added',
+                $name
+            ),ColorInterface::RED);
+            return;
+        }
+
         $crawler = $this->crawlerRepository->create($data)
             ->setOptionsFromArray($data['options']);
         $this->crawlerRepository->store($crawler);
