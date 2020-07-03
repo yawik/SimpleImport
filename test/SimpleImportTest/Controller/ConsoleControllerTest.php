@@ -90,7 +90,7 @@ class ConsoleControllerTest extends TestCase
     protected function setUp(): void
     {
         $this->crawlerRepository = $this->getMockBuilder(CrawlerRepository::class)
-            ->setMethods(['getCrawlersToImport', 'create', 'getDocumentManager', 'store', 'findOneByName', 'find'])
+            ->setMethods(['getCrawlersToImport', 'create', 'getDocumentManager', 'store', 'findOneByName', 'findOneBy', 'find'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -478,10 +478,44 @@ class ConsoleControllerTest extends TestCase
             ->with($values['name'])
             ->willReturn($crawler)
         ;
-
         $this->console->expects($this->once())
             ->method('writeLine')
             ->with($this->stringContains('name "crawlerName" already added'));
+
+        $this->target->addCrawlerAction();
+    }
+
+    public function testAddExistingCrawlerURI()
+    {
+        $values = [
+            'name' => 'crawlerName',
+            'organization' => 'crawlerOrganization',
+            'feedUri' => 'crawlerFeedUri',
+            'runDelay' => 'crawlerRunDelay',
+            'type' => 'crawlerType',
+            'options' => [
+                'initialState' => 'crawlerInitialState'
+            ]
+        ];
+        $crawler = new Crawler();
+        $crawler->setType(Crawler::TYPE_JOB);
+
+        $this->crawlerInputFilter->expects($this->once())
+            ->method('isValid')
+            ->willReturn(true);
+        $this->crawlerInputFilter->expects($this->once())
+            ->method('getValues')
+            ->willReturn($values);
+
+        $this->crawlerRepository->expects($this->once())
+            ->method('findOneBy')
+            ->with(['feedUri' => $values['feedUri']])
+            ->willReturn($crawler)
+        ;
+
+        $this->console->expects($this->once())
+            ->method('writeLine')
+            ->with($this->stringContains('feed-uri "crawlerFeedUri" already added'));
 
         $this->target->addCrawlerAction();
     }

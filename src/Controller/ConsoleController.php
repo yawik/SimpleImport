@@ -192,6 +192,15 @@ class ConsoleController extends AbstractConsoleController
             return;
         }
 
+        // check existing crawler by feed uri
+        if($this->crawlerRepository->findOneBy(['feedUri' => $data['feedUri']])){
+            $console->writeLine(sprintf(
+                'Crawler with feed-uri "%s" already added',
+                $data['feedUri']
+            ),ColorInterface::RED);
+            return;
+        }
+
         $crawler = $this->crawlerRepository->create($data)
             ->setOptionsFromArray($data['options']);
         $this->crawlerRepository->store($crawler);
