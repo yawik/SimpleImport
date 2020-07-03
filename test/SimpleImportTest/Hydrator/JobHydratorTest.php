@@ -97,16 +97,16 @@ class JobHydratorTest extends TestCase
         $job = new Job();
 
         $locations = [new Location()];
-        $this->geocodeLocation->expects($this->exactly(2))
+        $this->geocodeLocation->expects($this->exactly(3))
             ->method('getLocations')
             ->with($this->equalTo($data['location']))
             ->willReturn($locations);
 
-        $this->classificationsHydrator->expects($this->exactly(2))
+        $this->classificationsHydrator->expects($this->exactly(3))
             ->method('hydrate')
             ->with($this->equalTo($data['classifications']), $this->identicalTo($job->getClassifications()));
 
-            $this->shufflePublishDateFilter->expects($this->exactly(2))->method('filter')->will($this->returnArgument(0));
+            $this->shufflePublishDateFilter->expects($this->exactly(3))->method('filter')->will($this->returnArgument(0));
         $this->target->hydrate($data, $job);
         $this->assertSame($data['title'], $job->getTitle());
         $this->assertSame($data['location'], $job->getLocation());
@@ -119,7 +119,7 @@ class JobHydratorTest extends TestCase
         $this->assertNull($job->getDatePublishEnd());
         $atsMode = $job->getAtsMode();
         $this->assertInstanceOf(AtsMode::class, $atsMode);
-        $this->assertSame(AtsMode::MODE_NONE, $atsMode->getMode());
+        $this->assertSame(AtsMode::MODE_EMAIL, $atsMode->getMode());
 
         $data['datePublishEnd'] = '2017-12-24';
         $data['linkApply'] = 'job link apply';
@@ -129,6 +129,13 @@ class JobHydratorTest extends TestCase
         $this->assertInstanceOf(AtsMode::class, $atsMode);
         $this->assertSame(AtsMode::MODE_URI, $atsMode->getMode());
         $this->assertSame($data['linkApply'], $atsMode->getUri());
+
+        // check mode none if linkApply and contactEmail is null
+        $data['linkApply'] = null;
+        $data['contactEmail'] = null;
+        $this->target->hydrate($data, $job);
+        $atsMode = $job->getAtsMode();
+        $this->assertSame(AtsMode::MODE_NONE, $atsMode->getMode());
     }
 
     /**
