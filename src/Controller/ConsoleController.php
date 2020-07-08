@@ -85,6 +85,7 @@ class ConsoleController extends AbstractConsoleController
         $limit = abs($this->params('limit')) ?: 3;
         $name  = $this->params('name');
         $id    = $this->params('id');
+        $force = $this->params('force', false);
 
         $console = $this->getConsole();
 
@@ -129,7 +130,21 @@ class ConsoleController extends AbstractConsoleController
             );
 
             $result = clone $this->resultPrototype;
-            $processor->execute($crawler, $result, $this->logger);
+            try{
+                $processor->execute($crawler, $result, $this->logger,$force);
+            }catch (\Exception $e){
+                $console->writeLine(
+                    sprintf('Failed running crawler "%s (%s)". With message: %s%s',
+                        $crawler->getName(),
+                        $crawler->getId(),
+                        PHP_EOL,
+                        $e->getMessage()
+                    ),
+                    ColorInterface::RED
+                );
+                continue;
+            }
+
             $crawler->setDateLastRun(new DateTime());
             $documentManager->flush();
 

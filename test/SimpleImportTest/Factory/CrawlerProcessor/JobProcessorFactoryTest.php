@@ -18,6 +18,7 @@ use SimpleImport\Job\GeocodeLocation;
 use Jobs\Repository\Job as JobRepository;
 use Jobs\Repository\Categories as JobCategoriesRepository;
 use SimpleImport\Filter\ShufflePublishDateFilter;
+use Core\Options\ModuleOptions as CoreOptions;
 
 /**
  * @coversDefaultClass \SimpleImport\Factory\CrawlerProcessor\JobProcessorFactory
@@ -56,17 +57,25 @@ class JobProcessorFactoryTest extends TestCase
                 ->getMock();
         $filterManager->expects($this->once())->method('get')->with(ShufflePublishDateFilter::class)
             ->willReturn($shuffleFilter);
+
+        $coreOptions = $this->getMockBuilder(CoreOptions::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $coreOptions->expects($this->once())
+            ->method('getLogDir')
+            ->willReturn(__DIR__.'/../../../sandbox/var/log');
+
         $container = $this->getMockBuilder(ContainerInterface::class)
             ->getMock();
-        $container->expects($this->exactly(4))
+        $container->expects($this->exactly(5))
             ->method('get')
             ->will($this->returnValueMap([
                 ['repositories', $repositories],
                 ['SimpleImport/Options/Module', new ModuleOptions()],
                 ['SimpleImport/JobGeocodeLocation', $jobGeocodeLocation],
                 ['FilterManager', $filterManager],
+                ['Core/Options',$coreOptions]
             ]));
-
 
         $jobProcessor = (new JobProcessorFactory())->__invoke($container, JobProcessor::class);
         $this->assertInstanceOf(JobProcessor::class, $jobProcessor);

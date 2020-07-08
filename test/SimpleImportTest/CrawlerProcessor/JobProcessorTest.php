@@ -13,9 +13,12 @@ namespace SimpleImportTest\CrawlerProcessor;
 
 use Cross\TestUtils\TestCase\SetupTargetTrait;
 use Doctrine\Common\Collections\Collection;
+use http\Exception\InvalidArgumentException;
+use http\Message;
 use Jobs\Entity\Job;
 use Organizations\Entity\Organization;
 use PHPUnit\Framework\MockObject\MockObject;
+use SebastianBergmann\Environment\Runtime;
 use SimpleImport\CrawlerProcessor\JobProcessor;
 use SimpleImport\CrawlerProcessor\Result;
 use SimpleImport\DataFetch\JsonFetch;
@@ -31,6 +34,7 @@ use Cross\TestUtils\TestCase\TestInheritanceTrait;
 use SimpleImport\CrawlerProcessor\ProcessorInterface;
 use RuntimeException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @coversDefaultClass \SimpleImport\CrawlerProcessor\JobProcessor
@@ -85,6 +89,16 @@ class JobProcessorTest extends TestCase
     private $inheritance = [ProcessorInterface::class];
 
     /**
+     * @var string
+     */
+    private $lockDir;
+
+    /**
+     * @var Filesystem|MockObject
+     */
+    private $fs;
+
+    /**
      * @see TestCase::setUp()
      */
     protected function initTarget()
@@ -107,13 +121,134 @@ class JobProcessorTest extends TestCase
         $this->dataInputFilter = $this->getMockBuilder(InputFilterInterface::class)
             ->getMock();
 
+        $this->fs = $this->getMockBuilder(Filesystem::class)
+            ->getMock();
+
+        $this->lockDir = realpath(__DIR__.'/../../sandbox/var/simple-import');
+        if(!is_dir($this->lockDir)){
+            mkdir($this->lockDir,0777,true);
+        }
+
         return new JobProcessor(
             $this->jsonFetch,
             $this->plainTextFetch,
             $this->jobRepository,
             $this->jobHydrator,
-            $this->dataInputFilter
+            $this->dataInputFilter,
+            $this->fs,
+            $this->lockDir
         );
+    }
+
+    /**
+     * @covers ::__construct()
+     * @throws \Exception
+     */
+    public function testErrorWhenLockDirNotWritable()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectDeprecationMessage('Simple import lock dir "foo" is not exists or writable.');
+        $processor = new JobProcessor($this->jsonFetch,
+            $this->plainTextFetch,
+            $this->jobRepository,
+            $this->jobHydrator,
+            $this->dataInputFilter,
+            $this->fs,
+            'foo'
+        );
+    }
+
+    public function testExecuteSuccessfully()
+    {
+        $target = $this->target;
+        $jsonFetch = $this->jsonFetch;
+        $crawler = $this->getMockBuilder(Crawler::class)->disableOriginalConstructor()->getMock();
+        $result = $this->getMockBuilder(Result::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
+        $dataInputFilter = $this->dataInputFilter;
+        $jobRepository = $this->jobRepository;
+        $organization = new Organization();
+
+
+        $crawler->method('getId')
+            ->willReturn('crawler-id');
+        $crawler->method('getFeedUri')
+            ->willReturn('crawlerFeedUri');
+
+        $this->configureLockingExpectation();
+        $options = new JobOptions();
+        $job = new Job();
+        $job->setId('job-id');
+        $crawler->method('getOptions')->willReturn($options);
+
+        $data = [
+            'jobs' => [
+                $job
+            ]
+        ];
+        $item = new Item('job-id',['id' => 'job-id','link' => 'item-link']);
+
+        $jsonFetch->expects($this->once())
+            ->method('fetch')
+            ->with('crawlerFeedUri')
+            ->willReturn($data);
+
+        $result->expects($this->once())
+            ->method('setToProcess')
+            ->with(1);
+        $dataInputFilter->expects($this->once())
+            ->method('isValid')
+            ->willReturn(true);
+        $dataInputFilter->expects($this->once())
+            ->method('getValues')
+            ->willReturn($item->getImportData());
+        $crawler->method('getItem')
+            ->with($job->getId())
+            ->willReturn($item);
+        $crawler->method('getItems')
+            ->willReturn([$item]);
+        $crawler->method('getItemsToSync')
+            ->willReturn([$item]);
+        $crawler->method('getOrganization')
+            ->willReturn($organization);
+
+        $jobRepository->expects($this->once())
+            ->method('create')
+            ->with(null)
+            ->willReturn($job);
+        $target->execute($crawler, $result, $logger);
+    }
+
+    /**
+     * @covers ::execute()
+     */
+    public function testExecuteErrorWhenCrawlerAlreadyRunning()
+    {
+        $crawler = $this->createCrawler();
+        $fs = $this->fs;
+        $result = $this->getMockBuilder(Result::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logger = $this->getMockBuilder(LoggerInterface::class)
+            ->getMock();
+
+        $fs->expects($this->once())
+            ->method('exists')
+            ->with($this->lockDir.'/crawler-id.lck')
+            ->willReturn(true);
+
+        $message = 'Crawler "Crawler Name (crawler-id)" already running, with pid: "'.getmypid().'"';
+        $logger->expects($this->once())
+            ->method('err')
+            ->with($message);
+
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage($message);
+        $target = $this->target;
+        $target->execute($crawler,$result,$logger);
     }
 
     /**
@@ -122,8 +257,7 @@ class JobProcessorTest extends TestCase
      */
     public function testExecuteWithRemoteFetchFailure()
     {
-        $crawler = new Crawler();
-        $crawler->setFeedUri('crawlerFeedUri');
+        $crawler = $this->createCrawler();
 
         $result = $this->getMockBuilder(Result::class)
             ->disableOriginalConstructor()
@@ -142,6 +276,8 @@ class JobProcessorTest extends TestCase
             ->with($this->identicalTo($crawler->getFeedUri()))
             ->will($this->throwException(new RuntimeException()));
 
+        $this->expectException(RuntimeException::class);
+        $this->configureLockingExpectation();
         $this->target->execute($crawler, $result, $logger);
     }
 
@@ -150,8 +286,7 @@ class JobProcessorTest extends TestCase
      */
     public function testExecuteWithInvalidRemoteData()
     {
-        $crawler = new Crawler();
-        $crawler->setFeedUri('crawlerFeedUri');
+        $crawler = $this->createCrawler();
 
         $result = $this->getMockBuilder(Result::class)
             ->disableOriginalConstructor()
@@ -169,6 +304,9 @@ class JobProcessorTest extends TestCase
             ->method('fetch')
             ->with($this->identicalTo($crawler->getFeedUri()))
             ->willReturn('inv4lid data');
+
+        $this->expectException(RuntimeException::class);
+        $this->configureLockingExpectation();
 
         $this->target->execute($crawler, $result, $logger);
     }
@@ -241,8 +379,39 @@ class JobProcessorTest extends TestCase
             ->method('remove')
             ->with('item-id');
 
+        $crawler->expects($this->once())
+            ->method('getId')
+            ->willReturn('crawler-id');
+
+        $this->configureLockingExpectation();
+
         $target = $this->target;
         $target->execute($crawler, $result, $logger);
     }
 
+    /**
+     * @return Crawler
+     */
+    private function createCrawler()
+    {
+        $crawler = new Crawler();
+        $crawler
+            ->setId('crawler-id')
+            ->setFeedUri('crawlerFeedUri')
+            ->setName('Crawler Name')
+        ;
+        return $crawler;
+    }
+
+    private function configureLockingExpectation()
+    {
+        $fs = $this->fs;
+        $lockFile = $this->lockDir.'/crawler-id.lck';
+        $fs->expects($this->once())
+            ->method('touch')
+            ->with($lockFile);
+        $fs->expects($this->once())
+            ->method('remove')
+            ->with($lockFile);
+    }
 }

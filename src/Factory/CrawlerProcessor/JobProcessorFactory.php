@@ -18,6 +18,7 @@ use SimpleImport\Hydrator\Job\ClassificationsHydrator;
 use Core\Form\Hydrator\Strategy\TreeSelectStrategy;
 use SimpleImport\Filter\ShufflePublishDateFilter;
 use Laminas\Http\Client;
+use Symfony\Component\Filesystem\Filesystem;
 
 class JobProcessorFactory implements FactoryInterface
 {
@@ -42,7 +43,24 @@ class JobProcessorFactory implements FactoryInterface
         );
         $dataInputFilter = new JobDataInputFilter($moduleOptions->getClassifications());
 
+        $fs = new Filesystem();
+
+        // identify var dir location
+        /* @var \Core\Options\ModuleOptions $options */
+        $options = $container->get('Core/Options');
+        $lockDir = dirname($options->getLogDir()).'/simple-import';
+        if(!is_dir($lockDir)){
+            @mkdir($lockDir,0777,true);
+        }
+
         return new \SimpleImport\CrawlerProcessor\JobProcessor(
-            $jsonFetch, $plainTextFetch, $jobRepository, $jobHydrator, $dataInputFilter);
+            $jsonFetch,
+            $plainTextFetch,
+            $jobRepository,
+            $jobHydrator,
+            $dataInputFilter,
+            $fs,
+            $lockDir
+        );
     }
 }

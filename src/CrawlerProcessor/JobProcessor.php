@@ -23,6 +23,7 @@ use Jobs\Repository\Job as JobRepository;
 use Jobs\Entity\StatusInterface as JobStatusInterface;
 use Laminas\Hydrator\HydrationInterface;
 use Laminas\InputFilter\InputFilterInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use DateTime;
 use RuntimeException;
 
@@ -58,26 +59,55 @@ class JobProcessor implements ProcessorInterface
      * @var \SlmQueue\Controller\Plugin\QueuePlugin
      */
     private $queuePlugin;
-    
+
+    /**
+     * @var string
+     */
+    private $lockDir;
+
+    /**
+     * @var Filesystem
+     */
+    private $fs;
+
+    /**
+     * @var string
+     */
+    private $currentLockFile;
+
     /**
      * @param JsonFetch $jsonFetch
      * @param PlainTextFetch $plainTextFetch
      * @param JobRepository $jobRepository
      * @param HydrationInterface $jobHydrator
      * @param InputFilterInterface $dataInputFilter
+     * @param Filesystem $filesystem
+     * @param string $lockDir
      */
     public function __construct(
         JsonFetch $jsonFetch,
         PlainTextFetch $plainTextFetch,
         JobRepository $jobRepository,
         HydrationInterface $jobHydrator,
-        InputFilterInterface $dataInputFilter)
+        InputFilterInterface $dataInputFilter,
+        Filesystem $filesystem,
+        $lockDir
+    )
     {
         $this->jsonFetch = $jsonFetch;
         $this->plainTextFetch = $plainTextFetch;
         $this->jobRepository = $jobRepository;
         $this->jobHydrator = $jobHydrator;
         $this->dataInputFilter = $dataInputFilter;
+        $this->fs = $filesystem;
+
+        if(!is_dir($lockDir) || !is_writable($lockDir)){
+            throw new \InvalidArgumentException(sprintf(
+                'Simple import lock dir "%s" is not exists or writable.',
+                $lockDir
+            ));
+        }
+        $this->lockDir = $lockDir;
     }
 
     /**
@@ -93,29 +123,64 @@ class JobProcessor implements ProcessorInterface
         return $this;
     }
 
-
-
     /**
      * {@inheritDoc}
+     * @throws
      */
-    public function execute(Crawler $crawler, Result $result, LoggerInterface $logger)
-    {
+    public function execute(
+        Crawler $crawler,
+        Result $result,
+        LoggerInterface $logger,
+        $force = false
+    )
+    {   $fs = $this->fs;
+        $lockFile = $this->lockDir.'/'.$crawler->getId().'.lck';
+
+        clearstatcache(true,$lockFile);
+
+        // check if existing crawler already running
+        if($fs->exists($lockFile) && !$force){
+            $message = sprintf(
+                'Crawler "%s (%s)" already running, with pid: "%s"',
+                $crawler->getName(),
+                $crawler->getId(),
+                file_get_contents($lockFile)
+            );
+            $logger->err($message);
+            throw new RuntimeException($message);
+        }
+
         try {
-            $data = $this->jsonFetch->fetch($crawler->getFeedUri());
-        } catch (RuntimeException $e) {
-            $logger->err(sprintf('Fetching remote data failed, reason: "%s"', $e->getMessage()));
-            return;
+            file_put_contents($lockFile,getmypid(),LOCK_EX);
+            $fs->touch($lockFile);
+            $this->currentLockFile = $lockFile;
+            $this->doExecute($crawler, $result, $logger);
+            $fs->remove($lockFile);
+        } catch (\Exception $e) {
+            $message = sprintf('Fetching remote data failed, reason: "%s"', $e->getMessage());
+            $logger->err($message);
+            $fs->remove($lockFile);
+            throw new RuntimeException($message);
         }
-        
+    }
+
+    /**
+     * @param Crawler $crawler
+     * @param Result $result
+     * @param LoggerInterface $logger
+     * @throws \Doctrine\ODM\MongoDB\LockException when syncChanges failed
+     * @throws \Doctrine\ODM\MongoDB\Mapping\MappingException  when syncChanges failed
+     * @throws \Exception when trackChanges failed
+     */
+    private function doExecute(Crawler $crawler, Result $result, LoggerInterface $logger)
+    {
+        $data = $this->jsonFetch->fetch($crawler->getFeedUri());
         if (!is_array($data) || !isset($data['jobs']) || !is_array($data['jobs'])) {
-            $logger->err('Invalid data, a jobs key is missing or invalid');
-            return;
+            throw new RuntimeException('Invalid data format, a jobs key is missing or invalid');
         }
-        
         $result->setToProcess(count($data['jobs']));
         $this->trackChanges($crawler, $result, $logger, $data['jobs']);
         $this->syncChanges($crawler, $result, $logger);
-        
     }
 
     /**
