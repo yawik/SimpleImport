@@ -103,7 +103,7 @@ class JobProcessor implements ProcessorInterface
 
         if(!is_dir($lockDir) || !is_writable($lockDir)){
             throw new \InvalidArgumentException(sprintf(
-                'Simple import lock dir "%s" does not exists or not writable.',
+                'The directory "%s" is not writable.',
                 $lockDir
             ));
         }
