@@ -109,7 +109,7 @@ return [
             'routes' => [
                 'simpleimport-import' => [
                     'options' => [
-                        'route' => 'simpleimport import [--limit=] [--name=] [--id=]',
+                        'route' => 'simpleimport import [--force] [--limit=] [--name=] [--id=]',
                         'defaults' => [
                             'controller' => 'SimpleImport/ConsoleController',
                             'action' => 'import',

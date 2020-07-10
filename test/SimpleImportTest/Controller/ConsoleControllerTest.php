@@ -254,6 +254,50 @@ class ConsoleControllerTest extends TestCase
         $this->target->importAction();
     }
 
+    /**
+     * @covers ::importAction()
+     */
+    public function testImportActionWithCrawlerException()
+    {
+        $crawler = $this
+            ->getMockBuilder(Crawler::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $crawler->method('getId')->willReturn('id');
+        $crawler->method('getName')->willReturn('name');
+
+        $crawler->expects($this->once())
+            ->method('getType')
+            ->willReturn('crawler-type');
+        $processor = $this
+            ->getMockBuilder(ProcessorInterface::class)
+            ->getMock();
+
+        $this->crawlerRepository->expects($this->once())
+            ->method('getCrawlersToImport')
+            ->willReturn([$crawler]);
+        $this->crawlerProcessors
+            ->expects($this->once())
+            ->method('get')
+            ->with('crawler-type')
+            ->willReturn($processor);
+
+        $processor->expects($this->once())
+            ->method('execute')
+            ->willThrowException(new \Exception('test'));
+        $this->console->expects($this->exactly(3))
+            ->method('writeLine')
+            ->withConsecutive(
+                [$this->stringContains('started')],
+                [$this->stringContains('Failed running crawler "name (id)". With message:'),2,null],
+                [$this->stringContains('finished')]
+            )
+            ->willReturn([]);
+
+        $this->target->importAction();
+    }
+
     public function testImportActionProcessSpecificCrawler()
     {
         $this->target->method('params')->will($this->returnValueMap([

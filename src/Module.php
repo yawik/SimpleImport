@@ -80,6 +80,7 @@ class Module implements
                 ['--type=STRING', 'The type of an import (e.g. job)'],
                 ['--jobInitialState=STRING', 'The initial state of an imported job'],
                 ['--jobRecoverState=STRING', 'The state a job gets, if it was deleted, but found again in later runs.'],
+                ['--force','Force import even when lock file exists'],
                 '',
                 'simpleimport info' => 'Displays a list of all available crawlers.',
                 'simpleimport info [--id] <name>' => 'Shows information for a crawler',

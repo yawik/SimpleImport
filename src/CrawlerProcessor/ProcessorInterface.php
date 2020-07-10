@@ -18,6 +18,7 @@ interface ProcessorInterface
      * @param Crawler $crawler
      * @param Result $result
      * @param LoggerInterface $logger
+     * @param bool $force
      */
-    public function execute(Crawler $crawler, Result $result, LoggerInterface $logger);
+    public function execute(Crawler $crawler, Result $result, LoggerInterface $logger, $force=false);
 }
