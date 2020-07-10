@@ -147,7 +147,7 @@ class JobProcessorTest extends TestCase
     public function testErrorWhenLockDirNotWritable()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Simple import lock dir "foo" does not exists or writable.');
+        $this->expectExceptionMessage('Simple import lock dir "foo" does not exists or not writable.');
         $processor = new JobProcessor($this->jsonFetch,
             $this->plainTextFetch,
             $this->jobRepository,
