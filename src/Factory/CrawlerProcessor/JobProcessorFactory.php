@@ -11,6 +11,7 @@ namespace SimpleImport\Factory\CrawlerProcessor;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use SimpleImport\CrawlerProcessor\JobProcessor;
 use SimpleImport\DataFetch;
 use SimpleImport\InputFilter\JobDataInputFilter;
 use SimpleImport\Hydrator\JobHydrator;
@@ -48,12 +49,12 @@ class JobProcessorFactory implements FactoryInterface
         // identify var dir location
         /* @var \Core\Options\ModuleOptions $options */
         $options = $container->get('Core/Options');
-        $lockDir = dirname($options->getLogDir()).'/simple-import';
+        $lockDir = dirname($options->getCacheDir()).'/simple-import';
         if(!is_dir($lockDir)){
-            @mkdir($lockDir,0777,true);
+            mkdir($lockDir,0777,true);
         }
 
-        return new \SimpleImport\CrawlerProcessor\JobProcessor(
+        return new JobProcessor(
             $jsonFetch,
             $plainTextFetch,
             $jobRepository,

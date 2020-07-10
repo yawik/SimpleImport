@@ -124,9 +124,12 @@ class JobProcessorTest extends TestCase
         $this->fs = $this->getMockBuilder(Filesystem::class)
             ->getMock();
 
-        $this->lockDir = realpath(__DIR__.'/../../sandbox/var/simple-import');
+        $this->lockDir = __DIR__.'/../../sandbox/var/cache/simple-import';
         if(!is_dir($this->lockDir)){
             mkdir($this->lockDir,0777,true);
+        }
+        if(is_file($lockFile = $this->lockDir.'/crawler-id.lck')){
+            unlink($lockFile);
         }
 
         return new JobProcessor(
@@ -228,6 +231,9 @@ class JobProcessorTest extends TestCase
     {
         $crawler = $this->createCrawler();
         $fs = $this->fs;
+        if(!is_file($lockFile = $this->lockDir.'/crawler-id.lck')){
+            file_put_contents($lockFile,getmypid());
+        }
         $result = $this->getMockBuilder(Result::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -236,7 +242,7 @@ class JobProcessorTest extends TestCase
 
         $fs->expects($this->once())
             ->method('exists')
-            ->with($this->lockDir.'/crawler-id.lck')
+            ->with()
             ->willReturn(true);
 
         $message = 'Crawler "Crawler Name (crawler-id)" already running, with pid: "'.getmypid().'"';

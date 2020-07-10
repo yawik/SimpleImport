@@ -62,8 +62,8 @@ class JobProcessorFactoryTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $coreOptions->expects($this->once())
-            ->method('getLogDir')
-            ->willReturn(__DIR__.'/../../../sandbox/var/log');
+            ->method('getCacheDir')
+            ->willReturn(__DIR__.'/../../../sandbox/var/cache/simple-import');
 
         $container = $this->getMockBuilder(ContainerInterface::class)
             ->getMock();
