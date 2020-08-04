@@ -225,6 +225,7 @@ return [
             'SimpleImportOrganizationExists' => Factory\Validator\OrganizationExistsFactory::class,
             Validator\CrawlerOptions::class => InvokableFactory::class,
             Validator\EntityExists::class => InvokableFactory::class,
+            Validator\IsString::class => InvokableFactory::class,
         ],
     ],
     'simple_import_crawler_processor_manager' => [
