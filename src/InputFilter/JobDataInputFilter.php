@@ -11,6 +11,7 @@ namespace SimpleImport\InputFilter;
 use SimpleImport\Filter\MapClassificationsFilter;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\OptionalInputFilter;
+use SimpleImport\Validator\IsString;
 
 class JobDataInputFilter extends InputFilter
 {
@@ -41,7 +42,12 @@ class JobDataInputFilter extends InputFilter
                 [
                     'name' => 'StringTrim'
                 ]
-            ]
+            ],
+            'validators' => [
+                [
+                    'name' => IsString::class
+                ],
+            ],
         ])->add([
             'name' => 'company',
             'required' => false,
