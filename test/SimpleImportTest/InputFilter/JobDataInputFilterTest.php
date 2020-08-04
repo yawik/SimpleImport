@@ -174,4 +174,26 @@ class JobDataInputFilterTest extends TestCase
         $this->assertArrayHasKey('industries', $filtered, 'Filtered value should always contain known classifications');
         $this->assertSame($mappedExpected, $filtered['industries'], 'Filtered value should contain its passed value');
     }
+
+    /**
+     * @testWith    [true]
+     *              [1234]
+     *              [[1,2,3]]
+     *              [{"one":1, "two":2}]
+     */
+    public function testLocationIsInvalidIfNotString($location)
+    {
+        $target = new JobDataInputFilter([]);
+
+        $data = [
+            'id' => 'id',
+            'title' => 'title',
+            'link' => 'http://link.to/job',
+            'location' => $location
+        ];
+
+        $target->setData($data);
+
+        static::assertFalse($target->isValid());
+    }
 }
