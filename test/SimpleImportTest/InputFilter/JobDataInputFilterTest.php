@@ -195,5 +195,22 @@ class JobDataInputFilterTest extends TestCase
         $target->setData($data);
 
         static::assertFalse($target->isValid());
+        static::assertTrue(isset($target->getMessages()['location']['notString']), 'Missing error message');
+    }
+
+    public function testLocationIsValidIfString()
+    {
+        $target = new JobDataInputFilter([]);
+
+        $data = [
+            'id' => 'id',
+            'title' => 'title',
+            'link' => 'http://link.to/job',
+            'location' => 'finally a string',
+        ];
+
+        $target->setData($data);
+
+        static::assertTrue($target->isValid());
     }
 }
