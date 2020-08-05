@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5a7f097617023eaf2c01abe4e3a1b80",
+    "content-hash": "f12a206be33a5557019f4bde239dd6dd",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -1086,16 +1086,16 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "1.3.7",
+            "version": "1.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "0af483f91bada1c9ded6c2cfd26ab7d5ab2094e0"
+                "reference": "7a6eac9fb6f61bba91328f15aa7547f4806ca288"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/0af483f91bada1c9ded6c2cfd26ab7d5ab2094e0",
-                "reference": "0af483f91bada1c9ded6c2cfd26ab7d5ab2094e0",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/7a6eac9fb6f61bba91328f15aa7547f4806ca288",
+                "reference": "7a6eac9fb6f61bba91328f15aa7547f4806ca288",
                 "shasum": ""
             },
             "require": {
@@ -1104,7 +1104,7 @@
                 "doctrine/collections": "^1.0",
                 "doctrine/event-manager": "^1.0",
                 "doctrine/reflection": "^1.2",
-                "php": "^7.1"
+                "php": "^7.1 || ^8.0"
             },
             "conflict": {
                 "doctrine/common": "<2.10@dev"
@@ -1112,7 +1112,8 @@
             "require-dev": {
                 "doctrine/coding-standard": "^6.0",
                 "phpstan/phpstan": "^0.11",
-                "phpunit/phpunit": "^7.0"
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0",
+                "vimeo/psalm": "^3.11"
             },
             "type": "library",
             "extra": {
@@ -1165,7 +1166,21 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2020-03-21T15:13:52+00:00"
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fpersistence",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-06-20T12:56:16+00:00"
         },
         {
             "name": "doctrine/reflection",
@@ -7276,6 +7291,12 @@
                 "php",
                 "yawik"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/cbleek",
+                    "type": "github"
+                }
+            ],
             "time": "2020-07-24T16:44:19+00:00"
         },
         {
@@ -7809,16 +7830,16 @@
         },
         {
             "name": "enm1989/chromedriver",
-            "version": "2.46",
+            "version": "84.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ENM1989/chromedriver.git",
-                "reference": "08927b4412eb1bb668c42797139c8a82ffde2087"
+                "reference": "7483386c0ebdaaa2b13022b9a83a6a868d8bd139"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ENM1989/chromedriver/zipball/08927b4412eb1bb668c42797139c8a82ffde2087",
-                "reference": "08927b4412eb1bb668c42797139c8a82ffde2087",
+                "url": "https://api.github.com/repos/ENM1989/chromedriver/zipball/7483386c0ebdaaa2b13022b9a83a6a868d8bd139",
+                "reference": "7483386c0ebdaaa2b13022b9a83a6a868d8bd139",
                 "shasum": ""
             },
             "bin": [
@@ -7843,7 +7864,7 @@
                 "selenium",
                 "webdriver"
             ],
-            "time": "2019-03-17T19:47:18+00:00"
+            "time": "2020-06-01T20:15:39+00:00"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -10171,16 +10192,16 @@
         },
         {
             "name": "yawik/behat",
-            "version": "v0.34.7",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/behat.git",
-                "reference": "9e776b8aa8a069da13e35d717f7bb35c2f96b277"
+                "reference": "dc978d6162647d1bfafc9ae6513ef37551ffe70c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yawik/behat/zipball/9e776b8aa8a069da13e35d717f7bb35c2f96b277",
-                "reference": "9e776b8aa8a069da13e35d717f7bb35c2f96b277",
+                "url": "https://api.github.com/repos/yawik/behat/zipball/dc978d6162647d1bfafc9ae6513ef37551ffe70c",
+                "reference": "dc978d6162647d1bfafc9ae6513ef37551ffe70c",
                 "shasum": ""
             },
             "require": {
@@ -10189,7 +10210,7 @@
                 "behat/mink-browserkit-driver": "^1.3",
                 "behat/mink-extension": "^2.3",
                 "behat/mink-selenium2-driver": "^1.3",
-                "enm1989/chromedriver": "~2.35",
+                "enm1989/chromedriver": "^84.0",
                 "lakion/mink-debug-extension": "^1.2.3",
                 "novaway/common-contexts": "~2.0",
                 "se/selenium-server-standalone": "^2.52"
@@ -10231,11 +10252,11 @@
             "description": "This package provide a Behat tests utility for yawik",
             "keywords": [
                 "Behat",
+                "laminas",
                 "module",
-                "yawik",
-                "zf3"
+                "yawik"
             ],
-            "time": "2018-11-23T01:55:06+00:00"
+            "time": "2020-08-05T07:33:06+00:00"
         },
         {
             "name": "yawik/composer-plugin",
@@ -10592,9 +10613,18 @@
             "time": "2020-06-24T08:06:04+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "0.34.7-dev",
+            "alias_normalized": "0.34.7.0-dev",
+            "version": "9999999-dev",
+            "package": "yawik/behat"
+        }
+    ],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "yawik/behat": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -10603,5 +10633,6 @@
     "platform-dev": [],
     "platform-overrides": {
         "ext-mongo": "1.6.16"
-    }
+    },
+    "plugin-api-version": "1.1.0"
 }
