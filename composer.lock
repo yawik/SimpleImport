@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f12a206be33a5557019f4bde239dd6dd",
+    "content-hash": "a5a7f097617023eaf2c01abe4e3a1b80",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -1165,20 +1165,6 @@
                 "odm",
                 "orm",
                 "persistence"
-            ],
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fpersistence",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-06-20T12:56:16+00:00"
         },
@@ -3202,16 +3188,16 @@
         },
         {
             "name": "laminas/laminas-mail",
-            "version": "2.12.0",
+            "version": "2.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-mail.git",
-                "reference": "5e8bc77db515c2a207ee25df5f3464f121daf225"
+                "reference": "77b4ea7c3d58f5f8858e638a6f809cc6cfdd7f9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-mail/zipball/5e8bc77db515c2a207ee25df5f3464f121daf225",
-                "reference": "5e8bc77db515c2a207ee25df5f3464f121daf225",
+                "url": "https://api.github.com/repos/laminas/laminas-mail/zipball/77b4ea7c3d58f5f8858e638a6f809cc6cfdd7f9e",
+                "reference": "77b4ea7c3d58f5f8858e638a6f809cc6cfdd7f9e",
                 "shasum": ""
             },
             "require": {
@@ -3240,10 +3226,6 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "2.12.x-dev",
-                    "dev-develop": "2.13.x-dev"
-                },
                 "laminas": {
                     "component": "Laminas\\Mail",
                     "config-provider": "Laminas\\Mail\\ConfigProvider"
@@ -3264,7 +3246,7 @@
                 "laminas",
                 "mail"
             ],
-            "time": "2020-07-30T16:09:35+00:00"
+            "time": "2020-08-05T15:27:27+00:00"
         },
         {
             "name": "laminas/laminas-math",
@@ -5017,49 +4999,6 @@
                 "persistence"
             ],
             "time": "2020-07-03T11:35:00+00:00"
-        },
-        {
-            "name": "mpdf/mpdf",
-            "version": "v5.7.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mpdf/mpdf.git",
-                "reference": "f9a374c7ea975ce8c795cec4dfd17ef55addac9c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/f9a374c7ea975ce8c795cec4dfd17ef55addac9c",
-                "reference": "f9a374c7ea975ce8c795cec4dfd17ef55addac9c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=4.3.10"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "mpdf.php",
-                    "classes"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-1.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Ian Back"
-                }
-            ],
-            "description": "A PHP class to generate PDF files from HTML with Unicode/UTF-8 and CJK support",
-            "homepage": "http://www.mpdf1.com/mpdf/index.php",
-            "keywords": [
-                "pdf",
-                "php",
-                "utf-8"
-            ],
-            "time": "2014-12-14T18:32:11+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -7183,16 +7122,16 @@
         },
         {
             "name": "yawik/core",
-            "version": "v0.34.7",
+            "version": "v0.34.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/core.git",
-                "reference": "e8a037e21700b4296fc942efaafefbc7695a0129"
+                "reference": "98734b4f0c859f5cc02a340b492883c9ab52c4cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yawik/core/zipball/e8a037e21700b4296fc942efaafefbc7695a0129",
-                "reference": "e8a037e21700b4296fc942efaafefbc7695a0129",
+                "url": "https://api.github.com/repos/yawik/core/zipball/98734b4f0c859f5cc02a340b492883c9ab52c4cb",
+                "reference": "98734b4f0c859f5cc02a340b492883c9ab52c4cb",
                 "shasum": ""
             },
             "require": {
@@ -7226,7 +7165,6 @@
                 "laminas/laminas-servicemanager-di": "^1.1",
                 "laminas/laminas-session": "^2.7",
                 "laminas/laminas-view": "^2.9",
-                "mpdf/mpdf": "5.7.*",
                 "php": ">=7.1",
                 "sebastian/version": "^2.0",
                 "slm/queue": "^1.0",
@@ -7291,17 +7229,11 @@
                 "php",
                 "yawik"
             ],
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/cbleek",
-                    "type": "github"
-                }
-            ],
-            "time": "2020-07-24T16:44:19+00:00"
+            "time": "2020-08-05T14:17:59+00:00"
         },
         {
             "name": "yawik/jobs",
-            "version": "v0.34.7",
+            "version": "v0.34.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/jobs.git",
@@ -10072,7 +10004,7 @@
         },
         {
             "name": "yawik/applications",
-            "version": "v0.34.7",
+            "version": "v0.34.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/applications.git",
@@ -10132,7 +10064,7 @@
         },
         {
             "name": "yawik/auth",
-            "version": "v0.34.7",
+            "version": "v0.34.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/auth.git",
@@ -10192,7 +10124,7 @@
         },
         {
             "name": "yawik/behat",
-            "version": "dev-master",
+            "version": "v0.34.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/behat.git",
@@ -10326,7 +10258,7 @@
         },
         {
             "name": "yawik/cv",
-            "version": "v0.34.7",
+            "version": "v0.34.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/cv.git",
@@ -10444,7 +10376,7 @@
         },
         {
             "name": "yawik/install",
-            "version": "v0.34.7",
+            "version": "v0.34.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/install.git",
@@ -10498,16 +10430,16 @@
         },
         {
             "name": "yawik/organizations",
-            "version": "v0.34.7",
+            "version": "v0.34.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/organizations.git",
-                "reference": "9583ab508c7bca605b550315d73c121661989d18"
+                "reference": "4b10e745a80fb712c9e531283ebe28944c006202"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yawik/organizations/zipball/9583ab508c7bca605b550315d73c121661989d18",
-                "reference": "9583ab508c7bca605b550315d73c121661989d18",
+                "url": "https://api.github.com/repos/yawik/organizations/zipball/4b10e745a80fb712c9e531283ebe28944c006202",
+                "reference": "4b10e745a80fb712c9e531283ebe28944c006202",
                 "shasum": ""
             },
             "require": {
@@ -10556,16 +10488,16 @@
         },
         {
             "name": "yawik/settings",
-            "version": "v0.34.7",
+            "version": "v0.34.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yawik/settings.git",
-                "reference": "78956d86719999c2bb87467248e7e9a17cf78e59"
+                "reference": "7fd9a877545ee915dc63794067114064a3d52bc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yawik/settings/zipball/78956d86719999c2bb87467248e7e9a17cf78e59",
-                "reference": "78956d86719999c2bb87467248e7e9a17cf78e59",
+                "url": "https://api.github.com/repos/yawik/settings/zipball/7fd9a877545ee915dc63794067114064a3d52bc4",
+                "reference": "7fd9a877545ee915dc63794067114064a3d52bc4",
                 "shasum": ""
             },
             "require": {
@@ -10613,18 +10545,9 @@
             "time": "2020-06-24T08:06:04+00:00"
         }
     ],
-    "aliases": [
-        {
-            "alias": "0.34.7-dev",
-            "alias_normalized": "0.34.7.0-dev",
-            "version": "9999999-dev",
-            "package": "yawik/behat"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "yawik/behat": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -10633,6 +10556,5 @@
     "platform-dev": [],
     "platform-overrides": {
         "ext-mongo": "1.6.16"
-    },
-    "plugin-api-version": "1.1.0"
+    }
 }
