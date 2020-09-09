@@ -98,4 +98,10 @@
         "test": "phpunit",
         "db.init": "mongorestore --drop"
     }
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/cbleek"
+        }
+    ]
 }
