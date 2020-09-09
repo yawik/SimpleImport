@@ -40,7 +40,7 @@
     "prefer-stable": true,
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.3",
         "geocoder-php/cache-provider": "^4.1",
         "geocoder-php/google-maps-provider": "^4.4",
         "guzzlehttp/guzzle": "^6.3",
@@ -97,7 +97,7 @@
         "start-selenium": "./vendor/bin/selenium-server-standalone -p 4444 -Dwebdriver.chrome.driver=./vendor/bin/chromedriver",
         "test": "phpunit",
         "db.init": "mongorestore --drop"
-    }
+    },
     "funding": [
         {
             "type": "github",
