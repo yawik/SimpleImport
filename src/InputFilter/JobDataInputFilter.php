@@ -38,6 +38,7 @@ class JobDataInputFilter extends InputFilter
         ])->add([
             'name' => 'location',
             'required' => false,
+            'continue_if_empty' => true,
             'filters' => [
                 [
                     'name' => 'StringTrim'
