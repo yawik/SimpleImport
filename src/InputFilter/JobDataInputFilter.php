@@ -46,7 +46,10 @@ class JobDataInputFilter extends InputFilter
             ],
             'validators' => [
                 [
-                    'name' => IsString::class
+                    'name' => IsString::class,
+                    'options' => [
+                        'allowNull' => true
+                    ]
                 ],
             ],
         ])->add([
