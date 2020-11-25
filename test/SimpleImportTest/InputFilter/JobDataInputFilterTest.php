@@ -181,13 +181,17 @@ class JobDataInputFilterTest extends TestCase
      *              [[1,2,3]]
      *              [{"one":1, "two":2}]
      *              [[]]
-     *              [null]
      *              [0]
      *              [false]
+     *              ["object"]
      */
     public function testLocationIsInvalidIfNotString($location)
     {
         $target = new JobDataInputFilter([]);
+
+        if ($location == "object") {
+            $location = new \stdClass();
+        }
 
         $data = [
             'id' => 'id',
@@ -199,12 +203,13 @@ class JobDataInputFilterTest extends TestCase
         $target->setData($data);
 
         static::assertFalse($target->isValid());
-        static::assertTrue(isset($target->getMessages()['location']['notString']), 'Missing error message');
+        static::assertTrue(isset($target->getMessages()['location']['notStringOrNull']), 'Missing error message');
     }
 
     /**
      * @testWith    ["finally a string"]
      *              [""]
+     *              [null]
      */
     public function testLocationIsValidIfString($str)
     {
