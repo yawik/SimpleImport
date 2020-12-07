@@ -148,4 +148,42 @@ class JobHydratorTest extends TestCase
         $this->expectExceptionMessage('Object must be instance');
         $this->target->hydrate([], new stdClass());
     }
+
+    /**
+     * @testWith    [null]
+     *              [""]
+     */
+    public function testRemoveOldLocationIfNewLocationIsEmpty($value)
+    {
+        $job = new Job();
+        $location = new Location();
+        $location->setCity('Job City');
+        $job->setLocation('Job Location');
+        $job->setLocations([$location]);
+
+        $data = [
+            'title' => 'job title',
+            'location' => $value,
+            'company' => 'job company',
+            'reference' => 'job reference',
+            'contactEmail' => 'job contactEmail',
+            'language' => 'job language',
+            'link' => 'job link',
+            'datePublishStart' => '2017-11-24',
+            'logoRef' => 'job logoRef',
+            'datePublishEnd' => null,
+            'linkApply' => null,
+            'classifications' => [
+                'professions' => [
+                    'first profession',
+                    'second profession'
+                ]
+            ],
+        ];
+
+        $this->target->hydrate($data, $job);
+
+        $this->assertEmpty($job->getLocation());
+        $this->assertEmpty($job->getLocations());
+    }
 }
