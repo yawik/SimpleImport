@@ -1,0 +1,25 @@
+site_name: SimpleIport
+site_description: Documentation yawik SimpleImport module
+site_url: https://yawik.github.io/SimpleImport/
+copyright: 'Copyright &copy; 2021'
+repo_name: yawik/simple-import
+repo_url: https://github.com/yawik/SimpleImport
+site_dir: build/site
+theme: material
+markdown_extensions:
+  - codehilite:
+      guess_lang: true
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.magiclink
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.extra
+  - footnotes
+plugins:
+  - section-index
+  - search
+  
