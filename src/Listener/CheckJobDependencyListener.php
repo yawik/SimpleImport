@@ -57,6 +57,7 @@ class CheckJobDependencyListener extends AbstractDependenciesListener
                     $crawler->setItemsMetaData($ids);
                 }
             } catch (\Doctrine\ODM\MongoDB\DocumentNotFoundException $e) {
+                $options = null;
             }
         } else {
             $options = 'of ' . $item->getCrawler();
