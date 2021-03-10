@@ -40,19 +40,24 @@ class CheckJobDependencyListener extends AbstractDependenciesListener
         if (!$item) { return null; }
 
         if ($event->isDelete()) {
-            $crawler = $item->getCrawler();
-            $options = [
-                'mode' => DependencyResult::MODE_DELETE,
-                'description' => 'deleted.',
-            ];
-            $ids = $crawler->getMetaData('documentIds');
-            $ids = array_filter(
-                $ids,
-                function ($i) use ($jobId) {
-                    return $i != $jobId;
+            try {
+                $crawler = $item->getCrawler();
+                $options = [
+                    'mode' => DependencyResult::MODE_DELETE,
+                    'description' => 'deleted.',
+                ];
+                $ids = $crawler->getMetaData('documentIds');
+                $ids = array_filter(
+                    $ids,
+                    function ($i) use ($jobId) {
+                        return $i != $jobId;
+                    }
+                );
+                if (is_array($ids)) {
+                    $crawler->setItemsMetaData($ids);
                 }
-            );
-            $crawler->setItemsMetaData($ids);
+            } catch (\Doctrine\ODM\MongoDB\DocumentNotFoundException $e) {
+            }
         } else {
             $options = 'of ' . $item->getCrawler();
         }
