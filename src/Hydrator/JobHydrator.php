@@ -108,7 +108,7 @@ class JobHydrator implements HydrationInterface
 
         if (empty($data['location'])) {
             $job->setLocation("");
-            $job->setLocations(new ArrayCollection());
+            $job->getLocations()->clear();
         } else {
             $locations = $this->geocodeLocation->getLocations($data['location']);
             $job->setLocations(new ArrayCollection($locations));
