@@ -249,7 +249,7 @@ class UpdateCrawlerConsoleControllerTest extends TestCase
         $this->setupUpdateActionTest(false);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageRegExp('~^Invalid parameter.*field1.*Test error message 1.*Message1\.1.*field2.*Error Message 2~s');
+        $this->expectExceptionMessageMatches('~^Invalid parameter.*field1.*Test error message 1.*Message1\.1.*field2.*Error Message 2~s');
 
         $this->target->updateAction();
 

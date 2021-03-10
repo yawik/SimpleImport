@@ -11,6 +11,7 @@
 
 namespace SimpleImportTest\Hydrator;
 
+use Core\Entity\Collection\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 
 use SimpleImport\Hydrator\JobHydrator;
@@ -159,7 +160,7 @@ class JobHydratorTest extends TestCase
         $location = new Location();
         $location->setCity('Job City');
         $job->setLocation('Job Location');
-        $job->setLocations([$location]);
+        $job->setLocations(new ArrayCollection([$location]));
 
         $data = [
             'title' => 'job title',
